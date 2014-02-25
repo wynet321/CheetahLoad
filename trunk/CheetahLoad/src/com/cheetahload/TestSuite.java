@@ -3,31 +3,31 @@ package com.cheetahload;
 import java.util.ArrayList;
 
 public final class TestSuite {
-	private ArrayList<TestItem> testItemList = new ArrayList<TestItem>();
-	private TestCase prepareTestCase;
-	private TestCase clearupTestCase;
+	private ArrayList<TestCase> testItemList = new ArrayList<TestCase>();
+	private TestScript prepareTestCase;
+	private TestScript clearupTestCase;
 	
-	public final void add(TestItem testItem) {
+	public final void add(TestCase testItem) {
 		testItemList.add(testItem);
 	}
 
-	public final ArrayList<TestItem> getTestItemList() {
+	public final ArrayList<TestCase> getTestItemList() {
 		return testItemList;
 	}
 	
-	public final TestCase getPrepareTestCase(){
+	public final TestScript getPrepareTestCase(){
 		return prepareTestCase;
 	}
 	
-	public final TestCase getClearupTestCase(){
+	public final TestScript getClearupTestCase(){
 		return clearupTestCase;
 	}
 	
-	public final void setPrepareTestCase(TestCase prepareTestCase){
+	public final void setPrepareTestCase(TestScript prepareTestCase){
 		this.prepareTestCase=prepareTestCase;
 	}
 	
-	public final void setClearupTestCase(TestCase clearupTestCase){
+	public final void setClearupTestCase(TestScript clearupTestCase){
 		this.clearupTestCase=clearupTestCase;
 	}
 }

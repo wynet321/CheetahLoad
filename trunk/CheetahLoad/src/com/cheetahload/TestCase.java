@@ -1,20 +1,27 @@
 package com.cheetahload;
 
-public abstract class TestCase {
-	private String caseName;
-	public TestCase(){
-		
+
+public final class TestCase{
+	
+	private TestCase testCase;
+	private TestScript testScript;
+	private int percentage;
+	
+	public TestCase(TestScript testCase, int percentage)
+	{
+		this.testScript=testCase;
+		this.percentage=percentage;
 	}
-	public TestCase(String caseName){
-		this.caseName=caseName;
+	
+	public final TestCase getTestItem(){
+		return testCase;
 	}
-	public void setName(String caseName){
-		this.caseName=caseName;
+	
+	public final TestScript getTestCase(){
+		return testScript;
 	}
-	public String getName(){
-		return caseName;
+	
+	public final int getPercentage(){
+		return percentage;
 	}
-	public abstract void prepare();
-	public abstract void test();
-	public abstract void clearup();
 }

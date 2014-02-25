@@ -1,4 +1,6 @@
-package com.cheetahload;
+package com.cheetahload.executor;
+
+import com.cheetahload.TestSuite;
 
 public class TestLauncher {
 

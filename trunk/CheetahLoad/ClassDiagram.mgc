@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="com.cheetahload.TestScript" x="790" y="247">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+    </Class>
+    <Class name="com.cheetahload.executor.TestThread" x="91" y="140">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+        <Association destinationClassName="com.cheetahload.TestSuite"
+            endpointName="testSuite" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.TestScript"/>
+    </Class>
+    <Class name="com.cheetahload.TestSuite" x="380" y="50">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+        <Association destinationClassName="com.cheetahload.TestScript"
+            endpointName="prepareTestCase" kind="Simple">
+            <Point x="862" y="175"/>
+        </Association>
+        <Association destinationClassName="com.cheetahload.TestCase"
+            endpointName="testItemList" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestScript"
+            endpointName="clearupTestCase" kind="Simple"/>
+    </Class>
+    <Class name="com.cheetahload.executor.TestLauncher" x="137" y="316">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+    </Class>
+    <Class name="com.cheetahload.TestCase" x="447" y="312">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+        <Association destinationClassName="com.cheetahload.TestScript"
+            endpointName="testScript" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestCase"
+            endpointName="testCase" kind="Simple"/>
+    </Class>
+</ClassDiagram>

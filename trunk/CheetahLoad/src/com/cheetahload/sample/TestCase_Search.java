@@ -1,8 +1,8 @@
 package com.cheetahload.sample;
 
-import com.cheetahload.TestCase;
+import com.cheetahload.TestScript;
 
-public class TestCase_Search extends TestCase {
+public class TestCase_Search extends TestScript {
 
 	@Override
 	public void prepare() {

@@ -1,6 +1,10 @@
-package com.cheetahload;
+package com.cheetahload.executor;
 
 import java.util.ArrayList;
+
+import com.cheetahload.TestCase;
+import com.cheetahload.TestScript;
+import com.cheetahload.TestSuite;
 
 public class TestThread extends Thread {
 
@@ -21,7 +25,7 @@ public class TestThread extends Thread {
 		execute(testSuite.getClearupTestCase());
 	}
 
-	private void execute(TestCase testCase) {
+	private void execute(TestScript testCase) {
 		// test suite loop
 		if (testCase != null) {
 			testCase.prepare();
@@ -30,7 +34,7 @@ public class TestThread extends Thread {
 		}
 	}
 
-	private void execute(ArrayList<TestItem> testItemList) {
+	private void execute(ArrayList<TestCase> testItemList) {
 		// loop
 
 	}
