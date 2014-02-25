@@ -1,6 +1,7 @@
 package com.cheetahload.executor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.cheetahload.TestCase;
 import com.cheetahload.TestScript;
@@ -36,6 +37,8 @@ public class TestThread extends Thread {
 
 	private void execute(ArrayList<TestCase> testItemList) {
 		// loop
-
+		Iterator<TestCase> iterator = testSuite.getTestItemList().iterator();
+		while (iterator.hasNext())
+			System.out.println(this.getName() + ((TestCase) iterator.next()).getTestScript().getName());
 	}
 }

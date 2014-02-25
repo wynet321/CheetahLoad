@@ -3,7 +3,6 @@ package com.cheetahload;
 
 public final class TestCase{
 	
-	private TestCase testCase;
 	private TestScript testScript;
 	private int percentage;
 	
@@ -13,11 +12,7 @@ public final class TestCase{
 		this.percentage=percentage;
 	}
 	
-	public final TestCase getTestItem(){
-		return testCase;
-	}
-	
-	public final TestScript getTestCase(){
+	public final TestScript getTestScript(){
 		return testScript;
 	}
 	

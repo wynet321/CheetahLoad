@@ -3,16 +3,16 @@ package com.cheetahload;
 import java.util.ArrayList;
 
 public final class TestSuite {
-	private ArrayList<TestCase> testItemList = new ArrayList<TestCase>();
+	private ArrayList<TestCase> testCaseList = new ArrayList<TestCase>();
 	private TestScript prepareTestCase;
 	private TestScript clearupTestCase;
 	
 	public final void add(TestCase testItem) {
-		testItemList.add(testItem);
+		testCaseList.add(testItem);
 	}
 
 	public final ArrayList<TestCase> getTestItemList() {
-		return testItemList;
+		return testCaseList;
 	}
 	
 	public final TestScript getPrepareTestCase(){
