@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.cheetahload.TestCase;
 import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
+import com.cheetahload.log.Logger;
 
 public class TestThread extends Thread {
 
@@ -24,6 +25,7 @@ public class TestThread extends Thread {
 		execute(testSuite.getPrepareTestCase());
 		execute(testSuite.getTestItemList());
 		execute(testSuite.getClearupTestCase());
+		
 	}
 
 	private void execute(TestScript testCase) {
@@ -38,7 +40,11 @@ public class TestThread extends Thread {
 	private void execute(ArrayList<TestCase> testItemList) {
 		// loop
 		Iterator<TestCase> iterator = testSuite.getTestItemList().iterator();
-		while (iterator.hasNext())
-			System.out.println(this.getName() + ((TestCase) iterator.next()).getTestScript().getName());
+		while (iterator.hasNext()){
+			TestCase testcase=iterator.next();
+			if(testcase!=null)
+				System.out.println(this.getName() + testcase.getTestScript().getName());
+			
+		}
 	}
 }

@@ -3,7 +3,7 @@ package com.cheetahload;
 import java.util.Vector;
 
 public class VirtualUser {
-	public static Vector<String> generateUserNameVector(String prefix, int digit, int startNumber, int userNumber) {
+	public static Vector<String> generateUserNames(String prefix, int digit, int startNumber, int userNumber) {
 		Vector<String> userNameVector = new Vector<String>();
 		if (prefix == null) {
 			// Todo deal with the exception

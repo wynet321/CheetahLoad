@@ -9,6 +9,15 @@
             default-accepted="true" static-accepted="true"
             accessors-accepted="true" constructors-accepted="true"/>
     </Class>
+    <Class name="com.cheetahload.executor.TestEntry" x="93" y="296">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+    </Class>
     <Class name="com.cheetahload.executor.TestThread" x="91" y="140">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -34,18 +43,9 @@
             <Point x="862" y="175"/>
         </Association>
         <Association destinationClassName="com.cheetahload.TestCase"
-            endpointName="testItemList" kind="Simple"/>
+            endpointName="testCaseList" kind="Simple"/>
         <Association destinationClassName="com.cheetahload.TestScript"
             endpointName="clearupTestCase" kind="Simple"/>
-    </Class>
-    <Class name="com.cheetahload.executor.TestLauncher" x="137" y="316">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"
-            accessors-accepted="true" constructors-accepted="true"/>
     </Class>
     <Class name="com.cheetahload.TestCase" x="447" y="312">
         <AttributesDisplayFilter public-accepted="true"
@@ -57,7 +57,5 @@
             accessors-accepted="true" constructors-accepted="true"/>
         <Association destinationClassName="com.cheetahload.TestScript"
             endpointName="testScript" kind="Simple"/>
-        <Association destinationClassName="com.cheetahload.TestCase"
-            endpointName="testCase" kind="Simple"/>
     </Class>
 </ClassDiagram>
