@@ -11,15 +11,15 @@ public final class TestSuite {
 		testCaseList.add(testItem);
 	}
 
-	public final ArrayList<TestCase> getTestItemList() {
+	public final ArrayList<TestCase> getTestCaseList() {
 		return testCaseList;
 	}
 	
-	public final TestScript getPrepareTestCase(){
+	public final TestScript getPrepareTestScript(){
 		return prepareTestCase;
 	}
 	
-	public final TestScript getClearupTestCase(){
+	public final TestScript getClearupTestScript(){
 		return clearupTestCase;
 	}
 	

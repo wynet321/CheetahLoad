@@ -11,39 +11,61 @@ public class TestConfiguration {
 	private static int loops = 0;
 	private static int vusers = 0;
 	private static Vector<String> userNames;
-	private static String password = "";
+	private static String password = new String();
 	private static int thinkTime = 0;
-	private static String testSuiteName = "";
-	private static String logPath = "./cheetahload.log";
+	private static String testSuiteName = new String();
+	private static String logPath = "./";
 	private static Level logLevel = Level.ERROR;
-	private static Logger logger;
+	private static Logger commonLogger;
+	private static int index=0;
 
+	public synchronized static int getIndex(){
+		return index++;
+	}
 	public static boolean isCompleted() {
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration=" + duration, Level.DEBUG);
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
+					Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration and loops can not be non-zero both.",
+					Level.ERROR);
 			return false;
 		}
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - vusers=" + vusers, Level.DEBUG);
 		if (vusers == 0) {
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password=" + password, Level.DEBUG);
 		if (password.isEmpty()) {
-			;
-			// log password is blank.
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password is set to blank.", Level.WARN);
 		}
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - testSuiteName=" + testSuiteName, Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			// log suite name is empty
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
-		if (userNames == null || userNames.size() == 0) { // log userNames is
-															// empty
+		if (userNames != null)
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - userNames has " + userNames.size() + " cell object(s).", Level.DEBUG);
+		else {
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - userNames can not be null.", Level.ERROR);
 			return false;
 		}
+		if (userNames.size() == 0) {
+			TestConfiguration.getCommonLogger()
+					.write("TestConfiguration - isCompleted() - userNames should has cell object(s).", Level.ERROR);
+			return false;
+		}
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() passed.", Level.DEBUG);
 		return true;
 	}
 
-	public Vector<String> getUserNames() {
+	public static Vector<String> getUserNames() {
 		return userNames;
 	}
 
@@ -112,12 +134,12 @@ public class TestConfiguration {
 		TestConfiguration.logLevel = logLevel;
 	}
 
-	public static Logger getLogger() {
-		if (logger != null)
-			return logger;
+	public static Logger getCommonLogger() {
+		if (commonLogger != null)
+			return commonLogger;
 		else {
-			logger=new Logger(TestConfiguration.logPath, TestConfiguration.logLevel);
-			return logger;
+			commonLogger = new Logger(TestConfiguration.logPath+"/cheetahload.log", TestConfiguration.logLevel);
+			return commonLogger;
 		}
 	}
 

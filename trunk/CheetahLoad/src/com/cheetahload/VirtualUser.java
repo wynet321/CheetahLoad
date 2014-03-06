@@ -22,8 +22,8 @@ public class VirtualUser {
 			// Todo deal with the exception
 			return userNameVector;
 		}
-		for (int i = startNumber; i < userNumber; i++) {
-			userNameVector.add(prefix + String.format("%0" + digit + "d", String.valueOf(i)));
+		for (int i = startNumber; i < startNumber+userNumber; i++) {
+			userNameVector.add(prefix + String.format("%0" + digit + "d", i));
 		}
 		return userNameVector;
 	}

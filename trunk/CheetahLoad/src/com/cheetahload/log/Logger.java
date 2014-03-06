@@ -5,8 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-import com.cheetahload.TestConfiguration;
-
 public class Logger {
 	private FileWriter logWriter;
 	private int fileCount;
@@ -24,10 +22,11 @@ public class Logger {
 		this.path = path;
 		this.level = level;
 		fileCount = 0;
+		text = new String();
 	}
 
 	public void write(String message, Level lineLevel) {
-		if (lineLevel.ordinal() >= level.ordinal()) {
+		if (lineLevel.ordinal() <= level.ordinal()) {
 			text += new Timestamp(System.currentTimeMillis()).toString() + " " + lineLevel.toString() + " " + message
 					+ "\r";
 			if (text.length() >= fileSize)
@@ -56,8 +55,10 @@ public class Logger {
 					logWriter = new FileWriter(path, false);
 				}
 			}
-			if (flushAll)
+			if (flushAll) {
 				logWriter.write(text);
+				text = "";
+			}
 			logWriter.close();
 		} catch (IOException e) {
 			// TODO deal with IO exception

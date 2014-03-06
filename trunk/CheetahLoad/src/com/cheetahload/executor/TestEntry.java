@@ -3,26 +3,27 @@ package com.cheetahload.executor;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
-import com.cheetahload.log.Logger;
 
 public final class TestEntry {
 
-	public final static void runTest() {
+	public final static void runTest(TestSuite testSuite) {
 		if (!TestConfiguration.isCompleted()) {
-			// TODO log failed
-			System.out.println("failed");
-			TestConfiguration.getLogger().write("failed1111", Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
+					Level.ERROR);
+			TestConfiguration.getCommonLogger().flush(true);
 			System.exit(0);
 		}
-		TestSuite testSuite = new TestSuite();
-		int threadCount = 1;
+
+		int threadCount = TestConfiguration.getVusers();
 		int i = 0;
-		Thread[] thread = new Thread[2];
-		while (i <= threadCount) {
+		Thread[] thread = new Thread[threadCount];
+		while (i < threadCount) {
 			thread[i] = new TestThread(testSuite);
 			thread[i].start();
 			i++;
 		}
+		TestConfiguration.getCommonLogger().flush(true);
 	}
 
 }
