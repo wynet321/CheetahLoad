@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
-import com.cheetahload.log.Logger;
 
 public class TestConfiguration {
 
@@ -20,9 +20,14 @@ public class TestConfiguration {
 	private static String logPath = "./log";
 	private static String timerLogPath = "./log/timer/";
 	private static Level logLevel = Level.ERROR;
-	private static Logger commonLogger;
+	private static CommonLogger commonLogger;
 	private static int userIndex = 0;
 	private static HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
+	private static HashMap<String, ConcurrentLinkedQueue<String>> userLoggerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
+
+	public static HashMap<String, ConcurrentLinkedQueue<String>> getUserLoggerQueueMap() {
+		return userLoggerQueueMap;
+	}
 
 	public static String getTimerLogPath() {
 		if (!createLogFolder(timerLogPath)) {
@@ -49,7 +54,6 @@ public class TestConfiguration {
 		TestConfiguration.timerLogPath = timerLogPath;
 	}
 
-	
 	public static HashMap<String, ConcurrentLinkedQueue<String>> getTimerQueueMap() {
 		return timerQueueMap;
 	}
@@ -184,13 +188,12 @@ public class TestConfiguration {
 		TestConfiguration.logLevel = logLevel;
 	}
 
-	public static Logger getCommonLogger() {
-		if (commonLogger != null)
-			return commonLogger;
-		else {
-			commonLogger = new Logger(TestConfiguration.logPath + "/cheetahload.log", TestConfiguration.logLevel);
-			return commonLogger;
+	public static CommonLogger getCommonLogger() {
+		if (commonLogger == null) {
+			commonLogger = new CommonLogger();
 		}
+		return commonLogger;
+
 	}
 
 }

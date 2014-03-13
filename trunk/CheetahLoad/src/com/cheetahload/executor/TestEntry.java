@@ -7,6 +7,7 @@ import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
+import com.cheetahload.log.UserLoggerWriter;
 import com.cheetahload.timer.TimerWriter;
 
 public final class TestEntry {
@@ -21,14 +22,20 @@ public final class TestEntry {
 		}
 
 		// timer log thread
-		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
-		while (iterator.hasNext()) {
-			TestConfiguration.getTimerQueueMap().put(((TestCase) iterator.next()).getTestScript().getName(),
+		Iterator<TestCase> testCaseIterator = testSuite.getTestCaseList().iterator();
+		while (testCaseIterator.hasNext()) {
+			TestConfiguration.getTimerQueueMap().put(((TestCase) testCaseIterator.next()).getTestScript().getName(),
 					new ConcurrentLinkedQueue<String>());
 		}
 		TimerWriter timerWriter = new TimerWriter();
 		timerWriter.start();
 
+		for(String userName: TestConfiguration.getUserNames()){
+			TestConfiguration.getUserLoggerQueueMap().put(userName, new ConcurrentLinkedQueue<String>());
+		}
+		UserLoggerWriter loggerWriter=new UserLoggerWriter();
+		loggerWriter.start();		
+		
 		// Thread(VU) start
 		int threadCount = TestConfiguration.getVusers();
 		int i = 0;
@@ -38,8 +45,10 @@ public final class TestEntry {
 			thread[i].start();
 			i++;
 		}
+		//stop log write thread
 		timerWriter.setStopSignal(true);
+		loggerWriter.setStopSignal(true);
+		//close common log file
 		TestConfiguration.getCommonLogger().flush(true);
-		
 	}
 }

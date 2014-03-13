@@ -17,7 +17,7 @@ public class TestCase_Login extends TestScript {
 	@Override
 	public void test() {
 		// TODO Auto-generated method stub
-		getLogger().write(this.getName() + " - test()", Level.INFO);
+		getUserLogger().write(this.getName() + " - test()", Level.INFO);
 	}
 
 	@Override

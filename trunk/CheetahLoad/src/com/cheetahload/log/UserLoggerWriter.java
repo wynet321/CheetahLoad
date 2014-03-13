@@ -1,4 +1,4 @@
-package com.cheetahload.timer;
+package com.cheetahload.log;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,9 +7,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 
-public final class TimerWriter extends Thread {
+public final class UserLoggerWriter extends Thread {
 	private boolean stopSignal = false;
 	private String buffer = new String();
+	private int fileCount = 0;
+	private int fileSize = 1024000;
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
@@ -17,16 +19,14 @@ public final class TimerWriter extends Thread {
 
 	public void run() {
 		while (!stopSignal) {
-			for (String key : TestConfiguration.getTimerQueueMap().keySet()) {
-				ConcurrentLinkedQueue<String> queue = TestConfiguration.getTimerQueueMap().get(key);
+			for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
+				ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
 				while (queue.size() > 10240) {
 					for (int i = 0; i < 10240; i++) {
 						buffer += queue.poll();
 					}
-					write(key, buffer);
-					buffer = "";
+					write(key);
 				}
-
 			}
 			try {
 				sleep(300000);
@@ -36,19 +36,17 @@ public final class TimerWriter extends Thread {
 			}
 		}
 		// write all of timer buffer to file
-		for (String key : TestConfiguration.getTimerQueueMap().keySet()) {
-			ConcurrentLinkedQueue<String> queue = TestConfiguration.getTimerQueueMap().get(key);
+		for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
+			ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
 			while (!queue.isEmpty()) {
 				buffer += queue.poll();
 			}
-			write(key, buffer);
-			buffer = "";
+			write(key);
 		}
-
 	}
 
-	public void write(String testScriptName, String content) {
-		String path = TestConfiguration.getTimerLogPath() + "/" + testScriptName + ".log";
+	public void write(String userName) {
+		String path = TestConfiguration.getLogPath() + "/" + userName + ".log";
 		File file = new File(path);
 		FileWriter logWriter;
 		try {
@@ -57,9 +55,19 @@ public final class TimerWriter extends Thread {
 			} else {
 				logWriter = new FileWriter(path, false);
 			}
-			logWriter.write(content);
-			logWriter.flush();
-			logWriter.close();
+			while (buffer.length() >= fileSize) {
+				logWriter.write(buffer.substring(0, fileSize));
+				buffer = buffer.substring(fileSize + 1);
+				logWriter.flush();
+				logWriter.close();
+				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
+				logWriter = new FileWriter(path, false);
+			}
+			if (stopSignal) {
+				logWriter.write(buffer);
+				logWriter.flush();
+				logWriter.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

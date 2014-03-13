@@ -3,7 +3,7 @@ package com.cheetahload;
 import java.util.Hashtable;
 
 import com.cheetahload.executor.TestThread;
-import com.cheetahload.log.Logger;
+import com.cheetahload.log.UserLogger;
 
 public abstract class TestScript {
 	private String caseName;
@@ -14,8 +14,8 @@ public abstract class TestScript {
 		caseParameters = new Hashtable();
 	}
 
-	public final Logger getLogger() {
-		return ((TestThread) (Thread.currentThread())).getLogger();
+	public final UserLogger getUserLogger() {
+		return ((TestThread) (Thread.currentThread())).getUserLogger();
 	}
 
 	public TestScript(String caseName) {

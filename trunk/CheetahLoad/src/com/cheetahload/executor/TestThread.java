@@ -8,30 +8,30 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
-import com.cheetahload.log.Logger;
+import com.cheetahload.log.UserLogger;
 import com.cheetahload.timer.Timer;
 
 public class TestThread extends Thread {
 	TestSuite testSuite;
-	private Logger logger;
+	private UserLogger userLogger;
 	private String userName;
 	private Timer timer;
 
 	public TestThread(TestSuite testSuite) {
 		this.testSuite = testSuite;
-		this.userName=TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
-		logger=new Logger(TestConfiguration.getLogPath()+this.userName+".log", TestConfiguration.getLogLevel());
-		timer = new Timer();	}
-	
-	public Logger getLogger(){
-		return logger;
+		this.userName = TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
+		userLogger = new UserLogger(userName);
+		timer = new Timer();
+	}
+
+	public UserLogger getUserLogger() {
+		return userLogger;
 	}
 
 	public void run() {
 		execute(testSuite.getPrepareTestScript());
 		execute(testSuite.getTestCaseList());
 		execute(testSuite.getClearupTestScript());
-		logger.flush(true);
 	}
 
 	private void execute(TestScript testScript) {
@@ -40,7 +40,7 @@ public class TestThread extends Thread {
 			testScript.prepare();
 			timer.begin();
 			testScript.test();
-			timer.end(testScript.getName(),userName);
+			timer.end(testScript.getName(), userName);
 			testScript.clearup();
 		}
 	}
@@ -51,12 +51,14 @@ public class TestThread extends Thread {
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
 		while (iterator.hasNext()) {
 			TestCase testcase = iterator.next();
-			if (testcase != null)
-			{
-				//System.out.println(this.getName() + testcase.getTestScript().getName());
-				logger.write("TestThread - execute(ArrayList<TestCase>) "+testcase.getTestScript().getName()+" start.",Level.DEBUG);
+			if (testcase != null) {
+				// System.out.println(this.getName() +
+				// testcase.getTestScript().getName());
+				userLogger.write("TestThread - execute(ArrayList<TestCase>) " + testcase.getTestScript().getName()
+						+ " start.", Level.DEBUG);
 				execute(testcase.getTestScript());
-				logger.write("TestThread - execute(ArrayList<TestCase>) "+testcase.getTestScript().getName()+" end.",Level.DEBUG);
+				userLogger.write("TestThread - execute(ArrayList<TestCase>) " + testcase.getTestScript().getName()
+						+ " end.", Level.DEBUG);
 			}
 
 		}
