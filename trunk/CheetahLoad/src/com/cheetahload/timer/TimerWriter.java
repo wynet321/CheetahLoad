@@ -9,7 +9,7 @@ import com.cheetahload.TestConfiguration;
 
 public final class TimerWriter extends Thread {
 	private boolean stopSignal = false;
-	private String buffer = new String();
+	private StringBuffer buffer = new StringBuffer();
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
@@ -21,10 +21,10 @@ public final class TimerWriter extends Thread {
 				ConcurrentLinkedQueue<String> queue = TestConfiguration.getTimerQueueMap().get(key);
 				while (queue.size() > 10240) {
 					for (int i = 0; i < 10240; i++) {
-						buffer += queue.poll();
+						buffer.append(queue.poll());
 					}
-					write(key, buffer);
-					buffer = "";
+					write(key, buffer.toString());
+					buffer.setLength(0);
 				}
 
 			}
@@ -39,10 +39,10 @@ public final class TimerWriter extends Thread {
 		for (String key : TestConfiguration.getTimerQueueMap().keySet()) {
 			ConcurrentLinkedQueue<String> queue = TestConfiguration.getTimerQueueMap().get(key);
 			while (!queue.isEmpty()) {
-				buffer += queue.poll();
+				buffer.append(queue.poll());
 			}
-			write(key, buffer);
-			buffer = "";
+			write(key, buffer.toString());
+			buffer.setLength(0);
 		}
 
 	}

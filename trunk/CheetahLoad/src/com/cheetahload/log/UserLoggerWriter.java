@@ -9,7 +9,7 @@ import com.cheetahload.TestConfiguration;
 
 public final class UserLoggerWriter extends Thread {
 	private boolean stopSignal = false;
-	private String buffer = new String();
+	private StringBuffer buffer = new StringBuffer();
 	private int fileCount = 0;
 	private int fileSize = 1024000;
 
@@ -23,7 +23,7 @@ public final class UserLoggerWriter extends Thread {
 				ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
 				while (queue.size() > 10240) {
 					for (int i = 0; i < 10240; i++) {
-						buffer += queue.poll();
+						buffer.append(queue.poll());
 					}
 					write(key);
 				}
@@ -39,7 +39,7 @@ public final class UserLoggerWriter extends Thread {
 		for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
 			ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
 			while (!queue.isEmpty()) {
-				buffer += queue.poll();
+				buffer.append(queue.poll());
 			}
 			write(key);
 		}
@@ -57,14 +57,15 @@ public final class UserLoggerWriter extends Thread {
 			}
 			while (buffer.length() >= fileSize) {
 				logWriter.write(buffer.substring(0, fileSize));
-				buffer = buffer.substring(fileSize + 1);
+				buffer.delete(0, fileSize);
+				//buffer = buffer.substring(fileSize + 1);
 				logWriter.flush();
 				logWriter.close();
 				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
 				logWriter = new FileWriter(path, false);
 			}
 			if (stopSignal) {
-				logWriter.write(buffer);
+				logWriter.write(buffer.toString());
 				logWriter.flush();
 				logWriter.close();
 			}
