@@ -9,17 +9,19 @@ import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
+import com.cheetahload.timer.Timer;
 
 public class TestThread extends Thread {
 	TestSuite testSuite;
 	private Logger logger;
 	private String userName;
+	private Timer timer;
 
 	public TestThread(TestSuite testSuite) {
 		this.testSuite = testSuite;
-		this.userName=TestConfiguration.getUserNames().get(TestConfiguration.getIndex());
+		this.userName=TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
 		logger=new Logger(TestConfiguration.getLogPath()+this.userName+".log", TestConfiguration.getLogLevel());
-	}
+		timer = new Timer();	}
 	
 	public Logger getLogger(){
 		return logger;
@@ -36,7 +38,9 @@ public class TestThread extends Thread {
 		// test suite loop
 		if (testScript != null) {
 			testScript.prepare();
+			timer.begin();
 			testScript.test();
+			timer.end(testScript.getName(),userName);
 			testScript.clearup();
 		}
 	}

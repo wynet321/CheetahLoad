@@ -1,6 +1,9 @@
 package com.cheetahload;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
@@ -14,51 +17,92 @@ public class TestConfiguration {
 	private static String password = new String();
 	private static int thinkTime = 0;
 	private static String testSuiteName = new String();
-	private static String logPath = "./";
+	private static String logPath = "./log";
+	private static String timerLogPath = "./log/timer/";
 	private static Level logLevel = Level.ERROR;
 	private static Logger commonLogger;
-	private static int index=0;
+	private static int userIndex = 0;
+	private static HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
 
-	public synchronized static int getIndex(){
-		return index++;
+	public static String getTimerLogPath() {
+		if (!createLogFolder(timerLogPath)) {
+			commonLogger.write("TestConfiguration - createLogFolder() Failed to create folder '" + timerLogPath
+					+ "'. Default folder './log/timer/' will be used.", Level.WARN);
+			timerLogPath = "./log/timer";
+			createLogFolder(timerLogPath);
+		}
+		return timerLogPath;
 	}
+
+	private static boolean createLogFolder(String path) {
+		File dir = new File(timerLogPath);
+		if (dir.isDirectory()) {
+			if (!dir.exists()) {
+				return dir.mkdirs();
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static void setTimerLogPath(String timerLogPath) {
+		TestConfiguration.timerLogPath = timerLogPath;
+	}
+
+	
+	public static HashMap<String, ConcurrentLinkedQueue<String>> getTimerQueueMap() {
+		return timerQueueMap;
+	}
+
+	public synchronized static int getUserIndex() {
+		return userIndex++;
+	}
+
 	public static boolean isCompleted() {
-		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration=" + duration, Level.DEBUG);
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration=" + duration,
+				Level.DEBUG);
 		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
-					Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - duration or loops should be non-zero value.", Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration and loops can not be non-zero both.",
-					Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - duration and loops can not be non-zero both.", Level.ERROR);
 			return false;
 		}
 		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - vusers=" + vusers, Level.DEBUG);
 		if (vusers == 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - vusers should be non-zero value.", Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
-		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password=" + password, Level.DEBUG);
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password=" + password,
+				Level.DEBUG);
 		if (password.isEmpty()) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password is set to blank.", Level.WARN);
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - password is set to blank.",
+					Level.WARN);
 		}
-		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - testSuiteName=" + testSuiteName,
+				Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - testSuiteName can not be blank.", Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
 		if (userNames != null)
 			TestConfiguration.getCommonLogger().write(
-					"TestConfiguration - isCompleted() - userNames has " + userNames.size() + " cell object(s).", Level.DEBUG);
+					"TestConfiguration - isCompleted() - userNames has " + userNames.size() + " cell object(s).",
+					Level.DEBUG);
 		else {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - userNames can not be null.", Level.ERROR);
+			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - userNames can not be null.",
+					Level.ERROR);
 			return false;
 		}
 		if (userNames.size() == 0) {
-			TestConfiguration.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - userNames should has cell object(s).", Level.ERROR);
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - isCompleted() - userNames should has cell object(s).", Level.ERROR);
 			return false;
 		}
 		TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() passed.", Level.DEBUG);
@@ -119,6 +163,12 @@ public class TestConfiguration {
 	}
 
 	public static String getLogPath() {
+		if (!createLogFolder(logPath)) {
+			commonLogger.write("TestConfiguration - createLogFolder() Failed to create folder '" + logPath
+					+ "'. Default folder './log/' will be used.", Level.WARN);
+			logPath = "./log/";
+			createLogFolder(logPath);
+		}
 		return logPath;
 	}
 
@@ -138,7 +188,7 @@ public class TestConfiguration {
 		if (commonLogger != null)
 			return commonLogger;
 		else {
-			commonLogger = new Logger(TestConfiguration.logPath+"/cheetahload.log", TestConfiguration.logLevel);
+			commonLogger = new Logger(TestConfiguration.logPath + "/cheetahload.log", TestConfiguration.logLevel);
 			return commonLogger;
 		}
 	}
