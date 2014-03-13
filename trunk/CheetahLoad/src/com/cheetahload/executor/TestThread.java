@@ -11,11 +11,17 @@ import com.cheetahload.log.Level;
 import com.cheetahload.log.UserLogger;
 import com.cheetahload.timer.Timer;
 
-public class TestThread extends Thread {
+public final class TestThread extends Thread {
 	TestSuite testSuite;
 	private UserLogger userLogger;
 	private String userName;
 	private Timer timer;
+	public String getUserName() {
+		return userName;
+	}
+	public Timer getTimer() {
+		return timer;
+	}
 
 	public TestThread(TestSuite testSuite) {
 		this.testSuite = testSuite;
@@ -40,7 +46,7 @@ public class TestThread extends Thread {
 			testScript.prepare();
 			timer.begin();
 			testScript.test();
-			timer.end(testScript.getName(), userName);
+			timer.end();
 			testScript.clearup();
 		}
 	}

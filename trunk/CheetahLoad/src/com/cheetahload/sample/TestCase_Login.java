@@ -4,9 +4,6 @@ import com.cheetahload.TestScript;
 import com.cheetahload.log.Level;
 
 public class TestCase_Login extends TestScript {
-	public TestCase_Login() {
-		super();
-	}
 
 	@Override
 	public void prepare() {
