@@ -29,18 +29,30 @@ public class TestConfiguration {
 		return userLoggerQueueMap;
 	}
 
-	public static String getTimerLogPath() {
-		if (!logFolderExists(timerLogPath)) {
+	public static void initial() {
+		if (!initialLogPath(timerLogPath))
+			System.exit(0);
+
+	}
+
+	private static boolean initialLogPath(String path) {
+		//TODO deal with initial log feature
+		if (!logFolderExists(path)) {
 			System.out
 					.println("TestConfiguration - getTimerLogPath() Failed to initial folder '"
-							+ timerLogPath
+							+ path
 							+ "'. Current folder will be used by default.");
-			timerLogPath = "./";
+			return false;
 		}
-		if (!clearDirectory(new File(timerLogPath)))
-			throw new RuntimeException("TestConfiguration - getTimerLogPath() Clear folder '"
-					+ timerLogPath
-					+ "' failed. Please clear by manual.");
+		if (!clearDirectory(new File(path))) {
+			throw new RuntimeException(
+					"TestConfiguration - getTimerLogPath() Clear folder '"
+							+ path + "' failed. Please clear by manual.");
+		}
+		return true;
+	}
+
+	public static String getTimerLogPath() {
 		return timerLogPath;
 	}
 
@@ -225,6 +237,10 @@ public class TestConfiguration {
 							+ "'. Current folder will be used by default.");
 			logPath = "./";
 		}
+		if (!clearDirectory(new File(logPath)))
+			throw new RuntimeException(
+					"TestConfiguration - getLogPath() Clear folder '" + logPath
+							+ "' failed. Please clear by manual.");
 		return logPath;
 	}
 
