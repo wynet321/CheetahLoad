@@ -15,11 +15,11 @@ public final class TestSuite {
 		return testCaseList;
 	}
 	
-	public final TestScript getPrepareTestScript(){
+	public final TestScript getPrepareTestCase(){
 		return prepareTestCase;
 	}
 	
-	public final TestScript getClearupTestScript(){
+	public final TestScript getClearupTestCase(){
 		return clearupTestCase;
 	}
 	

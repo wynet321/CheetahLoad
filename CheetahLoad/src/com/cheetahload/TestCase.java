@@ -6,9 +6,9 @@ public final class TestCase{
 	private TestScript testScript;
 	private int percentage;
 	
-	public TestCase(TestScript testCase, int percentage)
+	public TestCase(TestScript testScript, int percentage)
 	{
-		this.testScript=testCase;
+		this.testScript=testScript;
 		this.percentage=percentage;
 	}
 	

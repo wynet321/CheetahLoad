@@ -29,7 +29,7 @@ public final class UserLoggerWriter extends Thread {
 				}
 			}
 			try {
-				sleep(300000);
+				sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

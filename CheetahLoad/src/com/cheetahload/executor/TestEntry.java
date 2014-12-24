@@ -45,6 +45,12 @@ public final class TestEntry {
 			thread[i].start();
 			i++;
 		}
+try {
+	Thread.sleep(10000);
+} catch (InterruptedException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
 		//stop log write thread
 		timerWriter.setStopSignal(true);
 		loggerWriter.setStopSignal(true);

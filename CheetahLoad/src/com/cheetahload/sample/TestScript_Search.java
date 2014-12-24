@@ -1,9 +1,8 @@
 package com.cheetahload.sample;
 
 import com.cheetahload.TestScript;
-import com.cheetahload.log.Level;
 
-public class TestCase_Login extends TestScript {
+public class TestScript_Search extends TestScript {
 
 	@Override
 	public void prepare() {
@@ -14,12 +13,13 @@ public class TestCase_Login extends TestScript {
 	@Override
 	public void test() {
 		// TODO Auto-generated method stub
-		getUserLogger().write(this.getName() + " - test()", Level.INFO);
+		System.out.println("user2");
 	}
 
 	@Override
 	public void clearup() {
 		// TODO Auto-generated method stub
+
 	}
 
 }

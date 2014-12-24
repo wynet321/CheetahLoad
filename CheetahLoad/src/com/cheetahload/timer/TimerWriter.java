@@ -28,14 +28,15 @@ public final class TimerWriter extends Thread {
 				}
 
 			}
+			//every 3 secs to write timer log
 			try {
-				sleep(300000);
+				sleep(3000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		// write all of timer buffer to file
+		// write all of timer buffer left to file
 		for (String key : TestConfiguration.getTimerQueueMap().keySet()) {
 			ConcurrentLinkedQueue<String> queue = TestConfiguration.getTimerQueueMap().get(key);
 			while (!queue.isEmpty()) {

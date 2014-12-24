@@ -17,11 +17,22 @@ public final class Timer {
 	public void end() {
 		end = System.currentTimeMillis();
 		duration = end - begin;
-		TestThread current = (TestThread) (Thread.currentThread());
-		TestConfiguration.getTimerQueueMap().get(current.getName()).add(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
+	}
+
+	public long getBeginTime() {
+		return begin;
+	}
+
+	public long getEndTime() {
+		return end;
+	}
+
+	public long getDuration() {
+		return duration;
 	}
 
 	public String getCurrentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd	HH:mm:ss SSS").format(System.currentTimeMillis());
+		return new SimpleDateFormat("yyyy-MM-dd	HH:mm:ss SSS").format(System
+				.currentTimeMillis());
 	}
 }

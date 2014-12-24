@@ -16,16 +16,19 @@ public final class TestThread extends Thread {
 	private UserLogger userLogger;
 	private String userName;
 	private Timer timer;
+
 	public String getUserName() {
 		return userName;
 	}
+
 	public Timer getTimer() {
 		return timer;
 	}
 
 	public TestThread(TestSuite testSuite) {
 		this.testSuite = testSuite;
-		this.userName = TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
+		userName = TestConfiguration.getUserNames().get(
+				TestConfiguration.getUserIndex());
 		userLogger = new UserLogger(userName);
 		timer = new Timer();
 	}
@@ -35,19 +38,24 @@ public final class TestThread extends Thread {
 	}
 
 	public void run() {
-		execute(testSuite.getPrepareTestScript());
+		execute(testSuite.getPrepareTestCase());
 		execute(testSuite.getTestCaseList());
-		execute(testSuite.getClearupTestScript());
+		execute(testSuite.getClearupTestCase());
 	}
 
 	private void execute(TestScript testScript) {
-		// test suite loop
 		if (testScript != null) {
 			testScript.prepare();
 			timer.begin();
 			testScript.test();
 			timer.end();
 			testScript.clearup();
+			TestConfiguration
+					.getTimerQueueMap()
+					.get(testScript.getName())
+					.add(userName + "," + timer.getDuration() + ","
+							+ timer.getBeginTime() + "," + timer.getEndTime()
+							+ "\n");
 		}
 	}
 
@@ -60,11 +68,13 @@ public final class TestThread extends Thread {
 			if (testcase != null) {
 				// System.out.println(this.getName() +
 				// testcase.getTestScript().getName());
-				userLogger.write("TestThread - execute(ArrayList<TestCase>) " + testcase.getTestScript().getName()
-						+ " start.", Level.DEBUG);
+				userLogger.write("TestThread - execute(ArrayList<TestCase>) "
+						+ testcase.getTestScript().getName() + " start.",
+						Level.DEBUG);
 				execute(testcase.getTestScript());
-				userLogger.write("TestThread - execute(ArrayList<TestCase>) " + testcase.getTestScript().getName()
-						+ " end.", Level.DEBUG);
+				userLogger.write("TestThread - execute(ArrayList<TestCase>) "
+						+ testcase.getTestScript().getName() + " end.",
+						Level.DEBUG);
 			}
 
 		}
