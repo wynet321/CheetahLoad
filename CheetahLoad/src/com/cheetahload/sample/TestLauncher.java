@@ -15,8 +15,8 @@ public class TestLauncher {
 		TestConfiguration.setLogLevel(Level.DEBUG);
 		
 		TestSuite testSuite=new TestSuite();
-		testSuite.add(new TestCase(new TestScript_Login(),50));
-		testSuite.add(new TestCase(new TestScript_Search(),50));
+		testSuite.setPrepareTestCase(new TestScript_Login());
+		testSuite.add(new TestCase(new TestScript_Search(),100));
 		TestEntry.runTest(testSuite);
 	}
 

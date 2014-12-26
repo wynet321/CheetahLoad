@@ -45,11 +45,15 @@ public final class TestThread extends Thread {
 
 	private void execute(TestScript testScript) {
 		if (testScript != null) {
+			userLogger.write("TestThread - execute(ArrayList<TestCase>) "
+					+ testScript.getName() + " start.", Level.DEBUG);
 			testScript.prepare();
 			timer.begin();
 			testScript.test();
 			timer.end();
 			testScript.clearup();
+			userLogger.write("TestThread - execute(ArrayList<TestCase>) "
+					+ testScript.getName() + " end.", Level.DEBUG);
 			TestConfiguration
 					.getTimerQueueMap()
 					.get(testScript.getName())
@@ -61,22 +65,13 @@ public final class TestThread extends Thread {
 
 	private void execute(ArrayList<TestCase> testItemList) {
 		// loop
-		// TODO deal with percentage
+		// TODO deal with percentage need random run
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
 		while (iterator.hasNext()) {
 			TestCase testcase = iterator.next();
 			if (testcase != null) {
-				// System.out.println(this.getName() +
-				// testcase.getTestScript().getName());
-				userLogger.write("TestThread - execute(ArrayList<TestCase>) "
-						+ testcase.getTestScript().getName() + " start.",
-						Level.DEBUG);
 				execute(testcase.getTestScript());
-				userLogger.write("TestThread - execute(ArrayList<TestCase>) "
-						+ testcase.getTestScript().getName() + " end.",
-						Level.DEBUG);
 			}
-
 		}
 	}
 }

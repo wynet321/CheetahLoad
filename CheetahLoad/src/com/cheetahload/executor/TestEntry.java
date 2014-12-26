@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.UserLoggerWriter;
@@ -22,6 +23,14 @@ public final class TestEntry {
 		}
 
 		// timer log thread
+		TestScript prepareTestCase=testSuite.getPrepareTestCase();
+		if(prepareTestCase!=null){
+			TestConfiguration.getTimerQueueMap().put(prepareTestCase.getName(),new ConcurrentLinkedQueue<String>());
+		}
+		TestScript clearupTestCase=testSuite.getClearupTestCase();
+		if(clearupTestCase!=null){
+			TestConfiguration.getTimerQueueMap().put(clearupTestCase.getName(),new ConcurrentLinkedQueue<String>());
+		}
 		Iterator<TestCase> testCaseIterator = testSuite.getTestCaseList().iterator();
 		while (testCaseIterator.hasNext()) {
 			TestConfiguration.getTimerQueueMap().put(((TestCase) testCaseIterator.next()).getTestScript().getName(),
