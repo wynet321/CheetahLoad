@@ -2,9 +2,6 @@ package com.cheetahload.timer;
 
 import java.text.SimpleDateFormat;
 
-import com.cheetahload.TestConfiguration;
-import com.cheetahload.executor.TestThread;
-
 public final class Timer {
 	private long duration = 0L;
 	private long begin = 0L;
