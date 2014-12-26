@@ -29,47 +29,128 @@ public class TestConfiguration {
 		return userLoggerQueueMap;
 	}
 
-	public static void initial() {
-		if (!initialLogPath(timerLogPath))
-			System.exit(0);
+	public static boolean initial() {
+		TestConfiguration.getCommonLogger().write(
+				"TestConfiguration - initial() - duration=" + duration,
+				Level.DEBUG);
+		TestConfiguration.getCommonLogger().write(
+				"TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
+		if (duration == 0 && loops == 0) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
+							Level.ERROR);
+			return false;
+		}
+		if (duration != 0 && loops != 0) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - duration and loops can not be non-zero both.",
+							Level.ERROR);
+			return false;
+		}
+		TestConfiguration.getCommonLogger()
+				.write("TestConfiguration - initial() - vusers=" + vusers,
+						Level.DEBUG);
+		if (vusers == 0) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - vusers should be non-zero value.",
+							Level.ERROR);
+			return false;
+		}
+		TestConfiguration.getCommonLogger().write(
+				"TestConfiguration - initial() - password=" + password,
+				Level.DEBUG);
+		if (password.isEmpty()) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - password is set to blank.",
+							Level.WARN);
+		}
+		TestConfiguration.getCommonLogger().write(
+				"TestConfiguration - initial() - testSuiteName="
+						+ testSuiteName, Level.DEBUG);
+		if (testSuiteName.isEmpty()) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - testSuiteName can not be blank.",
+							Level.ERROR);
+			return false;
+		}
+		if (userNames != null)
+			TestConfiguration.getCommonLogger().write(
+					"TestConfiguration - initial() - userNames has "
+							+ userNames.size() + " cell object(s).",
+					Level.DEBUG);
+		else {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - userNames can not be null.",
+							Level.ERROR);
+			return false;
+		}
+		if (userNames.size() == 0) {
+			TestConfiguration
+					.getCommonLogger()
+					.write("TestConfiguration - initial() - userNames should has cell object(s).",
+							Level.ERROR);
+			return false;
+		}
 
+		if (!initialLogPath(timerLogPath)) {
+			return false;
+		}
+		
+		if (!initialLogPath(logPath)) {
+			return false;
+		}
+
+		TestConfiguration.getCommonLogger().write(
+				"TestConfiguration - initial() passed.", Level.DEBUG);
+		return true;
 	}
 
 	private static boolean initialLogPath(String path) {
-		//TODO deal with initial log feature
-		if (!logFolderExists(path)) {
-			System.out
-					.println("TestConfiguration - getTimerLogPath() Failed to initial folder '"
-							+ path
-							+ "'. Current folder will be used by default.");
-			return false;
+		File dir = new File(path);
+		if (dir.exists()) {
+			if (dir.isDirectory()) {
+				if (!clearDirectory(new File(path))) {
+					throw new RuntimeException(
+							"TestConfiguration - initialLogPath() Clear folder '"
+									+ path
+									+ "' failed. Please clear by manual.");
+				}
+			} else {
+				if (!dir.delete())
+					throw new RuntimeException(
+							"TestConfiguration - initialLogPath() Delete file '"
+									+ path
+									+ "' failed. Please delete by manual.");
+				if (!dir.mkdir())
+					throw new RuntimeException(
+							"TestConfiguration - initialLogPath() Create folder '"
+									+ path
+									+ "' failed. Please create by manual.");
+			}
+			return true;
+		} else {
+			if (dir.mkdirs()) {
+				return true;
+			} else {
+				throw new RuntimeException(
+						"TestConfiguration - initialLogPath() Create folder '"
+								+ path + "' failed. Please check permission.");
+			}
 		}
-		if (!clearDirectory(new File(path))) {
-			throw new RuntimeException(
-					"TestConfiguration - getTimerLogPath() Clear folder '"
-							+ path + "' failed. Please clear by manual.");
-		}
-		return true;
 	}
 
 	public static String getTimerLogPath() {
 		return timerLogPath;
 	}
 
-	private static boolean logFolderExists(String path) {
-		File dir = new File(path);
-		if (dir.exists()) {
-			if (dir.isDirectory()) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			if (dir.mkdirs())
-				return true;
-			else
-				return false;
-		}
+	public static String getLogPath() {
+		return logPath;
 	}
 
 	private static boolean clearDirectory(File dir) {
@@ -98,80 +179,6 @@ public class TestConfiguration {
 
 	public synchronized static int getUserIndex() {
 		return userIndex++;
-	}
-
-	public static boolean isCompleted() {
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() - duration=" + duration,
-				Level.DEBUG);
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() - loops=" + loops,
-				Level.DEBUG);
-		if (duration == 0 && loops == 0) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
-							Level.ERROR);
-			return false;
-		}
-		if (duration != 0 && loops != 0) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - duration and loops can not be non-zero both.",
-							Level.ERROR);
-			return false;
-		}
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() - vusers=" + vusers,
-				Level.DEBUG);
-		if (vusers == 0) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - vusers should be non-zero value.",
-							Level.ERROR);
-			return false;
-		}
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() - password=" + password,
-				Level.DEBUG);
-		if (password.isEmpty()) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - password is set to blank.",
-							Level.WARN);
-		}
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() - testSuiteName="
-						+ testSuiteName, Level.DEBUG);
-		if (testSuiteName.isEmpty()) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - testSuiteName can not be blank.",
-							Level.ERROR);
-			return false;
-		}
-		if (userNames != null)
-			TestConfiguration.getCommonLogger().write(
-					"TestConfiguration - isCompleted() - userNames has "
-							+ userNames.size() + " cell object(s).",
-					Level.DEBUG);
-		else {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - userNames can not be null.",
-							Level.ERROR);
-			return false;
-		}
-		if (userNames.size() == 0) {
-			TestConfiguration
-					.getCommonLogger()
-					.write("TestConfiguration - isCompleted() - userNames should has cell object(s).",
-							Level.ERROR);
-			return false;
-		}
-		TestConfiguration.getCommonLogger().write(
-				"TestConfiguration - isCompleted() passed.", Level.DEBUG);
-		return true;
 	}
 
 	public static Vector<String> getUserNames() {
@@ -227,21 +234,6 @@ public class TestConfiguration {
 
 	public static void setTestSuiteName(String testSuiteName) {
 		TestConfiguration.testSuiteName = testSuiteName;
-	}
-
-	public static String getLogPath() {
-		if (!logFolderExists(logPath)) {
-			System.out
-					.println("TestConfiguration - getLogPath() Failed to initial folder '"
-							+ logPath
-							+ "'. Current folder will be used by default.");
-			logPath = "./";
-		}
-		if (!clearDirectory(new File(logPath)))
-			throw new RuntimeException(
-					"TestConfiguration - getLogPath() Clear folder '" + logPath
-							+ "' failed. Please clear by manual.");
-		return logPath;
 	}
 
 	public static void setLogLocation(String logLocation) {

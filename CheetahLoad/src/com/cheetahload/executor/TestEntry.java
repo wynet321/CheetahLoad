@@ -13,7 +13,7 @@ import com.cheetahload.timer.TimerWriter;
 public final class TestEntry {
 
 	public final static void runTest(TestSuite testSuite) {
-		if (!TestConfiguration.isCompleted()) {
+		if (!TestConfiguration.initial()) {
 			TestConfiguration.getCommonLogger().write(
 					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
@@ -41,16 +41,20 @@ public final class TestEntry {
 		int i = 0;
 		Thread[] thread = new Thread[threadCount];
 		while (i < threadCount) {
-			thread[i] = new TestThread(testSuite);
-			thread[i].start();
+			try {
+				thread[i] = new TestThread(testSuite);
+				thread[i].start();
+				thread[i].join();
+			} catch (InterruptedException e) {
+				TestConfiguration.getCommonLogger().write(
+						"TestEntry - runTest() Test thread can't start normally! ",
+						Level.ERROR);
+				e.printStackTrace();
+				break;
+			}
 			i++;
 		}
-try {
-	Thread.sleep(10000);
-} catch (InterruptedException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
+		
 		//stop log write thread
 		timerWriter.setStopSignal(true);
 		loggerWriter.setStopSignal(true);

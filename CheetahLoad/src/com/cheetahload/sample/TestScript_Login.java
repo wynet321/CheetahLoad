@@ -15,6 +15,11 @@ public class TestScript_Login extends TestScript {
 	public void test() {
 		// TODO Auto-generated method stub
 		getUserLogger().write(this.getName() + " - test()", Level.INFO);
+		try{
+			Thread.sleep(1);
+		}catch (Exception e){
+			
+		}
 	}
 
 	@Override
