@@ -45,6 +45,7 @@ public final class TestEntry {
 		UserLoggerWriter loggerWriter=new UserLoggerWriter();
 		loggerWriter.start();		
 		
+		int duration=TestConfiguration.getDuration();
 		// Thread(VU) start
 		int threadCount = TestConfiguration.getVusers();
 		int i = 0;
@@ -53,7 +54,11 @@ public final class TestEntry {
 			try {
 				thread[i] = new TestThread(testSuite);
 				thread[i].start();
-				thread[i].join();
+				if(duration>0){
+					thread[i].join(duration);
+				}else{
+					thread[i].join();
+				}
 			} catch (InterruptedException e) {
 				TestConfiguration.getCommonLogger().write(
 						"TestEntry - runTest() Test thread can't start normally! ",

@@ -64,14 +64,20 @@ public final class TestThread extends Thread {
 	}
 
 	private void execute(ArrayList<TestCase> testItemList) {
-		// loop
-		// TODO deal with percentage need random run
-		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
-		while (iterator.hasNext()) {
-			TestCase testcase = iterator.next();
-			if (testcase != null) {
-				execute(testcase.getTestScript());
-			}
-		}
+//		// sequentially run
+//		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
+//		int loop = TestConfiguration.getLoops();
+//		for (int i = 0; i < loop; i++) {
+//			while (iterator.hasNext()) {
+//				TestCase testcase = iterator.next();
+//				if (testcase != null) {
+//					execute(testcase.getTestScript());
+//				}
+//			}
+//			iterator = testSuite.getTestCaseList().iterator();
+//		}
+		// random run
+		//TODO: wait for implementation
+		
 	}
 }
