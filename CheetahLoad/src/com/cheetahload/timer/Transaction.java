@@ -12,6 +12,10 @@ public final class Transaction {
 	public Transaction(String name) {
 		this.name = name;
 	}
+	
+	public String getName(){
+		return name;
+	}
 
 	public void begin() {
 		begin = System.currentTimeMillis();

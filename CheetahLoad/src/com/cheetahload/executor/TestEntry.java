@@ -15,21 +15,20 @@ public final class TestEntry {
 
 	public final static void runTest(TestSuite testSuite) {
 		if (!TestConfiguration.initial()) {
-			TestConfiguration.getCommonLogger().write(
-					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
+			TestConfiguration.getCommonLogger().write("TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			TestConfiguration.getCommonLogger().flush(true);
 			System.exit(0);
 		}
 
 		// timer log thread
-		TestScript prepareTestCase=testSuite.getPrepareTestCase();
-		if(prepareTestCase!=null){
-			TestConfiguration.getTimerQueueMap().put(prepareTestCase.getName(),new ConcurrentLinkedQueue<String>());
+		TestScript prepareTestCase = testSuite.getPrepareTestScript();
+		if (prepareTestCase != null) {
+			TestConfiguration.getTimerQueueMap().put(prepareTestCase.getName(), new ConcurrentLinkedQueue<String>());
 		}
-		TestScript clearupTestCase=testSuite.getClearupTestCase();
-		if(clearupTestCase!=null){
-			TestConfiguration.getTimerQueueMap().put(clearupTestCase.getName(),new ConcurrentLinkedQueue<String>());
+		TestScript clearupTestCase = testSuite.getClearupTestScript();
+		if (clearupTestCase != null) {
+			TestConfiguration.getTimerQueueMap().put(clearupTestCase.getName(), new ConcurrentLinkedQueue<String>());
 		}
 		Iterator<TestCase> testCaseIterator = testSuite.getTestCaseList().iterator();
 		while (testCaseIterator.hasNext()) {
@@ -39,13 +38,12 @@ public final class TestEntry {
 		TimerWriter timerWriter = new TimerWriter();
 		timerWriter.start();
 
-		for(String userName: TestConfiguration.getUserNames()){
+		for (String userName : TestConfiguration.getUserNames()) {
 			TestConfiguration.getUserLoggerQueueMap().put(userName, new ConcurrentLinkedQueue<String>());
 		}
-		UserLoggerWriter loggerWriter=new UserLoggerWriter();
-		loggerWriter.start();		
-		
-		int duration=TestConfiguration.getDuration();
+		UserLoggerWriter loggerWriter = new UserLoggerWriter();
+		loggerWriter.start();
+
 		// Thread(VU) start
 		int threadCount = TestConfiguration.getVusers();
 		int i = 0;
@@ -54,25 +52,20 @@ public final class TestEntry {
 			try {
 				thread[i] = new TestThread(testSuite);
 				thread[i].start();
-				if(duration>0){
-					thread[i].join(duration);
-				}else{
-					thread[i].join();
-				}
+				// TODO: can't use join here to interrupt the main thread.
+				thread[i].join();
 			} catch (InterruptedException e) {
-				TestConfiguration.getCommonLogger().write(
-						"TestEntry - runTest() Test thread can't start normally! ",
-						Level.ERROR);
+				TestConfiguration.getCommonLogger().write("TestEntry - runTest() Test thread can't start normally! ", Level.ERROR);
 				e.printStackTrace();
 				break;
 			}
 			i++;
 		}
-		
-		//stop log write thread
+
+		// stop log write thread
 		timerWriter.setStopSignal(true);
 		loggerWriter.setStopSignal(true);
-		//close common log file
+		// close common log file
 		TestConfiguration.getCommonLogger().flush(true);
 	}
 }
