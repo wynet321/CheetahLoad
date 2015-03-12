@@ -10,7 +10,7 @@ public class TestLauncher {
 
 	public static void main(String[] args) {
 		TestConfiguration.setDuration(1);
-		TestConfiguration.setVusers(2, "user_", 2, 1);
+		TestConfiguration.setVusers(1, "user_", 2, 1);
 		TestConfiguration.setTestSuiteName("Bucket");
 		TestConfiguration.setLogLevel(Level.DEBUG);
 

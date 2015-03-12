@@ -2,6 +2,7 @@ package com.cheetahload.executor;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
@@ -48,18 +49,17 @@ public final class TestEntry {
 		int threadCount = TestConfiguration.getVusers();
 		int i = 0;
 		Thread[] thread = new Thread[threadCount];
+		CountDownLatch threadSignal = new CountDownLatch(threadCount);
 		while (i < threadCount) {
-			try {
-				thread[i] = new TestThread(testSuite);
-				thread[i].start();
-				// TODO: can't use join here to interrupt the main thread.
-				thread[i].join();
-			} catch (InterruptedException e) {
-				TestConfiguration.getCommonLogger().write("TestEntry - runTest() Test thread can't start normally! ", Level.ERROR);
-				e.printStackTrace();
-				break;
-			}
+			thread[i] = new TestThread(testSuite, threadSignal);
+			thread[i].start();
 			i++;
+		}
+		try {
+			threadSignal.await();
+		} catch (InterruptedException e) {
+			TestConfiguration.getCommonLogger().write("TestEntry - runTest() Thread can't be started. Error: " + e.getStackTrace().toString(),
+					Level.ERROR);
 		}
 
 		// stop log write thread

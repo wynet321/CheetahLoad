@@ -22,7 +22,6 @@ public final class UserLoggerWriter extends Thread {
 			for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
 				ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
 				while (queue.size() > 10240) {
-					buffer.setLength(0);
 					for (int i = 0; i < 10240; i++) {
 						buffer.append(queue.poll());
 					}
@@ -39,7 +38,6 @@ public final class UserLoggerWriter extends Thread {
 		// write all of timer buffer to file
 		for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
 			ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
-			buffer.setLength(0);
 			while (!queue.isEmpty()) {
 				buffer.append(queue.poll());
 			}
@@ -52,21 +50,16 @@ public final class UserLoggerWriter extends Thread {
 		File file = new File(path);
 		FileWriter logWriter;
 		try {
-			if (file.exists()) {
-				logWriter = new FileWriter(path, true);
-			} else {
-				logWriter = new FileWriter(path, false);
-			}
 			while (buffer.length() >= fileSize) {
+				logWriter = new FileWriter(path, false);
 				logWriter.write(buffer.substring(0, fileSize));
 				buffer.delete(0, fileSize);
-				//buffer = buffer.substring(fileSize + 1);
 				logWriter.flush();
 				logWriter.close();
 				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
-				logWriter = new FileWriter(path, false);
 			}
 			if (stopSignal) {
+				logWriter = new FileWriter(path, false);
 				logWriter.write(buffer.toString());
 				logWriter.flush();
 				logWriter.close();

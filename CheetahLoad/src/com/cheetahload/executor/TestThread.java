@@ -2,6 +2,7 @@ package com.cheetahload.executor;
 
 import java.util.Iterator;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
@@ -12,11 +13,12 @@ import com.cheetahload.log.UserLogger;
 import com.cheetahload.timer.Timer;
 
 public final class TestThread extends Thread {
-	TestSuite testSuite;
+	private TestSuite testSuite;
 	private UserLogger userLogger;
 	private String userName;
 	private Timer timer;
 	private Random random;
+	private CountDownLatch threadSignal;
 
 	public String getUserName() {
 		return userName;
@@ -26,8 +28,9 @@ public final class TestThread extends Thread {
 		return timer;
 	}
 
-	public TestThread(TestSuite testSuite) {
+	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
 		this.testSuite = testSuite;
+		this.threadSignal=threadSignal;
 		userName = TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
 		userLogger = new UserLogger(userName);
 		timer = new Timer();
@@ -42,6 +45,7 @@ public final class TestThread extends Thread {
 		execute(testSuite.getPrepareTestScript());
 		execute();
 		execute(testSuite.getClearupTestScript());
+		threadSignal.countDown();
 	}
 
 	private void execute(TestScript testScript) {

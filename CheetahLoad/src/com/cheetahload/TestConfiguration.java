@@ -119,7 +119,6 @@ public class TestConfiguration {
 				}
 			}
 		} else {
-			if (dir.getName().endsWith(".log"))
 				return dir.delete();
 		}
 		return true;
