@@ -8,6 +8,7 @@ import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
+import com.cheetahload.log.CommonLoggerWriter;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.UserLoggerWriter;
 import com.cheetahload.timer.TimerWriter;
@@ -42,8 +43,12 @@ public final class TestEntry {
 		for (String userName : TestConfiguration.getUserNames()) {
 			TestConfiguration.getUserLoggerQueueMap().put(userName, new ConcurrentLinkedQueue<String>());
 		}
-		UserLoggerWriter loggerWriter = new UserLoggerWriter();
-		loggerWriter.start();
+
+		CommonLoggerWriter commonLoggerWriter = new CommonLoggerWriter();
+		commonLoggerWriter.start();
+
+		UserLoggerWriter userLoggerWriter = new UserLoggerWriter();
+		userLoggerWriter.start();
 
 		// Thread(VU) start
 		int threadCount = TestConfiguration.getVusers();
@@ -62,10 +67,9 @@ public final class TestEntry {
 					Level.ERROR);
 		}
 
-		// stop log write thread
+		// stop log write threads
 		timerWriter.setStopSignal(true);
-		loggerWriter.setStopSignal(true);
-		// close common log file
-		TestConfiguration.getCommonLogger().flush(true);
+		userLoggerWriter.setStopSignal(true);
+		commonLoggerWriter.setStopSignal(true);
 	}
 }

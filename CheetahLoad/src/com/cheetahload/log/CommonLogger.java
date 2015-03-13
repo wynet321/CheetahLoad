@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import com.cheetahload.TestConfiguration;
 
 public final class CommonLogger extends Logger {
-	private String text = new String();
+	private String content = new String();
 	private int fileSize = 1024000;
 	private FileWriter logWriter;
 	private int fileCount = 0;
@@ -18,12 +18,14 @@ public final class CommonLogger extends Logger {
 		this.level = TestConfiguration.getLogLevel();
 	}
 	
+	public String getCommonLoggerContent(){
+		return content;
+	}
+	
 	@Override
 	public void write(String message, Level lineLevel) {
-		text += new Timestamp(System.currentTimeMillis()).toString() + " " + lineLevel.toString() + " " + message
+		content += new Timestamp(System.currentTimeMillis()).toString() + " " + lineLevel.toString() + " " + message
 				+ "\r";
-		if (text.length() >= fileSize)
-			flush(false);
 	}
 
 	public void flush(boolean flushAll) {
@@ -34,16 +36,16 @@ public final class CommonLogger extends Logger {
 			} else {
 				logWriter = new FileWriter(path, false);
 			}
-			while (text.length() >= fileSize) {
-				logWriter.write(text.substring(0, fileSize));
+			while (content.length() >= fileSize) {
+				logWriter.write(content.substring(0, fileSize));
 				logWriter.flush();
 				logWriter.close();
-				text = text.substring(fileSize + 1);
+				content = content.substring(fileSize + 1);
 				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
 				logWriter = new FileWriter(path, false);
 			}
 			if (flushAll) {
-				logWriter.write(text);
+				logWriter.write(content);
 				logWriter.flush();
 				logWriter.close();
 			}

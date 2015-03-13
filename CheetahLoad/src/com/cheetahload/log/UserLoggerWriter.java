@@ -7,11 +7,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 
-public final class UserLoggerWriter extends Thread {
-	private boolean stopSignal = false;
+public final class UserLoggerWriter extends LoggerWriter {
 	private StringBuffer buffer = new StringBuffer();
-	private int fileCount = 0;
-	private int fileSize = 1024000;
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
@@ -29,7 +26,7 @@ public final class UserLoggerWriter extends Thread {
 				}
 			}
 			try {
-				sleep(3000);
+				sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

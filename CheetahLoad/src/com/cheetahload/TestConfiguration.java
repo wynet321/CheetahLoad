@@ -24,7 +24,7 @@ public class TestConfiguration {
 	private static int userIndex = 0;
 	private static HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
 	private static HashMap<String, ConcurrentLinkedQueue<String>> userLoggerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
-
+	
 	public static HashMap<String, ConcurrentLinkedQueue<String>> getUserLoggerQueueMap() {
 		return userLoggerQueueMap;
 	}
