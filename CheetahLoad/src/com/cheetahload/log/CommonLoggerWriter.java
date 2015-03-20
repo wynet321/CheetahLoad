@@ -3,20 +3,36 @@ package com.cheetahload.log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 
 public final class CommonLoggerWriter extends LoggerWriter {
-	private String commonLoggerContent;
+	private ConcurrentLinkedQueue<String> queue;
+	private StringBuffer buffer;
+	TestConfiguration config;
+
+	public CommonLoggerWriter() {
+		config = TestConfiguration.getTestConfiguration();
+		queue = config.getCommonLogQueue();
+		buffer = new StringBuffer();
+	}
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
+		// write left common log to file
+		while (!queue.isEmpty()) {
+			buffer.append(queue.poll());
+		}
+		write();
 	}
 
 	public void run() {
 		while (!stopSignal) {
-			commonLoggerContent += TestConfiguration.getCommonLogger().getCommonLoggerContent();
-			if (commonLoggerContent.length() >= fileSize) {
+			if (queue.size() >= fileSize) {
+				for (int i = 0; i < 10240; i++) {
+					buffer.append(queue.poll());
+				}
 				write();
 			}
 			try {
@@ -26,27 +42,24 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				e.printStackTrace();
 			}
 		}
-		// write left common log to file
-		commonLoggerContent += TestConfiguration.getCommonLogger().getCommonLoggerContent();
-		write();
 	}
 
 	public void write() {
-		String path = TestConfiguration.getLogPath() + "/cheetahload.log";
+		String path = config.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
 		FileWriter logWriter;
 		try {
-			while (commonLoggerContent.length() >= fileSize) {
+			while (buffer.length() >= fileSize) {
 				logWriter = new FileWriter(path, false);
-				logWriter.write(commonLoggerContent.substring(0, fileSize));
+				logWriter.write(buffer.substring(0, fileSize));
+				buffer.delete(0, fileSize);
 				logWriter.flush();
 				logWriter.close();
-				commonLoggerContent = commonLoggerContent.substring(fileSize + 1);
 				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
 			}
 			if (stopSignal) {
 				logWriter = new FileWriter(path, false);
-				logWriter.write(commonLoggerContent);
+				logWriter.write(buffer.toString());
 				logWriter.flush();
 				logWriter.close();
 			}

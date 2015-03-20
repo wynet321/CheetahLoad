@@ -8,16 +8,31 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import com.cheetahload.TestConfiguration;
 
 public final class UserLoggerWriter extends LoggerWriter {
-	private StringBuffer buffer = new StringBuffer();
+	private StringBuffer buffer;
+	private ConcurrentLinkedQueue<String> queue;
+	private TestConfiguration config;
+
+	public UserLoggerWriter() {
+		config = TestConfiguration.getTestConfiguration();
+		buffer = new StringBuffer();
+	}
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
+		// write all of timer buffer to file
+		for (String key : config.getUserLoggerQueueMap().keySet()) {
+			queue = config.getUserLoggerQueueMap().get(key);
+			while (!queue.isEmpty()) {
+				buffer.append(queue.poll());
+			}
+			write(key);
+		}
 	}
 
 	public void run() {
 		while (!stopSignal) {
-			for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
-				ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
+			for (String key : config.getUserLoggerQueueMap().keySet()) {
+				queue = config.getUserLoggerQueueMap().get(key);
 				while (queue.size() > 10240) {
 					for (int i = 0; i < 10240; i++) {
 						buffer.append(queue.poll());
@@ -32,18 +47,10 @@ public final class UserLoggerWriter extends LoggerWriter {
 				e.printStackTrace();
 			}
 		}
-		// write all of timer buffer to file
-		for (String key : TestConfiguration.getUserLoggerQueueMap().keySet()) {
-			ConcurrentLinkedQueue<String> queue = TestConfiguration.getUserLoggerQueueMap().get(key);
-			while (!queue.isEmpty()) {
-				buffer.append(queue.poll());
-			}
-			write(key);
-		}
 	}
 
 	public void write(String userName) {
-		String path = TestConfiguration.getLogPath() + "/" + userName + ".log";
+		String path = config.getLogPath() + "/" + userName + ".log";
 		File file = new File(path);
 		FileWriter logWriter;
 		try {

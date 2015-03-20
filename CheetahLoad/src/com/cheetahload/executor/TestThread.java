@@ -3,7 +3,6 @@ package com.cheetahload.executor;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestScript;
@@ -19,6 +18,7 @@ public final class TestThread extends Thread {
 	private Timer timer;
 	private Random random;
 	private CountDownLatch threadSignal;
+	private TestConfiguration config;
 
 	public String getUserName() {
 		return userName;
@@ -29,9 +29,10 @@ public final class TestThread extends Thread {
 	}
 
 	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
+		config = TestConfiguration.getTestConfiguration();
 		this.testSuite = testSuite;
-		this.threadSignal=threadSignal;
-		userName = TestConfiguration.getUserNames().get(TestConfiguration.getUserIndex());
+		this.threadSignal = threadSignal;
+		userName = config.getUserNames().get(config.getUserIndex());
 		userLogger = new UserLogger(userName);
 		timer = new Timer();
 		random = new Random();
@@ -57,7 +58,7 @@ public final class TestThread extends Thread {
 			timer.end();
 			testScript.clearup();
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
-			TestConfiguration.getTimerQueueMap().get(testScript.getName())
+			config.getTimerQueueMap().get(testScript.getName())
 					.add(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
 		}
 	}
@@ -65,7 +66,7 @@ public final class TestThread extends Thread {
 	private void execute() {
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
 		// sequentially run
-		int loop = TestConfiguration.getLoops();
+		int loop = config.getLoops();
 		if (loop > 0) {
 			userLogger.write("TestThread - execute() sequential run start.", Level.INFO);
 			for (int i = 0; i < loop; i++) {
@@ -87,12 +88,12 @@ public final class TestThread extends Thread {
 				testcase = iterator.next();
 				int percentage = testcase.getPercentage();
 				for (int i = 0; i < percentage; i++) {
-					testScriptPool[percentageAccumulator+i] = testcase.getTestScript();
+					testScriptPool[percentageAccumulator + i] = testcase.getTestScript();
 				}
 				percentageAccumulator += percentage;
 			}
 			userLogger.write("TestThread - execute() random run preparation done with totalPercentage=" + totalPercentage, Level.DEBUG);
-			if (TestConfiguration.getLogLevel() == Level.DEBUG) {
+			if (config.getLogLevel() == Level.DEBUG) {
 				userLogger.write("TestThread - execute() random run preparation done with testScriptPool", Level.DEBUG);
 				for (int i = 0; i < testScriptPool.length; i++) {
 					userLogger.write("Index=" + i + ": " + testScriptPool[i].getName(), Level.DEBUG);
@@ -100,7 +101,7 @@ public final class TestThread extends Thread {
 			}
 			// random run
 			userLogger.write("TestThread - execute() random run start.", Level.INFO);
-			long duration = TestConfiguration.getDuration() * 1000;
+			long duration = config.getDuration() * 1000;
 			long begin = System.currentTimeMillis();
 			int testScriptPoolIndex = 0;
 			while (System.currentTimeMillis() - begin < duration) {

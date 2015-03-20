@@ -12,8 +12,8 @@ public final class Transaction {
 	public Transaction(String name) {
 		this.name = name;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
 
@@ -25,6 +25,7 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		TestConfiguration.getTimerQueueMap().get(current.getName()).add(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
+		TestConfiguration.getTestConfiguration().getTimerQueueMap().get(current.getName())
+				.add(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
 	}
 }

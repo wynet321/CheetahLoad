@@ -9,10 +9,11 @@ import com.cheetahload.log.Level;
 public class TestLauncher {
 
 	public static void main(String[] args) {
-		TestConfiguration.setDuration(1);
-		TestConfiguration.setVusers(1, "user_", 2, 1);
-		TestConfiguration.setTestSuiteName("Bucket");
-		TestConfiguration.setLogLevel(Level.DEBUG);
+		TestConfiguration config=TestConfiguration.getTestConfiguration();
+		config.setDuration(1);
+		config.setVusers(1, "user_", 2, 1);
+		config.setTestSuiteName("Bucket");
+		config.setLogLevel(Level.DEBUG);
 
 		TestSuite testSuite = new TestSuite();
 		//testSuite.setPrepareTestScript(new TestScript_Login());

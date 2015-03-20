@@ -10,59 +10,91 @@ import com.cheetahload.log.Level;
 
 public class TestConfiguration {
 
-	private static int duration = 0;
-	private static int loops = 0;
-	private static int vusers = 0;
-	private static Vector<String> userNames;
-	private static String password = new String();
-	private static int thinkTime = 0;
-	private static String testSuiteName = new String();
-	private static String logPath = "./log";
-	private static String timerLogPath = "./log/timer/";
-	private static Level logLevel = Level.ERROR;
-	private static CommonLogger commonLogger;
-	private static int userIndex = 0;
-	private static HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
-	private static HashMap<String, ConcurrentLinkedQueue<String>> userLoggerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
-	
-	public static HashMap<String, ConcurrentLinkedQueue<String>> getUserLoggerQueueMap() {
-		return userLoggerQueueMap;
+	private int duration;
+	private int loops;
+	private int vusers;
+	private Vector<String> userNames;
+	private String password;
+	private int thinkTime;
+	private String testSuiteName;
+	private String logPath;
+	private String timerLogPath;
+	private Level logLevel;
+	private CommonLogger commonLogger;
+	private int userIndex;
+	private HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap;
+	private HashMap<String, ConcurrentLinkedQueue<String>> userLogQueueMap;
+	private ConcurrentLinkedQueue<String> commonLogQueue;
+	private static TestConfiguration testConfiguration;
+
+	public HashMap<String, ConcurrentLinkedQueue<String>> getUserLoggerQueueMap() {
+		return userLogQueueMap;
 	}
 
-	public static boolean initial() {
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
+	public ConcurrentLinkedQueue<String> getCommonLogQueue() {
+		return commonLogQueue;
+	}
+
+	public static TestConfiguration getTestConfiguration() {
+		if (testConfiguration == null) {
+			testConfiguration = new TestConfiguration();
+		}
+		return testConfiguration;
+	}
+
+	private TestConfiguration() {
+		duration = 0;
+		loops = 0;
+		vusers = 0;
+		password = new String();
+		thinkTime = 0;
+		testSuiteName = new String();
+		logPath = "./log";
+		timerLogPath = "./log/timer/";
+		logLevel = Level.ERROR;
+		userIndex = 0;
+		timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
+		userLogQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
+		commonLogQueue = new ConcurrentLinkedQueue<String>();
+	}
+
+	public boolean verifyConfiguration() {
+		if (commonLogger == null) {
+			commonLogger = new CommonLogger();
+		}
+		commonLogger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
+		commonLogger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.", Level.ERROR);
+			commonLogger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.", Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - duration and loops can not be non-zero both.", Level.ERROR);
+			commonLogger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.", Level.ERROR);
 			return false;
 		}
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - vusers=" + vusers, Level.DEBUG);
+		commonLogger.write("TestConfiguration - initial() - vusers=" + vusers, Level.DEBUG);
 		if (vusers == 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
+			commonLogger.write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
+		commonLogger.write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
 		if (password.isEmpty()) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
+			commonLogger.write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
 		}
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		commonLogger.write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
+			commonLogger.write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
 		if (userNames != null)
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - userNames has " + userNames.size() + " cell object(s).",
-					Level.DEBUG);
+			if (userNames.size() != 0) {
+				commonLogger.write("TestConfiguration - initial() - userNames vector has " + userNames.size() + " cell object(s).", Level.DEBUG);
+			} else {
+				commonLogger.write("TestConfiguration - initial() - userNames vector should include cell object(s).", Level.ERROR);
+				return false;
+			}
 		else {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - userNames can not be null.", Level.ERROR);
-			return false;
-		}
-		if (userNames.size() == 0) {
-			TestConfiguration.getCommonLogger().write("TestConfiguration - initial() - userNames should has cell object(s).", Level.ERROR);
+			commonLogger.write("TestConfiguration - initial() - userNames vector can not be null.", Level.ERROR);
 			return false;
 		}
 
@@ -74,11 +106,11 @@ public class TestConfiguration {
 			return false;
 		}
 
-		TestConfiguration.getCommonLogger().write("TestConfiguration - initial() done.", Level.DEBUG);
+		commonLogger.write("TestConfiguration - initial() done.", Level.DEBUG);
 		return true;
 	}
 
-	private static boolean initialLogPath(String path) {
+	private boolean initialLogPath(String path) {
 		File dir = new File(path);
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
@@ -101,15 +133,15 @@ public class TestConfiguration {
 		}
 	}
 
-	public static String getTimerLogPath() {
+	public String getTimerLogPath() {
 		return timerLogPath;
 	}
 
-	public static String getLogPath() {
+	public String getLogPath() {
 		return logPath;
 	}
 
-	private static boolean clearDirectory(File dir) {
+	private boolean clearDirectory(File dir) {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (int i = 0; i < children.length; i++) {
@@ -119,93 +151,90 @@ public class TestConfiguration {
 				}
 			}
 		} else {
-				return dir.delete();
+			return dir.delete();
 		}
 		return true;
 	}
 
-	public static void setTimerLogPath(String timerLogPath) {
-		TestConfiguration.timerLogPath = timerLogPath;
+	public void setTimerLogPath(String timerLogPath) {
+		this.timerLogPath = timerLogPath;
 	}
 
-	public static HashMap<String, ConcurrentLinkedQueue<String>> getTimerQueueMap() {
+	public HashMap<String, ConcurrentLinkedQueue<String>> getTimerQueueMap() {
 		return timerQueueMap;
 	}
 
-	public synchronized static int getUserIndex() {
+	public synchronized int getUserIndex() {
 		return userIndex++;
 	}
 
-	public static Vector<String> getUserNames() {
+	public Vector<String> getUserNames() {
 		return userNames;
 	}
 
-	public static void setVusers(int vusers, String prefix, int digit, int startNumber) {
-		TestConfiguration.vusers = vusers;
+	public void setVusers(int vusers, String prefix, int digit, int startNumber) {
+		this.vusers = vusers;
 		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, vusers);
 	}
 
-	public static int getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 
-	public static void setDuration(int duration) {
-		TestConfiguration.duration = duration * 60; // transfer minutes to
-													// seconds
+	public void setDuration(int duration) {
+		this.duration = duration * 60; // transfer minutes to
+										// seconds
 	}
 
-	public static int getLoops() {
+	public int getLoops() {
 		return loops;
 	}
 
-	public static void setLoops(int loops) {
-		TestConfiguration.loops = loops;
+	public void setLoops(int loops) {
+		this.loops = loops;
 	}
 
-	public static int getVusers() {
+	public int getVusers() {
 		return vusers;
 	}
 
-	public static String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public static void setPassword(String password) {
-		TestConfiguration.password = password;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public static int getThinkTime() {
+	public int getThinkTime() {
 		return thinkTime;
 	}
 
-	public static void setThinkTime(int thinkTime) {
-		TestConfiguration.thinkTime = thinkTime;
+	public void setThinkTime(int thinkTime) {
+		this.thinkTime = thinkTime;
 	}
 
-	public static String getTestSuiteName() {
+	public String getTestSuiteName() {
 		return testSuiteName;
 	}
 
-	public static void setTestSuiteName(String testSuiteName) {
-		TestConfiguration.testSuiteName = testSuiteName;
+	public void setTestSuiteName(String testSuiteName) {
+		this.testSuiteName = testSuiteName;
 	}
 
-	public static void setLogLocation(String logLocation) {
-		TestConfiguration.logPath = logLocation;
+	public void setLogLocation(String logLocation) {
+		this.logPath = logLocation;
 	}
 
-	public static Level getLogLevel() {
+	public Level getLogLevel() {
 		return logLevel;
 	}
 
-	public static void setLogLevel(Level logLevel) {
-		TestConfiguration.logLevel = logLevel;
+	public void setLogLevel(Level logLevel) {
+		this.logLevel = logLevel;
 	}
 
-	public static CommonLogger getCommonLogger() {
-		if (commonLogger == null) {
-			commonLogger = new CommonLogger();
-		}
+	public CommonLogger getCommonLogger() {
 		return commonLogger;
 
 	}
