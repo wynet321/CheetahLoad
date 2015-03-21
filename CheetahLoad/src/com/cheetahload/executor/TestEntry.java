@@ -67,6 +67,7 @@ public final class TestEntry {
 
 		// stop log write threads
 		timerWriter.setStopSignal(true);
+		while(timerWriter.isAlive());
 		userLoggerWriter.setStopSignal(true);
 		commonLoggerWriter.setStopSignal(true);
 	}

@@ -26,10 +26,10 @@ public abstract class TestScript {
 	}
 
 	public void runTest() {
-		TestThread current = (TestThread) (Thread.currentThread());
-		current.getTimer().begin();
+		TestThread currentThread = (TestThread) (Thread.currentThread());
+		currentThread.getTimer().begin();
 		test();
-		current.getTimer().end();
+		currentThread.getTimer().end();
 	}
 
 	public abstract void prepare();

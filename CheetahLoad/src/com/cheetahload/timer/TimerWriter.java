@@ -11,6 +11,7 @@ public final class TimerWriter extends Thread {
 	private boolean stopSignal;
 	private StringBuffer buffer;
 	private TestConfiguration config;
+	private ConcurrentLinkedQueue<String> queue;
 
 	public TimerWriter() {
 		config = TestConfiguration.getTestConfiguration();
@@ -20,21 +21,13 @@ public final class TimerWriter extends Thread {
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
-		// write all of timer buffer left to file
-		for (String key : config.getTimerQueueMap().keySet()) {
-			ConcurrentLinkedQueue<String> queue = config.getTimerQueueMap().get(key);
-			while (!queue.isEmpty()) {
-				buffer.append(queue.poll());
-			}
-			write(key, buffer.toString());
-			buffer.setLength(0);
-		}
+
 	}
 
 	public void run() {
 		while (!stopSignal) {
 			for (String key : config.getTimerQueueMap().keySet()) {
-				ConcurrentLinkedQueue<String> queue = config.getTimerQueueMap().get(key);
+				queue = config.getTimerQueueMap().get(key);
 				while (queue.size() > 10240) {
 					for (int i = 0; i < 10240; i++) {
 						buffer.append(queue.poll());
@@ -51,6 +44,15 @@ public final class TimerWriter extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		// write all of timer buffer left to file
+		for (String key : config.getTimerQueueMap().keySet()) {
+			queue = config.getTimerQueueMap().get(key);
+			while (!queue.isEmpty()) {
+				buffer.append(queue.poll());
+			}
+			write(key, buffer.toString());
+			buffer.setLength(0);
 		}
 	}
 

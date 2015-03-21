@@ -10,7 +10,7 @@ import com.cheetahload.TestConfiguration;
 public final class CommonLoggerWriter extends LoggerWriter {
 	private ConcurrentLinkedQueue<String> queue;
 	private StringBuffer buffer;
-	TestConfiguration config;
+	private TestConfiguration config;
 
 	public CommonLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
@@ -20,11 +20,7 @@ public final class CommonLoggerWriter extends LoggerWriter {
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
-		// write left common log to file
-		while (!queue.isEmpty()) {
-			buffer.append(queue.poll());
-		}
-		write();
+
 	}
 
 	public void run() {
@@ -42,6 +38,11 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				e.printStackTrace();
 			}
 		}
+		// write left common log to file
+		while (!queue.isEmpty()) {
+			buffer.append(queue.poll());
+		}
+		write();
 	}
 
 	public void write() {

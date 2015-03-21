@@ -19,14 +19,6 @@ public final class UserLoggerWriter extends LoggerWriter {
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
-		// write all of timer buffer to file
-		for (String key : config.getUserLoggerQueueMap().keySet()) {
-			queue = config.getUserLoggerQueueMap().get(key);
-			while (!queue.isEmpty()) {
-				buffer.append(queue.poll());
-			}
-			write(key);
-		}
 	}
 
 	public void run() {
@@ -47,6 +39,14 @@ public final class UserLoggerWriter extends LoggerWriter {
 				e.printStackTrace();
 			}
 		}
+		// write all of timer buffer to file
+		for (String key : config.getUserLoggerQueueMap().keySet()) {
+			queue = config.getUserLoggerQueueMap().get(key);
+			while (!queue.isEmpty()) {
+				buffer.append(queue.poll());
+			}
+			write(key);
+		}
 	}
 
 	public void write(String userName) {
@@ -56,8 +56,12 @@ public final class UserLoggerWriter extends LoggerWriter {
 		try {
 			while (buffer.length() >= fileSize) {
 				logWriter = new FileWriter(path, false);
-				logWriter.write(buffer.substring(0, fileSize));
-				buffer.delete(0, fileSize);
+				int i = 0;
+				while (buffer.charAt(fileSize - i) != 13) {
+					i++;
+				}
+				logWriter.write(buffer.substring(0, fileSize - i + 1));
+				buffer.delete(0, fileSize - i + 1);
 				logWriter.flush();
 				logWriter.close();
 				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));

@@ -6,6 +6,11 @@ public final class Timer {
 	private long duration = 0L;
 	private long begin = 0L;
 	private long end = 0L;
+	private SimpleDateFormat timeFormat;
+
+	public Timer() {
+		timeFormat = new SimpleDateFormat("yyyy-MM-dd	HH:mm:ss SSS");
+	}
 
 	public void begin() {
 		begin = System.currentTimeMillis();
@@ -16,20 +21,15 @@ public final class Timer {
 		duration = end - begin;
 	}
 
-	public long getBeginTime() {
-		return begin;
+	public String getBeginTime() {
+		return timeFormat.format(begin);
 	}
 
-	public long getEndTime() {
-		return end;
+	public String getEndTime() {
+		return timeFormat.format(end);
 	}
 
 	public long getDuration() {
 		return duration;
-	}
-
-	public String getCurrentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd	HH:mm:ss SSS").format(System
-				.currentTimeMillis());
 	}
 }
