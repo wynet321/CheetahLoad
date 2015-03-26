@@ -1,9 +1,7 @@
 package com.cheetahload;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
@@ -20,19 +18,16 @@ public class TestConfiguration {
 	private String logPath;
 	private String timerLogPath;
 	private Level logLevel;
-	private CommonLogger commonLogger;
 	private int userIndex;
-	private HashMap<String, ConcurrentLinkedQueue<String>> timerQueueMap;
-	private HashMap<String, ConcurrentLinkedQueue<String>> userLogQueueMap;
-	private ConcurrentLinkedQueue<String> commonLogQueue;
+	private int logFileSize;
 	private static TestConfiguration testConfiguration;
 
-	public HashMap<String, ConcurrentLinkedQueue<String>> getUserLoggerQueueMap() {
-		return userLogQueueMap;
+	public int getLogFileSize() {
+		return logFileSize;
 	}
 
-	public ConcurrentLinkedQueue<String> getCommonLogQueue() {
-		return commonLogQueue;
+	public void setLogFileSize(int logFileSize) {
+		this.logFileSize = logFileSize;
 	}
 
 	public static TestConfiguration getTestConfiguration() {
@@ -43,6 +38,7 @@ public class TestConfiguration {
 	}
 
 	private TestConfiguration() {
+		// default value
 		duration = 0;
 		loops = 0;
 		vusers = 0;
@@ -53,15 +49,12 @@ public class TestConfiguration {
 		timerLogPath = "./log/timer/";
 		logLevel = Level.ERROR;
 		userIndex = 0;
-		timerQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
-		userLogQueueMap = new HashMap<String, ConcurrentLinkedQueue<String>>();
-		commonLogQueue = new ConcurrentLinkedQueue<String>();
+		logFileSize = 1024000;
 	}
 
 	public boolean verifyConfiguration() {
-		if (commonLogger == null) {
-			commonLogger = new CommonLogger();
-		}
+		CommonLogger commonLogger = CommonLogger.getCommonLogger();
+
 		commonLogger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
 		commonLogger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
@@ -160,10 +153,6 @@ public class TestConfiguration {
 		this.timerLogPath = timerLogPath;
 	}
 
-	public HashMap<String, ConcurrentLinkedQueue<String>> getTimerQueueMap() {
-		return timerQueueMap;
-	}
-
 	public synchronized int getUserIndex() {
 		return userIndex++;
 	}
@@ -182,8 +171,7 @@ public class TestConfiguration {
 	}
 
 	public void setDuration(int duration) {
-		this.duration = duration * 60; // transfer minutes to
-										// seconds
+		this.duration = duration * 60; // transfer minutes to seconds
 	}
 
 	public int getLoops() {
@@ -232,11 +220,6 @@ public class TestConfiguration {
 
 	public void setLogLevel(Level logLevel) {
 		this.logLevel = logLevel;
-	}
-
-	public CommonLogger getCommonLogger() {
-		return commonLogger;
-
 	}
 
 }

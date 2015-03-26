@@ -18,7 +18,8 @@ public class TestScript_Login extends TestScript {
 		try{
 			Thread.sleep(1);
 		}catch (Exception e){
-			
+			e.printStackTrace();
+			getUserLogger().write(this.getName() + " - test() failed.", Level.ERROR);
 		}
 	}
 

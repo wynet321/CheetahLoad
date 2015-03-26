@@ -3,8 +3,10 @@ package com.cheetahload.executor;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
 import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
@@ -19,6 +21,7 @@ public final class TestThread extends Thread {
 	private Random random;
 	private CountDownLatch threadSignal;
 	private TestConfiguration config;
+	private TestResult result;
 
 	public String getUserName() {
 		return userName;
@@ -30,10 +33,11 @@ public final class TestThread extends Thread {
 
 	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
 		config = TestConfiguration.getTestConfiguration();
+		result=TestResult.getTestResult();
 		this.testSuite = testSuite;
 		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
-		userLogger = new UserLogger(userName);
+		userLogger = UserLogger.getUserLogger(userName);
 		timer = new Timer();
 		random = new Random();
 	}
@@ -58,8 +62,9 @@ public final class TestThread extends Thread {
 			timer.end();
 			testScript.clearup();
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
-			config.getTimerQueueMap().get(testScript.getName())
-					.add(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
+//			config.getTimerQueueMap().get(testScript.getName())
+//					.add(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
+			result.getTimerBufferMap().get(testScript.getName()).append(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
 		}
 	}
 
@@ -107,6 +112,7 @@ public final class TestThread extends Thread {
 			while (System.currentTimeMillis() - begin < duration) {
 				testScriptPoolIndex = random.nextInt(totalPercentage);
 				execute(testScriptPool[testScriptPoolIndex]);
+				result.addUserExecutionCount(testScriptPool[testScriptPoolIndex].getName());
 			}
 			userLogger.write("TestThread - execute() random run stop.", Level.INFO);
 		}

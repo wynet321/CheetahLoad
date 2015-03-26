@@ -3,18 +3,20 @@ package com.cheetahload.log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
 
 public final class UserLoggerWriter extends LoggerWriter {
 	private StringBuffer buffer;
-	private ConcurrentLinkedQueue<String> queue;
 	private TestConfiguration config;
+	private TestResult result;
 
 	public UserLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
-		buffer = new StringBuffer();
+		result = TestResult.getTestResult();
+		// buffer = new StringBuffer();
+		fileSize = config.getLogFileSize();
 	}
 
 	public void setStopSignal(boolean stopSignal) {
@@ -23,28 +25,18 @@ public final class UserLoggerWriter extends LoggerWriter {
 
 	public void run() {
 		while (!stopSignal) {
-			for (String key : config.getUserLoggerQueueMap().keySet()) {
-				queue = config.getUserLoggerQueueMap().get(key);
-				while (queue.size() > 10240) {
-					for (int i = 0; i < 10240; i++) {
-						buffer.append(queue.poll());
-					}
-					write(key);
-				}
-			}
 			try {
 				sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			for (String key : result.getUserLogBufferMap().keySet()) {
+				write(key);
+			}
 		}
 		// write all of timer buffer to file
-		for (String key : config.getUserLoggerQueueMap().keySet()) {
-			queue = config.getUserLoggerQueueMap().get(key);
-			while (!queue.isEmpty()) {
-				buffer.append(queue.poll());
-			}
+		for (String key : result.getUserLogBufferMap().keySet()) {
 			write(key);
 		}
 	}
@@ -53,6 +45,8 @@ public final class UserLoggerWriter extends LoggerWriter {
 		String path = config.getLogPath() + "/" + userName + ".log";
 		File file = new File(path);
 		FileWriter logWriter;
+		buffer = result.getUserLogBufferMap().get(userName);
+		fileCount = result.getUserLogFileCount().get(userName);
 		try {
 			while (buffer.length() >= fileSize) {
 				logWriter = new FileWriter(path, false);
@@ -72,6 +66,7 @@ public final class UserLoggerWriter extends LoggerWriter {
 				logWriter.flush();
 				logWriter.close();
 			}
+			result.getUserLogFileCount().put(userName, fileCount);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

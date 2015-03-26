@@ -3,17 +3,27 @@ package com.cheetahload.log;
 import java.sql.Timestamp;
 
 import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
 
 public final class CommonLogger extends Logger {
 	// private String content = new String();
-
 	// private int fileSize = 1024000;
 	// private FileWriter logWriter;
 	// private int fileCount = 0;
 	private TestConfiguration config;
+	private TestResult result;
+	private static CommonLogger commonLogger;
 
-	public CommonLogger() {
+	public static CommonLogger getCommonLogger() {
+		if (commonLogger == null) {
+			commonLogger = new CommonLogger();
+		}
+		return commonLogger;
+	}
+
+	private CommonLogger() {
 		config = TestConfiguration.getTestConfiguration();
+		result = TestResult.getTestResult();
 		this.path = config.getLogPath() + "/cheetahload.log";
 		this.level = config.getLogLevel();
 	}
@@ -24,7 +34,10 @@ public final class CommonLogger extends Logger {
 
 	@Override
 	public void write(String message, Level lineLevel) {
-		config.getCommonLogQueue().add(new Timestamp(System.currentTimeMillis()).toString() + " " + lineLevel.toString() + " " + message + "\r");
+		// config.getCommonLogQueue().add(new
+		// Timestamp(System.currentTimeMillis()).toString() + " " +
+		// lineLevel.toString() + " " + message + "\r");
+		result.getCommonLogBuffer().append(new Timestamp(System.currentTimeMillis()).toString() + " " + lineLevel.toString() + " " + message + "\r");
 		// content += new Timestamp(System.currentTimeMillis()).toString() + " "
 		// + lineLevel.toString() + " " + message
 		// + "\r";

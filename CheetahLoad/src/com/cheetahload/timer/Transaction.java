@@ -1,6 +1,6 @@
 package com.cheetahload.timer;
 
-import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
 import com.cheetahload.executor.TestThread;
 
 public final class Transaction {
@@ -8,9 +8,11 @@ public final class Transaction {
 	private long begin = 0L;
 	private long end = 0L;
 	private long duration = 0L;
+	private TestResult result;
 
 	public Transaction(String name) {
 		this.name = name;
+		result = TestResult.getTestResult();
 	}
 
 	public String getName() {
@@ -25,7 +27,9 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		TestConfiguration.getTestConfiguration().getTimerQueueMap().get(current.getName())
-				.add(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
+		result.getTimerBufferMap().get(current.getName()).append(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
+		// TestConfiguration.getTestConfiguration().getTimerQueueMap().get(current.getName())
+		// .add(current.getUserName() + "," + duration + "," + begin + "," + end
+		// + "\n");
 	}
 }

@@ -11,7 +11,7 @@ public class TestLauncher {
 	public static void main(String[] args) {
 		TestConfiguration config=TestConfiguration.getTestConfiguration();
 		config.setDuration(1);
-		config.setVusers(1, "user_", 2, 1);
+		config.setVusers(2, "user_", 2, 1);
 		config.setTestSuiteName("Bucket");
 		config.setLogLevel(Level.DEBUG);
 

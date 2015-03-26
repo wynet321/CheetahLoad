@@ -25,12 +25,12 @@ public abstract class TestScript {
 		return caseName;
 	}
 
-	public void runTest() {
-		TestThread currentThread = (TestThread) (Thread.currentThread());
-		currentThread.getTimer().begin();
-		test();
-		currentThread.getTimer().end();
-	}
+//	public void runTest() {
+//		TestThread currentThread = (TestThread) (Thread.currentThread());
+//		currentThread.getTimer().begin();
+//		test();
+//		currentThread.getTimer().end();
+//	}
 
 	public abstract void prepare();
 
