@@ -47,9 +47,13 @@ public final class TestThread extends Thread {
 	}
 
 	public void run() {
+		userLogger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.", Level.DEBUG);
 		execute(testSuite.getPrepareTestScript());
+		userLogger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " stopped.", Level.DEBUG);
 		execute();
+		userLogger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " start.", Level.DEBUG);
 		execute(testSuite.getClearupTestScript());
+		userLogger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " stopped.", Level.DEBUG);
 		threadSignal.countDown();
 	}
 

@@ -13,10 +13,10 @@ public class TestLauncher {
 		config.setDuration(1);
 		config.setVusers(2, "user_", 2, 1);
 		config.setTestSuiteName("Bucket");
-		config.setLogLevel(Level.INFO);
+		config.setLogLevel(Level.DEBUG);
 
 		TestSuite testSuite = new TestSuite();
-		//testSuite.setPrepareTestScript(new TestScript_Login());
+		testSuite.setPrepareTestScript(new TestScript_Login());
 		testSuite.add(new TestCase(new TestScript_Search(), 1));
 		testSuite.add(new TestCase(new TestScript_Login(), 2));
 		TestEntry.runTest(testSuite);

@@ -3,6 +3,8 @@ package com.cheetahload.timer;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
@@ -63,6 +65,11 @@ public final class TimerWriter extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void write() {
+		
+		
 	}
 
 }

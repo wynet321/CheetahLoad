@@ -48,24 +48,6 @@ public final class TestEntry {
 			System.exit(0);
 		}
 
-		// TestScript prepareTestCase = testSuite.getPrepareTestScript();
-		// if (prepareTestCase != null) {
-		// result.getTimerBufferMap().put(prepareTestCase.getName(), new
-		// StringBuffer());
-		// }
-		// TestScript clearupTestCase = testSuite.getClearupTestScript();
-		// if (clearupTestCase != null) {
-		// result.getTimerBufferMap().put(clearupTestCase.getName(), new
-		// StringBuffer());
-		// }
-		// Iterator<TestCase> testCaseIterator =
-		// testSuite.getTestCaseList().iterator();
-		// while (testCaseIterator.hasNext()) {
-		// result.getTimerBufferMap().put(((TestCase)
-		// testCaseIterator.next()).getTestScript().getName(), new
-		// StringBuffer());
-		// }
-
 		// Thread(VU) start
 		int threadCount = config.getVusers();
 		int i = 0;
