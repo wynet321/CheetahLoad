@@ -62,9 +62,7 @@ public final class TestThread extends Thread {
 			timer.end();
 			testScript.clearup();
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
-//			config.getTimerQueueMap().get(testScript.getName())
-//					.add(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
-			result.getTimerBufferMap().get(testScript.getName()).append(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
+			result.getTimerBuffer(testScript.getName()).append(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
 		}
 	}
 

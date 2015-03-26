@@ -8,12 +8,11 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 
 public final class TimerWriter extends Thread {
+	
 	private boolean stopSignal;
 	private StringBuffer buffer;
 	private TestConfiguration config;
 	private TestResult result;
-
-	// private ConcurrentLinkedQueue<String> queue;
 
 	public TimerWriter() {
 		config = TestConfiguration.getTestConfiguration();
@@ -24,7 +23,6 @@ public final class TimerWriter extends Thread {
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
-
 	}
 
 	public void run() {
@@ -36,29 +34,13 @@ public final class TimerWriter extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for (String key : result.getTimerBufferMap().keySet()) {
-				// queue = config.getTimerQueueMap().get(key);
-				// while (queue.size() > 10240) {
-				// for (int i = 0; i < 10240; i++) {
-				// buffer.append(queue.poll());
-				// }
+			for (String key : result.getTimerBufferKeySet()) {
 				write(key);
-				// buffer.setLength(0);
-				// }
-
 			}
 		}
 		// write all of timer buffer left to file
-		for (String key : result.getTimerBufferMap().keySet()) {
-			// queue = config.getTimerQueueMap().get(key);
-			// while (queue.size() > 10240) {
-			// for (int i = 0; i < 10240; i++) {
-			// buffer.append(queue.poll());
-			// }
+		for (String key : result.getTimerBufferKeySet()) {
 			write(key);
-			// buffer.setLength(0);
-			// }
-
 		}
 	}
 
@@ -66,7 +48,7 @@ public final class TimerWriter extends Thread {
 		String path = config.getTimerLogPath() + "/" + testScriptName + ".log";
 		File file = new File(path);
 		FileWriter logWriter;
-		buffer = result.getTimerBufferMap().get(testScriptName);
+		buffer = result.getTimerBuffer(testScriptName);
 		int bufferLength = buffer.length();
 		try {
 			if (file.exists()) {

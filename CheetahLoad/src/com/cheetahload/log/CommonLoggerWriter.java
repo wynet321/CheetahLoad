@@ -8,7 +8,7 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 
 public final class CommonLoggerWriter extends LoggerWriter {
-	// private ConcurrentLinkedQueue<String> queue;
+
 	private StringBuffer buffer;
 	private TestConfiguration config;
 	private TestResult result;
@@ -16,8 +16,6 @@ public final class CommonLoggerWriter extends LoggerWriter {
 	public CommonLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
-		// queue = config.getCommonLogQueue();
-		// buffer = new StringBuffer();
 	}
 
 	public void setStopSignal(boolean stopSignal) {
@@ -33,18 +31,8 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// if (queiue.size() >= fileSize) {
-			// for (int i = 0; i < 10240; i++) {
-			// buffer.append(queue.poll());
-			// }
 			write();
-			// }
-
 		}
-		// write left common log to file
-		// while (!queue.isEmpty()) {
-		// buffer.append(queue.poll());
-		// }
 		write();
 	}
 

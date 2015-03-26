@@ -3,11 +3,13 @@ package com.cheetahload.log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Set;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 
 public final class UserLoggerWriter extends LoggerWriter {
+
 	private StringBuffer buffer;
 	private TestConfiguration config;
 	private TestResult result;
@@ -15,7 +17,6 @@ public final class UserLoggerWriter extends LoggerWriter {
 	public UserLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
-		// buffer = new StringBuffer();
 		fileSize = config.getLogFileSize();
 	}
 
@@ -24,6 +25,7 @@ public final class UserLoggerWriter extends LoggerWriter {
 	}
 
 	public void run() {
+		Set<String> userLogBufferKeySet = result.getUserLogBufferKeySet();
 		while (!stopSignal) {
 			try {
 				sleep(10000);
@@ -31,12 +33,12 @@ public final class UserLoggerWriter extends LoggerWriter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for (String key : result.getUserLogBufferMap().keySet()) {
+			for (String key : userLogBufferKeySet) {
 				write(key);
 			}
 		}
 		// write all of timer buffer to file
-		for (String key : result.getUserLogBufferMap().keySet()) {
+		for (String key : userLogBufferKeySet) {
 			write(key);
 		}
 	}
@@ -45,8 +47,8 @@ public final class UserLoggerWriter extends LoggerWriter {
 		String path = config.getLogPath() + "/" + userName + ".log";
 		File file = new File(path);
 		FileWriter logWriter;
-		buffer = result.getUserLogBufferMap().get(userName);
-		fileCount = result.getUserLogFileCount().get(userName);
+		buffer = result.getUserLogBuffer(userName);
+		fileCount = result.getUserLogFileCount(userName);
 		try {
 			while (buffer.length() >= fileSize) {
 				logWriter = new FileWriter(path, false);
@@ -66,7 +68,7 @@ public final class UserLoggerWriter extends LoggerWriter {
 				logWriter.flush();
 				logWriter.close();
 			}
-			result.getUserLogFileCount().put(userName, fileCount);
+			result.setUserLogFileCount(userName, fileCount);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
