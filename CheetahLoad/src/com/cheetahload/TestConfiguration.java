@@ -21,6 +21,7 @@ public class TestConfiguration {
 	private int userIndex;
 	private int logFileSize;
 	private static TestConfiguration testConfiguration;
+	private int logToFileRate;
 
 	public int getLogFileSize() {
 		return logFileSize;
@@ -50,6 +51,15 @@ public class TestConfiguration {
 		logLevel = Level.ERROR;
 		userIndex = 0;
 		logFileSize = 1024000;
+		logToFileRate = 10000;
+	}
+
+	public int getLogToFileRate() {
+		return logToFileRate;
+	}
+
+	public void setLogToFileRate(int logToFileRate) {
+		this.logToFileRate = logToFileRate;
 	}
 
 	public boolean verifyConfiguration() {

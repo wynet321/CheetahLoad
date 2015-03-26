@@ -12,10 +12,12 @@ public final class CommonLoggerWriter extends LoggerWriter {
 	private StringBuffer buffer;
 	private TestConfiguration config;
 	private TestResult result;
+	private int logToFileRate;
 
 	public CommonLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
+		logToFileRate = config.getLogToFileRate();
 	}
 
 	public void setStopSignal(boolean stopSignal) {
@@ -26,17 +28,17 @@ public final class CommonLoggerWriter extends LoggerWriter {
 	public void run() {
 		while (!stopSignal) {
 			try {
-				sleep(10000);
+				sleep(logToFileRate);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			write();
+			writeToFile();
 		}
-		write();
+		writeToFile();
 	}
 
-	public void write() {
+	public void writeToFile() {
 		String path = config.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
 		FileWriter logWriter;

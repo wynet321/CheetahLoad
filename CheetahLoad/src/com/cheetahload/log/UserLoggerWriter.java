@@ -3,7 +3,6 @@ package com.cheetahload.log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Set;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
@@ -13,6 +12,7 @@ public final class UserLoggerWriter extends LoggerWriter {
 	private StringBuffer buffer;
 	private TestConfiguration config;
 	private TestResult result;
+	private FileWriter logWriter;
 
 	public UserLoggerWriter() {
 		config = TestConfiguration.getTestConfiguration();
@@ -25,7 +25,6 @@ public final class UserLoggerWriter extends LoggerWriter {
 	}
 
 	public void run() {
-		Set<String> userLogBufferKeySet = result.getUserLogBufferKeySet();
 		while (!stopSignal) {
 			try {
 				sleep(10000);
@@ -33,45 +32,42 @@ public final class UserLoggerWriter extends LoggerWriter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for (String key : userLogBufferKeySet) {
-				write(key);
-			}
+			writeToFile();
 		}
 		// write all of timer buffer to file
-		for (String key : userLogBufferKeySet) {
-			write(key);
-		}
+		writeToFile();
 	}
 
-	public void write(String userName) {
-		String path = config.getLogPath() + "/" + userName + ".log";
-		File file = new File(path);
-		FileWriter logWriter;
-		buffer = result.getUserLogBuffer(userName);
-		fileCount = result.getUserLogFileCount(userName);
-		try {
-			while (buffer.length() >= fileSize) {
-				logWriter = new FileWriter(path, false);
-				int i = 0;
-				while (buffer.charAt(fileSize - i) != 13) {
-					i++;
+	public void writeToFile() {
+		for (String key : result.getUserLogBufferKeySet()) {
+			String path = config.getLogPath() + "/" + key + ".log";
+			File file = new File(path);
+			buffer = result.getUserLogBuffer(key);
+			fileCount = result.getUserLogFileCount(key);
+			try {
+				while (buffer.length() >= fileSize) {
+					logWriter = new FileWriter(path, false);
+					int i = 0;
+					while (buffer.charAt(fileSize - i) != 13) {
+						i++;
+					}
+					logWriter.write(buffer.substring(0, fileSize - i + 1));
+					buffer.delete(0, fileSize - i + 1);
+					logWriter.flush();
+					logWriter.close();
+					file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
 				}
-				logWriter.write(buffer.substring(0, fileSize - i + 1));
-				buffer.delete(0, fileSize - i + 1);
-				logWriter.flush();
-				logWriter.close();
-				file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
+				if (stopSignal) {
+					logWriter = new FileWriter(path, false);
+					logWriter.write(buffer.toString());
+					logWriter.flush();
+					logWriter.close();
+				}
+				result.setUserLogFileCount(key, fileCount);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (stopSignal) {
-				logWriter = new FileWriter(path, false);
-				logWriter.write(buffer.toString());
-				logWriter.flush();
-				logWriter.close();
-			}
-			result.setUserLogFileCount(userName, fileCount);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }
