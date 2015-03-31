@@ -28,6 +28,7 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		result.getTimerBuffer(current.getName()).append(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
+		//TODO add transaction to db
+		result.getTimerVector(current.getName()).add(current.getUserName() + "," + duration + "," + begin + "," + end + "\n");
 	}
 }

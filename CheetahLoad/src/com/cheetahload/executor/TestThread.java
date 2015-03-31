@@ -27,13 +27,13 @@ public final class TestThread extends Thread {
 		return userName;
 	}
 
-	public Timer getTimer() {
-		return timer;
-	}
+	// public Timer getTimer() {
+	// return timer;
+	// }
 
 	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
 		config = TestConfiguration.getTestConfiguration();
-		result=TestResult.getTestResult();
+		result = TestResult.getTestResult();
 		this.testSuite = testSuite;
 		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
@@ -66,7 +66,7 @@ public final class TestThread extends Thread {
 			timer.end();
 			testScript.clearup();
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
-			result.getTimerBuffer(testScript.getName()).append(userName + "," + timer.getDuration() + "," + timer.getBeginTime() + "," + timer.getEndTime() + "\n");
+			timer.write(testScript.getName(), timer.getDuration() + ",'" + userName + "','" + timer.getBeginTime() + "','" + timer.getEndTime() + "'");
 		}
 	}
 

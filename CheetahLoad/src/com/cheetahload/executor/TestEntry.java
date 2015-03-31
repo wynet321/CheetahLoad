@@ -39,14 +39,14 @@ public final class TestEntry {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
-		startLogger();
-
 		if (!config.verifyConfiguration()) {
 			CommonLogger.getCommonLogger().write("TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			commonLoggerWriter.setStopSignal(true);
 			System.exit(0);
 		}
+		
+		startLogger();
 
 		// Thread(VU) start
 		int threadCount = config.getVusers();

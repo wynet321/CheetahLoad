@@ -1,7 +1,9 @@
 package com.cheetahload;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Set;
+import java.util.Vector;
 
 public class TestResult {
 
@@ -10,12 +12,12 @@ public class TestResult {
 	private HashMap<String, StringBuffer> userLogBufferMap;
 	private static TestResult testResult;
 	private HashMap<String, Integer> userLogFileCountMap;
-	private HashMap<String, StringBuffer> timerBufferMap;
+	private Hashtable<String, Vector<String>> timerListTable;
 	private StringBuffer commonLogBuffer;
 
 	public TestResult() {
 		userLogBufferMap = new HashMap<String, StringBuffer>();
-		timerBufferMap = new HashMap<String, StringBuffer>();
+		timerListTable = new Hashtable<String, Vector<String>>();
 		userLogFileCountMap = new HashMap<String, Integer>();
 		userExecutionCountMap = new HashMap<String, Integer>();
 		userErrorCountMap = new HashMap<String, Integer>();
@@ -77,14 +79,14 @@ public class TestResult {
 	}
 
 	public Set<String> getTimerBufferKeySet() {
-		return timerBufferMap.keySet();
+		return timerListTable.keySet();
 	}
 
-	public StringBuffer getTimerBuffer(String scriptName) {
-		if (!timerBufferMap.containsKey(scriptName)) {
-			timerBufferMap.put(scriptName, new StringBuffer());
+	public Vector<String> getTimerVector(String scriptName) {
+		if (!timerListTable.containsKey(scriptName)) {
+			timerListTable.put(scriptName, new Vector<String>());
 		}
-		return timerBufferMap.get(scriptName);
+		return timerListTable.get(scriptName);
 	}
 
 	public StringBuffer getCommonLogBuffer() {

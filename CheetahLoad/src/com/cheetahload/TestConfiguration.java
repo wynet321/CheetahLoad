@@ -1,6 +1,7 @@
 package com.cheetahload;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import com.cheetahload.log.CommonLogger;
@@ -22,6 +23,15 @@ public class TestConfiguration {
 	private int logFileSize;
 	private static TestConfiguration testConfiguration;
 	private int logToFileRate;
+	private String testName;
+
+	public String getTestName() {
+		return testName;
+	}
+
+	public void setTestName(String testName) {
+		this.testName = testName + new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss").format(System.currentTimeMillis());
+	}
 
 	public int getLogFileSize() {
 		return logFileSize;
@@ -52,6 +62,7 @@ public class TestConfiguration {
 		userIndex = 0;
 		logFileSize = 1024000;
 		logToFileRate = 10000;
+		testName = testSuiteName + new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss").format(System.currentTimeMillis());
 	}
 
 	public int getLogToFileRate() {
