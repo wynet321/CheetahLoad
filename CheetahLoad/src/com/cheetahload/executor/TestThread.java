@@ -60,13 +60,20 @@ public final class TestThread extends Thread {
 	private void execute(TestScript testScript) {
 		if (testScript != null) {
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " start.", Level.DEBUG);
+			try{
 			testScript.prepare();
 			timer.begin();
 			testScript.test();
 			timer.end();
 			testScript.clearup();
+			}catch(Exception e){
+				//TODO deal with exception
+				result.addUserErrorCount(testScript.getName());
+				userLogger.write(e.getMessage(), Level.ERROR);
+			}
 			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
 			timer.write(testScript.getName(), timer.getDuration() + ",'" + userName + "','" + timer.getBeginTime() + "','" + timer.getEndTime() + "'");
+			result.addUserExecutionCount(testScript.getName());
 		}
 	}
 
@@ -114,7 +121,6 @@ public final class TestThread extends Thread {
 			while (System.currentTimeMillis() - begin < duration) {
 				testScriptPoolIndex = random.nextInt(totalPercentage);
 				execute(testScriptPool[testScriptPoolIndex]);
-				result.addUserExecutionCount(testScriptPool[testScriptPoolIndex].getName());
 			}
 			userLogger.write("TestThread - execute() random run stop.", Level.INFO);
 		}

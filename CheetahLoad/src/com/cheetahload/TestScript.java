@@ -22,9 +22,9 @@ public abstract class TestScript {
 		return caseName;
 	}
 
-	public abstract void prepare();
+	public abstract void prepare() throws Exception;
 
-	public abstract void test();
+	public abstract void test() throws Exception;
 
-	public abstract void clearup();
+	public abstract void clearup() throws Exception;
 }

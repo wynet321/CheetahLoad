@@ -1,6 +1,6 @@
 package com.cheetahload.executor;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.concurrent.CountDownLatch;
 
 import com.cheetahload.TestConfiguration;
@@ -13,7 +13,7 @@ import com.cheetahload.log.UserLoggerWriter;
 import com.cheetahload.timer.TimerWriter;
 
 public final class TestEntry {
-	
+
 	private static CommonLoggerWriter commonLoggerWriter;
 	private static TimerWriter timerWriter;
 	private static UserLoggerWriter userLoggerWriter;
@@ -40,12 +40,14 @@ public final class TestEntry {
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
 		if (!config.verifyConfiguration()) {
-			CommonLogger.getCommonLogger().write("TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
-					Level.ERROR);
+			CommonLogger
+					.getCommonLogger()
+					.write("TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
+							Level.ERROR);
 			commonLoggerWriter.setStopSignal(true);
 			System.exit(0);
 		}
-		
+
 		startLogger();
 
 		// Thread(VU) start
@@ -61,24 +63,35 @@ public final class TestEntry {
 		try {
 			threadSignal.await();
 		} catch (InterruptedException e) {
-			CommonLogger.getCommonLogger()
-					.write("TestEntry - runTest() Thread can't be started. Error: " + e.getStackTrace().toString(), Level.ERROR);
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() Thread can't be started. Error: "
+							+ e.getStackTrace().toString(), Level.ERROR);
 		}
 
 		// output statistic data
-		CommonLogger.getCommonLogger().write("TestEntry - runTest() Execution Count:", Level.INFO);
-		HashMap<String, Integer> userExecutionCountMap = result.getUserExecutionCountMap();
-		for (String key : userExecutionCountMap.keySet()) {
-			CommonLogger.getCommonLogger().write("TestEntry - runTest() " + key + ": " + userExecutionCountMap.get(key), Level.INFO);
+		CommonLogger.getCommonLogger().write(
+				"TestEntry - runTest() Execution Count:", Level.INFO);
+		Hashtable<String, Integer> userExecutionCountTable = result
+				.getUserExecutionCountTable();
+		for (String key : userExecutionCountTable.keySet()) {
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() " + key + ": "
+							+ userExecutionCountTable.get(key), Level.INFO);
 		}
 
-		HashMap<String, Integer> userErrorCountMap = result.getUserErrorCountMap();
-		if (userErrorCountMap.isEmpty()) {
-			CommonLogger.getCommonLogger().write("TestEntry - runTest() There is no error in test.", Level.INFO);
+		Hashtable<String, Integer> userErrorCountTable = result
+				.getUserErrorCountTable();
+		if (userErrorCountTable.isEmpty()) {
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() There is no error in test.",
+					Level.INFO);
 		} else {
-			CommonLogger.getCommonLogger().write("TestEntry - runTest() Error Count:", Level.INFO);
-			for (String key : userErrorCountMap.keySet()) {
-				CommonLogger.getCommonLogger().write("TestEntry - runTest() " + key + ": " + userErrorCountMap.get(key), Level.INFO);
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() Error Count:", Level.INFO);
+			for (String key : userErrorCountTable.keySet()) {
+				CommonLogger.getCommonLogger().write(
+						"TestEntry - runTest() " + key + ": "
+								+ userErrorCountTable.get(key), Level.INFO);
 			}
 		}
 

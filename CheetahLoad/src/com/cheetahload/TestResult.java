@@ -1,26 +1,25 @@
 package com.cheetahload;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.Vector;
 
 public class TestResult {
 
-	private HashMap<String, Integer> userExecutionCountMap;
-	private HashMap<String, Integer> userErrorCountMap;
-	private HashMap<String, StringBuffer> userLogBufferMap;
+	private Hashtable<String, Integer> userExecutionCountTable;
+	private Hashtable<String, Integer> userErrorCountTable;
+	private Hashtable<String, StringBuffer> userLogBufferTable;
 	private static TestResult testResult;
-	private HashMap<String, Integer> userLogFileCountMap;
+	private Hashtable<String, Integer> userLogFileCountTable;
 	private Hashtable<String, Vector<String>> timerListTable;
 	private StringBuffer commonLogBuffer;
 
 	public TestResult() {
-		userLogBufferMap = new HashMap<String, StringBuffer>();
+		userLogBufferTable = new Hashtable<String, StringBuffer>();
 		timerListTable = new Hashtable<String, Vector<String>>();
-		userLogFileCountMap = new HashMap<String, Integer>();
-		userExecutionCountMap = new HashMap<String, Integer>();
-		userErrorCountMap = new HashMap<String, Integer>();
+		userLogFileCountTable = new Hashtable<String, Integer>();
+		userExecutionCountTable = new Hashtable<String, Integer>();
+		userErrorCountTable = new Hashtable<String, Integer>();
 		commonLogBuffer = new StringBuffer();
 
 	}
@@ -32,50 +31,52 @@ public class TestResult {
 		return testResult;
 	}
 
-	public HashMap<String, Integer> getUserExecutionCountMap() {
-		return userExecutionCountMap;
+	public Hashtable<String, Integer> getUserExecutionCountTable() {
+		return userExecutionCountTable;
 	}
 
 	public synchronized void addUserExecutionCount(String testScriptName) {
-		if (userExecutionCountMap.containsKey(testScriptName)) {
-			userExecutionCountMap.put(testScriptName, 1 + userExecutionCountMap.get(testScriptName));
+		if (userExecutionCountTable.containsKey(testScriptName)) {
+			userExecutionCountTable.put(testScriptName,
+					1 + userExecutionCountTable.get(testScriptName));
 		} else {
-			userExecutionCountMap.put(testScriptName, 1);
+			userExecutionCountTable.put(testScriptName, 1);
 		}
 	}
 
-	public HashMap<String, Integer> getUserErrorCountMap() {
-		return userErrorCountMap;
+	public Hashtable<String, Integer> getUserErrorCountTable() {
+		return userErrorCountTable;
 	}
 
 	public synchronized void addUserErrorCount(String testScriptName) {
-		if (userErrorCountMap.containsKey(testScriptName)) {
-			userErrorCountMap.put(testScriptName, 1 + userErrorCountMap.get(testScriptName));
+		if (userErrorCountTable.containsKey(testScriptName)) {
+			userErrorCountTable.put(testScriptName,
+					1 + userErrorCountTable.get(testScriptName));
 		} else {
-			userErrorCountMap.put(testScriptName, 1);
+			userErrorCountTable.put(testScriptName, 1);
 		}
 	}
 
 	public Set<String> getUserLogBufferKeySet() {
-		return userLogBufferMap.keySet();
+		return userLogBufferTable.keySet();
 	}
 
 	public StringBuffer getUserLogBuffer(String userName) {
-		if (!userLogBufferMap.containsKey(userName)) {
-			userLogBufferMap.put(userName, new StringBuffer());
+		if (!userLogBufferTable.containsKey(userName)) {
+			userLogBufferTable.put(userName, new StringBuffer());
 		}
-		return userLogBufferMap.get(userName);
+		return userLogBufferTable.get(userName);
 	}
 
 	public int getUserLogFileCount(String userName) {
-		if (!userLogFileCountMap.containsKey(userName)) {
-			userLogFileCountMap.put(userName, 0);
+		if (!userLogFileCountTable.containsKey(userName)) {
+			userLogFileCountTable.put(userName, 0);
 		}
-		return userLogFileCountMap.get(userName);
+		return userLogFileCountTable.get(userName);
 	}
 
 	public void setUserLogFileCount(String userName, int logFileCount) {
-		userLogFileCountMap.put(userName, logFileCount);
+		userLogFileCountTable.put(userName, logFileCount);
 	}
 
 	public Set<String> getTimerBufferKeySet() {
