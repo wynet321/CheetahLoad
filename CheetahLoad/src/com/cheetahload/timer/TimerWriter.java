@@ -79,7 +79,7 @@ public final class TimerWriter extends Thread {
 	public void writeToDB() {
 		for (String key : result.getTimerBufferKeySet()) {
 			timerVector = result.getTimerVector(key);
-			Vector<String> subVector = (Vector<String>) timerVector.clone();
+			Vector<String> subVector = new Vector<String>(timerVector);
 			for (String value : subVector) {
 				String sql = "insert into timer values('" + config.getTestName() + "','" + key + "'," + value + ")";
 				try {
