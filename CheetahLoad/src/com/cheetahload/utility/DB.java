@@ -1,4 +1,4 @@
-package com.cheetahload.db;
+package com.cheetahload.utility;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
 
-public class Operation {
+public class DB {
 
 	private static Connection connection;
 
@@ -15,7 +15,9 @@ public class Operation {
 		if (connection == null) {
 			try {
 				Class.forName("org.sqlite.JDBC");
-				connection = DriverManager.getConnection("jdbc:sqlite:" + TestConfiguration.getTestConfiguration().getLogPath()+"/"+TestConfiguration.getTestConfiguration().getTestSuiteName() + ".db");
+				connection = DriverManager.getConnection("jdbc:sqlite:"
+						+ TestConfiguration.getTestConfiguration().getLogPath() + "/"
+						+ TestConfiguration.getTestConfiguration().getTestSuiteName() + ".db");
 				connection
 						.prepareStatement(
 								"create table timer(testname varchar(50), scriptname varchar(20), duration int, username varchar(20), start varchar(20), end varchar(20));")
@@ -23,7 +25,8 @@ public class Operation {
 				connection.setAutoCommit(false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				CommonLogger.getCommonLogger().write("Operation - getConnection() - Failed to get Connection.", Level.ERROR);
+				CommonLogger.getCommonLogger().write("Operation - getConnection() - Failed to get Connection.",
+						Level.ERROR);
 				e.printStackTrace();
 			}
 		}

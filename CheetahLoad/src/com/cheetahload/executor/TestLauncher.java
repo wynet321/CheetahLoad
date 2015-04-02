@@ -12,7 +12,7 @@ import com.cheetahload.log.Level;
 import com.cheetahload.log.UserLoggerWriter;
 import com.cheetahload.timer.TimerWriter;
 
-public final class TestEntry {
+public final class TestLauncher {
 
 	private static CommonLoggerWriter commonLoggerWriter;
 	private static TimerWriter timerWriter;
@@ -35,7 +35,7 @@ public final class TestEntry {
 		commonLoggerWriter.setStopSignal(true);
 	}
 
-	public final static void runTest(TestSuite testSuite) {
+	public final static void run(TestSuite testSuite) {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 

@@ -3,10 +3,10 @@ package com.cheetahload.sample;
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestSuite;
-import com.cheetahload.executor.TestEntry;
+import com.cheetahload.executor.TestLauncher;
 import com.cheetahload.log.Level;
 
-public class TestLauncher {
+public class TestSample {
 
 	public static void main(String[] args) {
 		TestConfiguration config=TestConfiguration.getTestConfiguration();
@@ -19,7 +19,7 @@ public class TestLauncher {
 		testSuite.setPrepareTestScript(new TestScript_Login());
 		testSuite.add(new TestCase(new TestScript_Search(), 1));
 		testSuite.add(new TestCase(new TestScript_Login(), 2));
-		TestEntry.runTest(testSuite);
+		TestLauncher.run(testSuite);
 	}
 
 }
