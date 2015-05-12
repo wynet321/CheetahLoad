@@ -5,6 +5,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -21,27 +22,26 @@ public class Monitor {
 		display = new Display();
 		shell = new Shell(display);
 		shell.setText("Dashboard");
-		// shell.setMaximized(true);
-		// layout.marginHeight = 10;
-		// layout.marginWidth = 10;
-		// layout.spacing = 10;
 		shell.setLayout(new FillLayout());
 
 		SashForm sashFormHorizontal = new SashForm(shell, SWT.HORIZONTAL);
 
 		Composite compTreeView = new Composite(sashFormHorizontal, SWT.BORDER);
 		compTreeView.setLayout(new FillLayout());
-		showTreeView(compTreeView);
+		initializeTreeView(compTreeView);
 
 		SashForm sashFormVertical = new SashForm(sashFormHorizontal, SWT.VERTICAL);
 		Composite compChartView = new Composite(sashFormVertical, SWT.BORDER);
 		compChartView.setLayout(new FillLayout());
-		showChartView(compChartView);
+
 		Composite compDataView = new Composite(sashFormVertical, SWT.BORDER);
 		compDataView.setLayout(new FillLayout());
-		showDataView(compDataView);
+		initializeDataView(compDataView);
 
 		shell.open();
+
+		produceChart(compChartView);
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
@@ -49,7 +49,7 @@ public class Monitor {
 		display.dispose();
 	}
 
-	private void showTreeView(Composite comp) {
+	private void initializeTreeView(Composite comp) {
 		Tree tree = new Tree(comp, SWT.BORDER);
 		TreeItem item1 = new TreeItem(tree, 0);
 		item1.setText("finally");
@@ -58,7 +58,18 @@ public class Monitor {
 
 	}
 
-	private void showChartView(Composite comp) {
+	//TODO sample code for chart, need add event and modify later
+	private void produceChart(Composite comp) {
+		GC gc = new GC(comp);
+		gc.setForeground(new Color(comp.getDisplay(), 255, 0, 0));
+		gc.setLineStyle(SWT.LINE_SOLID);
+		gc.setLineWidth(2);
+		gc.drawLine(10, 10, 100, 100);
+		gc.drawRectangle(10, 10, 40, 45);
+		gc.dispose();
+	}
+
+	private void initializeDataView(Composite comp) {
 		CTabFolder tabFolder = new CTabFolder(comp, SWT.BORDER | SWT.BOTTOM);
 		// tabFolder.setBounds(10, 10, 800, 400);
 		tabFolder.setSelectionForeground(new Color(null, 255, 255, 255));
@@ -75,10 +86,6 @@ public class Monitor {
 			// label.setBounds(10, 10, 100, 100);
 			item.setControl(comp1);
 		}
-	}
-
-	private void showDataView(Composite comp) {
-
 	}
 
 }
