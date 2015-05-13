@@ -1,5 +1,10 @@
 package com.cheetahload.dashboard;
 
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -49,16 +54,30 @@ public class Monitor {
 		display.dispose();
 	}
 
+	//need generate testResults from DB later
 	private void initializeTreeView(Composite comp) {
-		Tree tree = new Tree(comp, SWT.BORDER);
-		TreeItem item1 = new TreeItem(tree, 0);
-		item1.setText("finally");
-		TreeItem item2 = new TreeItem(tree, 0);
-		item2.setText("wait");
+		HashMap<String, HashMap<String, String>> testResults = new HashMap<String, HashMap<String, String>>();
+		testResults.put(DateFormat.getDateInstance().format(new Date()), new HashMap<String, String>());
+		testResults.get(DateFormat.getDateInstance().format(new Date())).put("Test1", "GUID1");
+		testResults.get(DateFormat.getDateInstance().format(new Date())).put("Test2", "GUID2");
 
+		Tree tree = new Tree(comp, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION);
+		ArrayList<TreeItem> treeParentItems = new ArrayList<TreeItem>();
+		for (int i = 0; i < testResults.keySet().size(); i++) {
+			treeParentItems.add(new TreeItem(tree, SWT.None));
+			treeParentItems.get(i).setText(testResults.keySet().toArray()[i].toString());
+		}
+
+		ArrayList<TreeItem> treeChildItems = new ArrayList<TreeItem>();
+		for (int j = 0; j < testResults.get(DateFormat.getDateInstance().format(new Date())).keySet().size(); j++) {
+			treeChildItems.add(new TreeItem(treeParentItems.get(0), SWT.None));
+			treeChildItems.get(j).setText(testResults.get(DateFormat.getDateInstance().format(new Date())).keySet().toArray()[j].toString());
+		}
+		
+		treeParentItems.get(0).setExpanded(true);
 	}
 
-	//TODO sample code for chart, need add event and modify later
+	// TODO sample code for chart, need add event and modify later
 	private void produceChart(Composite comp) {
 		GC gc = new GC(comp);
 		gc.setForeground(new Color(comp.getDisplay(), 255, 0, 0));
@@ -71,21 +90,25 @@ public class Monitor {
 
 	private void initializeDataView(Composite comp) {
 		CTabFolder tabFolder = new CTabFolder(comp, SWT.BORDER | SWT.BOTTOM);
-		// tabFolder.setBounds(10, 10, 800, 400);
 		tabFolder.setSelectionForeground(new Color(null, 255, 255, 255));
 		tabFolder.setSelectionBackground(new Color(null, 0, 0, 255));
 		tabFolder.setSimple(false);
-
-		for (int i = 0; i < 4; i++) {
-			CTabItem item = new CTabItem(tabFolder, SWT.CLOSE);
-			item.setText("Item " + i);
-			Composite comp1 = new Composite(tabFolder, SWT.NONE);
-			comp.setBackground(new Color(null, 255, 255, 255));
-			Label label = new Label(comp1, SWT.NONE);
+		ArrayList<CTabItem> tabItems = new ArrayList<CTabItem>();
+		ArrayList<Composite> tabItemComposites = new ArrayList<Composite>();
+		for (int i = 0; i < 5; i++) {
+			tabItems.add(new CTabItem(tabFolder, SWT.CLOSE));
+			tabItemComposites.add(new Composite(tabFolder, SWT.NONE));
+			tabItemComposites.get(i).setBackground(new Color(null, 255, 255, 255));
+			Label label = new Label(tabItemComposites.get(i), SWT.NONE);
 			label.setText("Item " + i);
-			// label.setBounds(10, 10, 100, 100);
-			item.setControl(comp1);
+			tabItems.get(i).setControl(tabItemComposites.get(i));
 		}
+		tabItems.get(0).setText("Test Configuration");
+		tabItems.get(2).setText("Throughput");
+		tabItems.get(3).setText("Response Time");
+		tabItems.get(4).setText("Success Rate");
+		tabItems.get(1).setText("General Result");
+
 	}
 
 }
