@@ -1,6 +1,6 @@
 package com.cheetahload.log;
 
-public enum Level {
+public enum LogLevel {
 	 ERROR,
      WARN,
      INFO,

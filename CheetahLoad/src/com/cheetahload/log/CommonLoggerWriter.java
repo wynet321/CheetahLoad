@@ -4,42 +4,48 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 
 public final class CommonLoggerWriter extends LoggerWriter {
 
 	private StringBuffer buffer;
-	private TestConfiguration config;
 	private TestResult result;
 	private int logToFileRate;
+	private static CommonLoggerWriter commonLoggerWriter;
 
-	public CommonLoggerWriter() {
-		config = TestConfiguration.getTestConfiguration();
-		result = TestResult.getTestResult();
-		logToFileRate = config.getLogToFileRate();
+	public static CommonLoggerWriter getLoggerWriter() {
+		if (commonLoggerWriter == null)
+			commonLoggerWriter = new CommonLoggerWriter();
+		return commonLoggerWriter;
 	}
 
-	public void setStopSignal(boolean stopSignal) {
-		this.stopSignal = stopSignal;
+	private CommonLoggerWriter() {
+		result = TestResult.getTestResult();
+		logToFileRate = result.getLogToFileRate();
+	}
 
+	public void stopWriter() {
+		stopSignal = true;
+		writeToFile();
 	}
 
 	public void run() {
 		while (!stopSignal) {
+			// while (true) {
+			writeToFile();
 			try {
 				sleep(logToFileRate);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				CommonLogger.getLogger().write(
+						"CommonLoggerWriter - run() Failed to sleep CommonLoggerWriter thread. " + e.getMessage(),
+						LogLevel.ERROR);
 			}
-			writeToFile();
 		}
 		writeToFile();
 	}
 
 	public void writeToFile() {
-		String path = config.getLogPath() + "/cheetahload.log";
+		String path = result.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
 		FileWriter logWriter;
 		buffer = result.getCommonLogBuffer();
@@ -59,8 +65,9 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				logWriter.close();
 			}
 		} catch (IOException e) {
-			// TODO deal with IO exception
-			e.printStackTrace();
+			CommonLogger.getLogger().write(
+					"CommonLoggerWriter - writeToFile() Failed to write to common log file. Path: " + path + ". "
+							+ e.getMessage(), LogLevel.ERROR);
 		}
 	}
 }

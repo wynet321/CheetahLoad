@@ -1,29 +1,34 @@
 package com.cheetahload;
 
-import java.io.File;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import com.cheetahload.log.CommonLogger;
-import com.cheetahload.log.Level;
+import com.cheetahload.log.LogLevel;
+import com.cheetahload.utility.DB;
 
 public class TestConfiguration {
 
 	private int duration;
 	private int loops;
-	private int vusers;
+	private int virtualUserNum;
 	private Vector<String> userNames;
 	private String password;
 	private int thinkTime;
 	private String testSuiteName;
-	private String logPath;
-	private String timerLogPath;
-	private Level logLevel;
 	private int userIndex;
-	private int logFileSize;
 	private static TestConfiguration testConfiguration;
-	private int logToFileRate;
 	private String testName;
+	private String operatorName;
+
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
 
 	public String getTestName() {
 		return testName;
@@ -31,14 +36,6 @@ public class TestConfiguration {
 
 	public void setTestName(String testName) {
 		this.testName = testName + new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss").format(System.currentTimeMillis());
-	}
-
-	public int getLogFileSize() {
-		return logFileSize;
-	}
-
-	public void setLogFileSize(int logFileSize) {
-		this.logFileSize = logFileSize;
 	}
 
 	public static TestConfiguration getTestConfiguration() {
@@ -52,126 +49,95 @@ public class TestConfiguration {
 		// default value
 		duration = 0;
 		loops = 0;
-		vusers = 0;
+		virtualUserNum = 0;
 		password = new String();
 		thinkTime = 0;
 		testSuiteName = new String();
-		logPath = "./log";
-		timerLogPath = "./log/timer/";
-		logLevel = Level.ERROR;
+
+		// timerLogPath = "./log/timer/";
+
 		userIndex = 0;
-		logFileSize = 1024000;
-		logToFileRate = 10000;
+
+		operatorName = "Anonymity";
 		testName = testSuiteName + new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss").format(System.currentTimeMillis());
 	}
 
-	public int getLogToFileRate() {
-		return logToFileRate;
-	}
-
-	public void setLogToFileRate(int logToFileRate) {
-		this.logToFileRate = logToFileRate;
-	}
-
-	public boolean verifyConfiguration() {
-		CommonLogger commonLogger = CommonLogger.getCommonLogger();
-
-		commonLogger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
-		commonLogger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
+	public boolean verify() {
+		CommonLogger.getLogger().write("TestConfiguration - verify() - duration=" + duration + " seconds",
+				LogLevel.DEBUG);
+		CommonLogger.getLogger().write("TestConfiguration - verify() - loops=" + loops, LogLevel.DEBUG);
 		if (duration == 0 && loops == 0) {
-			commonLogger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.", Level.ERROR);
+			CommonLogger.getLogger().write(
+					"TestConfiguration - verify() - duration or loops should be non-zero value.", LogLevel.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			commonLogger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.", Level.ERROR);
+			CommonLogger.getLogger().write(
+					"TestConfiguration - verify() - duration and loops can not be non-zero both.", LogLevel.ERROR);
 			return false;
 		}
-		commonLogger.write("TestConfiguration - initial() - vusers=" + vusers, Level.DEBUG);
-		if (vusers == 0) {
-			commonLogger.write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
+		CommonLogger.getLogger().write("TestConfiguration - verify() - vusers=" + virtualUserNum, LogLevel.DEBUG);
+		if (virtualUserNum == 0) {
+			CommonLogger.getLogger().write("TestConfiguration - verify() - vusers should be non-zero value.",
+					LogLevel.ERROR);
 			return false;
 		}
-		commonLogger.write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
+		CommonLogger.getLogger().write("TestConfiguration - verify() - password=" + password, LogLevel.DEBUG);
 		if (password.isEmpty()) {
-			commonLogger.write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
+			CommonLogger.getLogger().write("TestConfiguration - verify() - password is set to blank.", LogLevel.WARN);
 		}
-		commonLogger.write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		CommonLogger.getLogger().write("TestConfiguration - verify() - testSuiteName=" + testSuiteName, LogLevel.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			commonLogger.write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
+			CommonLogger.getLogger().write("TestConfiguration - verify() - testSuiteName can not be blank.",
+					LogLevel.ERROR);
 			return false;
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				commonLogger.write("TestConfiguration - initial() - userNames vector has " + userNames.size() + " cell object(s).", Level.DEBUG);
+				CommonLogger.getLogger().write(
+						"TestConfiguration - verify() - userNames vector has " + userNames.size() + " cell object(s).",
+						LogLevel.DEBUG);
 			} else {
-				commonLogger.write("TestConfiguration - initial() - userNames vector should include cell object(s).", Level.ERROR);
+				CommonLogger.getLogger().write(
+						"TestConfiguration - verify() - userNames vector should include cell object(s).",
+						LogLevel.ERROR);
 				return false;
 			}
 		else {
-			commonLogger.write("TestConfiguration - initial() - userNames vector can not be null.", Level.ERROR);
+			CommonLogger.getLogger().write("TestConfiguration - verify() - userNames vector can not be null.",
+					LogLevel.ERROR);
 			return false;
 		}
 
-		if (!initialLogPath(timerLogPath)) {
+		if (operatorName.isEmpty()) {
+			CommonLogger.getLogger().write("TestConfiguration - verify() - operatorName can not be blank.",
+					LogLevel.ERROR);
 			return false;
 		}
 
-		if (!initialLogPath(logPath)) {
+		TestResult result = TestResult.getTestResult();
+		String configuration = "duration =" + duration + ";\nloops = " + loops + ";\nvirtualUserNum = "
+				+ virtualUserNum + ";\npassword = " + password + ";\nthinkTime = " + thinkTime + ";\ntestSuiteName = "
+				+ testSuiteName + ";\nresultPath = " + result.getResultPath() + ";\nlogPath = " + result.getLogPath()
+				+ ";\nlogLevel = " + result.getLogLevel() + ";\nlogFileSize = " + result.getLogFileSize()
+				+ ";\nlogToFileRate = " + result.getLogToFileRate() + ";\noperatorName = " + operatorName + ";\n";
+		String sql = "insert into test values('" + testName + "','" + configuration + "','" + operatorName + "','','','','')";
+		try {
+			DB.getChildDBConnection().prepareStatement(sql).execute();
+			DB.getChildDBConnection().commit();
+		} catch (SQLException e) {
+			CommonLogger.getLogger().write(
+					"TestConfiguration - verify() - DB SQL execution failed. SQL: " + sql + ". " + e.getMessage(),
+					LogLevel.ERROR);
+			return false;
+		} catch (ClassNotFoundException e1) {
+			CommonLogger.getLogger().write("TestConfiguration - verify() - DB class was not found. " + e1.getMessage(),
+					LogLevel.ERROR);
 			return false;
 		}
 
-		commonLogger.write("TestConfiguration - initial() done.", Level.DEBUG);
+		CommonLogger.getLogger().write("TestConfiguration - verify() done.", LogLevel.DEBUG);
 		return true;
-	}
-
-	private boolean initialLogPath(String path) {
-		File dir = new File(path);
-		if (dir.exists()) {
-			if (dir.isDirectory()) {
-				if (!clearDirectory(new File(path))) {
-					throw new RuntimeException("TestConfiguration - initialLogPath() Clear folder '" + path + "' failed. Please clear by manual.");
-				}
-			} else {
-				if (!dir.delete())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Delete file '" + path + "' failed. Please delete by manual.");
-				if (!dir.mkdir())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path + "' failed. Please create by manual.");
-			}
-			return true;
-		} else {
-			if (dir.mkdirs()) {
-				return true;
-			} else {
-				throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path + "' failed. Please check permission.");
-			}
-		}
-	}
-
-	public String getTimerLogPath() {
-		return timerLogPath;
-	}
-
-	public String getLogPath() {
-		return logPath;
-	}
-
-	private boolean clearDirectory(File dir) {
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i = 0; i < children.length; i++) {
-				boolean success = clearDirectory(new File(dir, children[i]));
-				if (!success) {
-					return false;
-				}
-			}
-		} else {
-			return dir.delete();
-		}
-		return true;
-	}
-
-	public void setTimerLogPath(String timerLogPath) {
-		this.timerLogPath = timerLogPath;
 	}
 
 	public synchronized int getUserIndex() {
@@ -183,7 +149,7 @@ public class TestConfiguration {
 	}
 
 	public void setVusers(int vusers, String prefix, int digit, int startNumber) {
-		this.vusers = vusers;
+		this.virtualUserNum = vusers;
 		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, vusers);
 	}
 
@@ -204,7 +170,7 @@ public class TestConfiguration {
 	}
 
 	public int getVusers() {
-		return vusers;
+		return virtualUserNum;
 	}
 
 	public String getPassword() {
@@ -229,18 +195,6 @@ public class TestConfiguration {
 
 	public void setTestSuiteName(String testSuiteName) {
 		this.testSuiteName = testSuiteName;
-	}
-
-	public void setLogLocation(String logLocation) {
-		this.logPath = logLocation;
-	}
-
-	public Level getLogLevel() {
-		return logLevel;
-	}
-
-	public void setLogLevel(Level logLevel) {
-		this.logLevel = logLevel;
 	}
 
 }
