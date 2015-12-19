@@ -2,17 +2,15 @@ package com.cheetahload.sample;
 
 import com.cheetahload.TestCase;
 import com.cheetahload.TestConfiguration;
-import com.cheetahload.TestResult;
 import com.cheetahload.TestSuite;
-import com.cheetahload.dashboard.Monitor;
 import com.cheetahload.executor.TestLauncher;
-import com.cheetahload.log.LogLevel;
+import com.cheetahload.log.Level;
 
 public class TestSample {
 
 	public static void main(String[] args) {
-		 test();
-		//Monitor monitor = new Monitor();
+		test();
+		// Monitor monitor = new Monitor();
 	}
 
 	private static void test() {
@@ -20,9 +18,8 @@ public class TestSample {
 		config.setDuration(1);
 		config.setVusers(2, "user_", 2, 1);
 		config.setTestSuiteName("Bucket");
-		
-//		TestResult result=TestResult.getTestResult();
-//		result.setLogLevel(LogLevel.DEBUG);
+		config.setLogLevel(Level.DEBUG);
+		config.setTestName("3hrPerformanceRegression");
 
 		TestSuite testSuite = new TestSuite();
 		testSuite.setPrepareTestScript(new TestScript_Login());

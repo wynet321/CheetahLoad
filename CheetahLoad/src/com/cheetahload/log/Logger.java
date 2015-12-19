@@ -2,10 +2,10 @@ package com.cheetahload.log;
 
 public abstract class Logger {
 
-	protected LogLevel level;
+	protected Level level;
 	protected String path;
 	protected String userName;
 
-	public abstract void write(String message, LogLevel lineLevel);
+	public abstract void write(String message, Level lineLevel);
 
 }

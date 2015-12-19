@@ -1,75 +1,72 @@
 package com.cheetahload.timer;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Vector;
-
+import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.log.CommonLogger;
-import com.cheetahload.log.LogLevel;
+import com.cheetahload.log.Level;
 import com.cheetahload.utility.DB;
 
 public final class TimerWriter extends Thread {
 
 	private boolean stopSignal;
-	private Vector<String> timerVector;
+	// private Vector<String> timerVector;
+	private TestConfiguration config;
 	private TestResult result;
 	// private FileWriter logWriter;
-	private int logToFileRate;
-	private Connection connection;
-	private static TimerWriter timerWriter;
 
-	public static TimerWriter getTimerWriter() {
-		if (timerWriter == null)
-			timerWriter = new TimerWriter();
-		return timerWriter;
-	}
+	private int logWriteRate;
 
-	private TimerWriter() {
+	// private Connection connection;
+
+	public TimerWriter() {
+		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
 		stopSignal = false;
-		timerVector = new Vector<String>();
-		logToFileRate = result.getLogToFileRate();
-		try {
-			connection = DB.getChildDBConnection();
-		} catch (ClassNotFoundException e) {
-			CommonLogger.getLogger().write(
-					"TimerWriter - TimerWriter() SQLite JBDC class can not be found. Stop record time. "
-							+ e.getMessage(), LogLevel.ERROR);
-			this.interrupt();
-		} catch (SQLException e1) {
-			CommonLogger.getLogger().write(
-					"TimerWriter - TimerWriter() Failed to get general DB connection. Stop record time. "
-							+ e1.getMessage(), LogLevel.ERROR);
-			this.interrupt();
-		}
+		// timerVector = new Vector<String>();
+		logWriteRate = config.getLogWriteRate();
 	}
 
-	public void stopWriter() {
-		stopSignal = true;
+	public void setStopSignal(boolean stopSignal) {
+		this.stopSignal = stopSignal;
 	}
 
 	public void run() {
 		while (!stopSignal) {
-			// while (true) {
-			writeToDB();
 			try {
-				sleep(logToFileRate);
+				sleep(logWriteRate);
 			} catch (InterruptedException e) {
-				CommonLogger.getLogger().write(
-						"TimerWriter - run() Failed to sleep TimerWriter thread. " + e.getMessage(), LogLevel.ERROR);
+				CommonLogger.getCommonLogger()
+						.write("TimerWriter - run() - sleep interrupted abnormally.", Level.ERROR);
+				e.printStackTrace();
 			}
+			// writeToFile();
+			writeToDB();
 		}
-		// write left timer buffer to db
+		// write all of timer buffer left to file
+		// writeToFile();
 		writeToDB();
-		try {
-			connection.close();
-		} catch (SQLException e) {
-			CommonLogger.getLogger().write(
-					"DB - getGeneralDBConnection() Failed to close DB connection. " + e.getMessage(), LogLevel.ERROR);
-		}
+		DB.closeConnection();
 	}
 
+	public void writeToDB() {
+		if (!DB.insert("", result.getTimerQueue())) {
+			stopSignal = true;
+			CommonLogger.getCommonLogger().write(
+					"TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter thread.", Level.ERROR);
+		}
+
+		// for (String key : result.getTimerBufferKeySet()) {
+		// // TODO use queue replace vector
+		// Vector<String> timerVector = new
+		// Vector<String>(result.getTimerVector(key));
+		// if (!DB.insert("insert into timer values(?,?,?,?)", timerVector)) {
+		// stopSignal = true;
+		// } else {
+		// result.getTimerVector(key).removeAll(timerVector);
+		//
+		// }
+		// }
+	}
 	// public void writeToFile() {
 	// for (String key : result.getTimerBufferKeySet()) {
 	// String path = config.getTimerLogPath() + "/" + key + ".log";
@@ -92,39 +89,4 @@ public final class TimerWriter extends Thread {
 	// }
 	// }
 	// }
-
-	public void writeToDB() {
-		for (String scriptName : result.getTimerBufferKeySet()) {
-			timerVector = result.getTimerVector(scriptName);
-			Vector<String> subVector = new Vector<String>(timerVector);
-			for (String value : subVector) {
-				// value includes duration, username, start time, end time
-				String sql = "insert into timer values('" + scriptName + "'," + value + ");";
-				try {
-					connection.prepareStatement(sql).executeUpdate();
-				} catch (SQLException e) {
-					CommonLogger.getLogger().write(
-							"TimerWriter - writeToDB() execute SQL failed. SQL: " + sql + ". " + e.getMessage(),
-							LogLevel.ERROR);
-				}
-			}
-			try {
-				connection.commit();
-			} catch (SQLException e) {
-				CommonLogger.getLogger().write("TimerWriter - writeToDB() Commit to DB failed. " + e.getMessage(),
-						LogLevel.ERROR);
-				CommonLogger.getLogger().write("TimerWriter - writeToDB() Data lost from DB: ", LogLevel.ERROR);
-				for (String value : subVector) {
-					CommonLogger.getLogger().write(scriptName + " " + value, LogLevel.ERROR);
-				}
-				try {
-					connection.rollback();
-				} catch (SQLException e1) {
-					CommonLogger.getLogger().write(
-							"TimerWriter - writeToDB() Commit roll back failed. " + e1.getMessage(), LogLevel.ERROR);
-				}
-			}
-			timerVector.removeAll(subVector);
-		}
-	}
 }

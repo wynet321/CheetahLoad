@@ -1,7 +1,7 @@
 package com.cheetahload.sample;
 
 import com.cheetahload.TestScript;
-import com.cheetahload.log.LogLevel;
+import com.cheetahload.log.Level;
 
 public class TestScript_Login extends TestScript {
 
@@ -14,7 +14,7 @@ public class TestScript_Login extends TestScript {
 	@Override
 	public void test() throws Exception {
 		// TODO Auto-generated method stub
-		getUserLogger().write(this.getName() + " - test()", LogLevel.INFO);
+		getUserLogger().write(this.getName() + " - test()", Level.INFO);
 			Thread.sleep(1);
 	}
 

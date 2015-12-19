@@ -1,11 +1,18 @@
 package com.cheetahload.log;
 
+import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
+
 public abstract class LoggerWriter extends Thread {
+	protected TestConfiguration config=TestConfiguration.getTestConfiguration();;
+	protected TestResult result=TestResult.getTestResult();
+	protected StringBuffer buffer=result.getCommonLogBuffer();
+	protected int fileSize = config.getLogFileSize();
+	protected int logWriteRate=config.getLogWriteRate();
 	protected boolean stopSignal = false;
 	protected int fileCount = 0;
-	protected int fileSize = 1024000;
-
-	public abstract void stopWriter();
+	
+	public abstract void setStopSignal(boolean stopSignal);
 
 	public abstract void run();
 }

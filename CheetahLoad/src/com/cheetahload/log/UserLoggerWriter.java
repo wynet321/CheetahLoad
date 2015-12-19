@@ -4,51 +4,32 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.cheetahload.TestResult;
-
 public final class UserLoggerWriter extends LoggerWriter {
 
 	private StringBuffer buffer;
-	private TestResult result;
 	private FileWriter logWriter;
-	private static UserLoggerWriter userLoggerWriter;
-	private int logToFileRate;
 
-	public static UserLoggerWriter getUserLoggerWriter() {
-		if (userLoggerWriter == null)
-			userLoggerWriter = new UserLoggerWriter();
-		return userLoggerWriter;
-	}
-
-	private UserLoggerWriter() {
-		result = TestResult.getTestResult();
-		fileSize = result.getLogFileSize();
-		logToFileRate = result.getLogToFileRate();
-	}
-
-	@Override
-	public void stopWriter() {
-		stopSignal = true;
-		writeToFile();
+	public void setStopSignal(boolean stopSignal) {
+		this.stopSignal = stopSignal;
 	}
 
 	public void run() {
 		while (!stopSignal) {
-			writeToFile();
 			try {
-				sleep(logToFileRate);
+				sleep(logWriteRate);
 			} catch (InterruptedException e) {
-				CommonLogger.getLogger().write("UserLoggerWriter - run() Thread sleep failed. " + e.getMessage(),
-						LogLevel.ERROR);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			writeToFile();
 		}
-		// write left timer buffer to file
+		// write all of timer buffer to file
 		writeToFile();
 	}
 
 	public void writeToFile() {
 		for (String key : result.getUserLogBufferKeySet()) {
-			String path = result.getLogPath() + "/" + key + ".log";
+			String path = config.getLogPath() + "/" + key + ".log";
 			File file = new File(path);
 			buffer = result.getUserLogBuffer(key);
 			fileCount = result.getUserLogFileCount(key);
@@ -65,21 +46,17 @@ public final class UserLoggerWriter extends LoggerWriter {
 					logWriter.close();
 					file.renameTo(new File(path + "." + String.valueOf(++fileCount)));
 				}
-				result.setUserLogFileCount(key, fileCount);
-
 				if (stopSignal) {
 					logWriter = new FileWriter(path, false);
 					logWriter.write(buffer.toString());
 					logWriter.flush();
 					logWriter.close();
-					this.interrupt();
 				}
+				result.setUserLogFileCount(key, fileCount);
 			} catch (IOException e) {
-				CommonLogger.getLogger().write(
-						"UserLoggerWriter - writeToFile() Failed to write user log files. Path: " + path + ". "
-								+ e.getMessage(), LogLevel.ERROR);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
-
 }

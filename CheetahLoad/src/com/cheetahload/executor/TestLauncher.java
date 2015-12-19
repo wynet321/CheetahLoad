@@ -7,22 +7,51 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.CommonLogger;
-import com.cheetahload.log.LogLevel;
+import com.cheetahload.log.CommonLoggerWriter;
+import com.cheetahload.log.Level;
+import com.cheetahload.log.UserLoggerWriter;
+import com.cheetahload.timer.TimerWriter;
 
 public final class TestLauncher {
 
-	public final static void run(TestSuite testSuite) {
-		TestResult result = TestResult.getTestResult();
-		result.startLoggerWriters();
+	private static CommonLoggerWriter commonLoggerWriter;
+	private static TimerWriter timerWriter;
+	private static UserLoggerWriter userLoggerWriter;
 
-		TestConfiguration config = TestConfiguration.getTestConfiguration();
-		if (!config.verify()) {
-			CommonLogger.getLogger().write(
-					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
-					LogLevel.ERROR);
-			result.stopLoggerWriters();
+	private static void startLogger() {
+		commonLoggerWriter = new CommonLoggerWriter();
+		commonLoggerWriter.start();
+
+		timerWriter = new TimerWriter();
+		timerWriter.start();
+
+		userLoggerWriter = new UserLoggerWriter();
+		userLoggerWriter.start();
+	}
+
+	public static void stopLogger() {
+		timerWriter.setStopSignal(true);
+		userLoggerWriter.setStopSignal(true);
+		commonLoggerWriter.setStopSignal(true);
+		while (timerWriter.isInterrupted() && userLoggerWriter.isInterrupted() && commonLoggerWriter.isInterrupted()) {
+			System.out.println("Test is completed.");
 			System.exit(0);
 		}
+	}
+
+	public final static void run(TestSuite testSuite) {
+		TestResult result = TestResult.getTestResult();
+		TestConfiguration config = TestConfiguration.getTestConfiguration();
+
+		if (!config.verifyConfiguration()) {
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
+					Level.ERROR);
+			commonLoggerWriter.setStopSignal(true);
+			System.exit(0);
+		}
+
+		startLogger();
 
 		// Thread(VU) start
 		int threadCount = config.getVusers();
@@ -37,30 +66,31 @@ public final class TestLauncher {
 		try {
 			threadSignal.await();
 		} catch (InterruptedException e) {
-			CommonLogger.getLogger().write(
+			CommonLogger.getCommonLogger().write(
 					"TestEntry - runTest() Thread can't be started. Error: " + e.getStackTrace().toString(),
-					LogLevel.ERROR);
+					Level.ERROR);
 		}
 
 		// output statistic data
-		CommonLogger.getLogger().write("TestEntry - runTest() Execution Count:", LogLevel.INFO);
+		CommonLogger.getCommonLogger().write("TestEntry - runTest() Execution Summary Start.", Level.INFO);
 		Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
 		for (String key : userExecutionCountTable.keySet()) {
-			CommonLogger.getLogger().write("TestEntry - runTest() " + key + ": " + userExecutionCountTable.get(key),
-					LogLevel.INFO);
+			CommonLogger.getCommonLogger().write(
+					"TestEntry - runTest() " + key + " execution count: " + userExecutionCountTable.get(key),
+					Level.INFO);
 		}
 
 		Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
 		if (userErrorCountTable.isEmpty()) {
-			CommonLogger.getLogger().write("TestEntry - runTest() There is no error in test.", LogLevel.INFO);
+			CommonLogger.getCommonLogger().write("TestEntry - runTest() There is no error in test.", Level.INFO);
 		} else {
-			CommonLogger.getLogger().write("TestEntry - runTest() Error Count:", LogLevel.INFO);
 			for (String key : userErrorCountTable.keySet()) {
-				CommonLogger.getLogger().write("TestEntry - runTest() " + key + ": " + userErrorCountTable.get(key),
-						LogLevel.INFO);
+				CommonLogger.getCommonLogger().write(
+						"TestEntry - runTest() " + key + " error count: " + userErrorCountTable.get(key), Level.INFO);
 			}
 		}
 
-		result.stopLoggerWriters();
+		CommonLogger.getCommonLogger().write("TestEntry - runTest() Execution Summary End.", Level.INFO);
+		stopLogger();
 	}
 }
