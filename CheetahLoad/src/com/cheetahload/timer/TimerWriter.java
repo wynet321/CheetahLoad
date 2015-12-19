@@ -49,23 +49,11 @@ public final class TimerWriter extends Thread {
 	}
 
 	public void writeToDB() {
-		if (!DB.insert("", result.getTimerQueue())) {
+		if (!DB.insert("insert into timer values(?,?,?,?)", result.getTimerQueue())) {
 			stopSignal = true;
 			CommonLogger.getCommonLogger().write(
 					"TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter thread.", Level.ERROR);
 		}
-
-		// for (String key : result.getTimerBufferKeySet()) {
-		// // TODO use queue replace vector
-		// Vector<String> timerVector = new
-		// Vector<String>(result.getTimerVector(key));
-		// if (!DB.insert("insert into timer values(?,?,?,?)", timerVector)) {
-		// stopSignal = true;
-		// } else {
-		// result.getTimerVector(key).removeAll(timerVector);
-		//
-		// }
-		// }
 	}
 	// public void writeToFile() {
 	// for (String key : result.getTimerBufferKeySet()) {

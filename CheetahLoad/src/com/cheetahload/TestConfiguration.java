@@ -30,7 +30,7 @@ public class TestConfiguration {
 	}
 
 	public void setTestName(String testName) {
-		this.testName = testName + this.testName;
+		this.testName = testName + "_" + this.testName;
 	}
 
 	public int getLogFileSize() {
@@ -62,7 +62,7 @@ public class TestConfiguration {
 		userIndex = 0;
 		logFileSize = 1024000;
 		logWriteRate = 10000;
-		testName = new SimpleDateFormat("yyyy-MM-dd.HH:mm:ss").format(System.currentTimeMillis());
+		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
 	}
 
 	public int getLogWriteRate() {
@@ -79,11 +79,13 @@ public class TestConfiguration {
 		commonLogger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
 		commonLogger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
-			commonLogger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.", Level.ERROR);
+			commonLogger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
+					Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			commonLogger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.", Level.ERROR);
+			commonLogger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.",
+					Level.ERROR);
 			return false;
 		}
 		commonLogger.write("TestConfiguration - initial() - vusers=" + vusers, Level.DEBUG);
@@ -102,9 +104,11 @@ public class TestConfiguration {
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				commonLogger.write("TestConfiguration - initial() - userNames vector has " + userNames.size() + " cell object(s).", Level.DEBUG);
+				commonLogger.write("TestConfiguration - initial() - userNames vector has " + userNames.size()
+						+ " cell object(s).", Level.DEBUG);
 			} else {
-				commonLogger.write("TestConfiguration - initial() - userNames vector should include cell object(s).", Level.ERROR);
+				commonLogger.write("TestConfiguration - initial() - userNames vector should include cell object(s).",
+						Level.ERROR);
 				return false;
 			}
 		else {
@@ -129,20 +133,24 @@ public class TestConfiguration {
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
 				if (!clearDirectory(new File(path))) {
-					throw new RuntimeException("TestConfiguration - initialLogPath() Clear folder '" + path + "' failed. Please clear by manual.");
+					throw new RuntimeException("TestConfiguration - initialLogPath() Clear folder '" + path
+							+ "' failed. Please clear by manual.");
 				}
 			} else {
 				if (!dir.delete())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Delete file '" + path + "' failed. Please delete by manual.");
+					throw new RuntimeException("TestConfiguration - initialLogPath() Delete file '" + path
+							+ "' failed. Please delete by manual.");
 				if (!dir.mkdir())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path + "' failed. Please create by manual.");
+					throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path
+							+ "' failed. Please create by manual.");
 			}
 			return true;
 		} else {
 			if (dir.mkdirs()) {
 				return true;
 			} else {
-				throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path + "' failed. Please check permission.");
+				throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path
+						+ "' failed. Please check permission.");
 			}
 		}
 	}

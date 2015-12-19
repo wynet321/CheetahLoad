@@ -123,7 +123,7 @@ public class TestResult {
 			return;
 		}
 		StringBuilder item = new StringBuilder();
-		item.append(testName).append(scriptName).append(userName).append(duration);
+		item.append(testName).append(",").append(scriptName).append(",").append(userName).append(",").append(duration);
 		if (!timerQueue.add(item.toString())) {
 			CommonLogger.getCommonLogger().write(
 					"TestResult - setTimerQueue - Add to queue failed. item: '" + item.toString() + "'", Level.ERROR);

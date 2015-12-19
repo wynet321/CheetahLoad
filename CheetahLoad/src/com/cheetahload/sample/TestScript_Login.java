@@ -7,20 +7,20 @@ public class TestScript_Login extends TestScript {
 
 	@Override
 	public void prepare() throws Exception{
-		// TODO Auto-generated method stub
+	
 
 	}
 
 	@Override
 	public void test() throws Exception {
-		// TODO Auto-generated method stub
+		
 		getUserLogger().write(this.getName() + " - test()", Level.INFO);
-			Thread.sleep(1);
+			Thread.sleep(10);
 	}
 
 	@Override
 	public void clearup() throws Exception {
-		// TODO Auto-generated method stub
+		
 	}
 
 }

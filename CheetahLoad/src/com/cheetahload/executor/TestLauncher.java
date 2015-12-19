@@ -33,10 +33,15 @@ public final class TestLauncher {
 		timerWriter.setStopSignal(true);
 		userLoggerWriter.setStopSignal(true);
 		commonLoggerWriter.setStopSignal(true);
-		while (timerWriter.isInterrupted() && userLoggerWriter.isInterrupted() && commonLoggerWriter.isInterrupted()) {
-			System.out.println("Test is completed.");
-			System.exit(0);
+		while (timerWriter.isAlive() || userLoggerWriter.isAlive() || commonLoggerWriter.isAlive()) { 
+			try{
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		System.out.println("Test is completed.");
 	}
 
 	public final static void run(TestSuite testSuite) {
@@ -52,7 +57,7 @@ public final class TestLauncher {
 		}
 
 		startLogger();
-
+		System.out.println("Test is starting...");
 		// Thread(VU) start
 		int threadCount = config.getVusers();
 		int i = 0;

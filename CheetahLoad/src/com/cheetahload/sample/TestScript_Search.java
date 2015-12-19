@@ -5,23 +5,22 @@ import com.cheetahload.log.Level;
 
 public class TestScript_Search extends TestScript {
 
-	
 	@Override
-	public void test() throws Exception{
-		// TODO Auto-generated method stub
+	public void test() throws Exception {
+		
 		getUserLogger().write(this.getName() + " - test()", Level.INFO);
+		Thread.sleep(20);
 		throw new Exception("aaa");
+		
 	}
 
 	@Override
 	public void prepare() throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void clearup() throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
