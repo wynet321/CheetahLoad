@@ -2,17 +2,18 @@ package com.cheetahload;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Vector;
+import java.util.List;
 
-import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 
 public class TestConfiguration {
 
 	private int duration;
 	private int loops;
-	private int vusers;
-	private Vector<String> userNames;
+	private int userCount;
+	private List<String> userNames;
 	private String password;
 	private int thinkTime;
 	private String testSuiteName;
@@ -52,7 +53,7 @@ public class TestConfiguration {
 		// default value
 		duration = 0;
 		loops = 0;
-		vusers = 0;
+		userCount = 0;
 		password = new String();
 		thinkTime = 0;
 		testSuiteName = new String();
@@ -74,45 +75,46 @@ public class TestConfiguration {
 	}
 
 	public boolean verifyConfiguration() {
-		CommonLogger commonLogger = CommonLogger.getCommonLogger();
+		//CommonLogger commonLogger = CommonLogger.getCommonLogger();
+		Logger logger=Logger.getLogger(LoggerName.Common);
 
-		commonLogger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
-		commonLogger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
+		logger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
+		logger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
-			commonLogger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
+			logger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
 					Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			commonLogger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.",
+			logger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.",
 					Level.ERROR);
 			return false;
 		}
-		commonLogger.write("TestConfiguration - initial() - vusers=" + vusers, Level.DEBUG);
-		if (vusers == 0) {
-			commonLogger.write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
+		logger.write("TestConfiguration - initial() - vusers=" + userCount, Level.DEBUG);
+		if (userCount == 0) {
+			logger.write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
-		commonLogger.write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
+		logger.write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
 		if (password.isEmpty()) {
-			commonLogger.write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
+			logger.write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
 		}
-		commonLogger.write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		logger.write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			commonLogger.write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
+			logger.write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				commonLogger.write("TestConfiguration - initial() - userNames vector has " + userNames.size()
+				logger.write("TestConfiguration - initial() - userNames vector has " + userNames.size()
 						+ " cell object(s).", Level.DEBUG);
 			} else {
-				commonLogger.write("TestConfiguration - initial() - userNames vector should include cell object(s).",
+				logger.write("TestConfiguration - initial() - userNames vector should include cell object(s).",
 						Level.ERROR);
 				return false;
 			}
 		else {
-			commonLogger.write("TestConfiguration - initial() - userNames vector can not be null.", Level.ERROR);
+			logger.write("TestConfiguration - initial() - userNames vector can not be null.", Level.ERROR);
 			return false;
 		}
 
@@ -124,7 +126,7 @@ public class TestConfiguration {
 			return false;
 		}
 
-		commonLogger.write("TestConfiguration - initial() done.", Level.DEBUG);
+		logger.write("TestConfiguration - initial() done.", Level.DEBUG);
 		return true;
 	}
 
@@ -186,13 +188,13 @@ public class TestConfiguration {
 		return userIndex++;
 	}
 
-	public Vector<String> getUserNames() {
+	public List<String> getUserNames() {
 		return userNames;
 	}
 
-	public void setVusers(int vusers, String prefix, int digit, int startNumber) {
-		this.vusers = vusers;
-		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, vusers);
+	public void setUserNames(int userCount, String prefix, int digit, int startNumber) {
+		this.userCount = userCount;
+		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, userCount);
 	}
 
 	public int getDuration() {
@@ -211,8 +213,8 @@ public class TestConfiguration {
 		this.loops = loops;
 	}
 
-	public int getVusers() {
-		return vusers;
+	public int getUserCount() {
+		return userCount;
 	}
 
 	public String getPassword() {

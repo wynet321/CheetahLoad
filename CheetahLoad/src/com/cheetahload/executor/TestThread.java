@@ -10,12 +10,14 @@ import com.cheetahload.TestResult;
 import com.cheetahload.TestScript;
 import com.cheetahload.TestSuite;
 import com.cheetahload.log.Level;
-import com.cheetahload.log.UserLogger;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 import com.cheetahload.timer.Timer;
 
 public final class TestThread extends Thread {
 	private TestSuite testSuite;
-	private UserLogger userLogger;
+	//private UserLogger userLogger;
+	private Logger logger;
 	private String userName;
 	private Timer timer;
 	private Random random;
@@ -27,43 +29,40 @@ public final class TestThread extends Thread {
 		return userName;
 	}
 
-	// public Timer getTimer() {
-	// return timer;
-	// }
-
 	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
 		this.testSuite = testSuite;
 		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
-		userLogger = UserLogger.getUserLogger(userName);
+		//userLogger = UserLogger.getUserLogger(userName);
+		logger=Logger.getLogger(LoggerName.User);
 		timer = new Timer();
 		random = new Random();
 	}
 
-	public UserLogger getUserLogger() {
-		return userLogger;
-	}
+//	public UserLogger getUserLogger() {
+//		return userLogger;
+//	}
 
 	public void run() {
-		userLogger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.",
+		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.",
 				Level.DEBUG);
 		execute(testSuite.getPrepareTestScript());
-		userLogger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " stopped.",
+		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " stopped.",
 				Level.DEBUG);
 		execute();
-		userLogger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " start.",
+		logger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " start.",
 				Level.DEBUG);
 		execute(testSuite.getClearupTestScript());
-		userLogger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " stopped.",
+		logger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " stopped.",
 				Level.DEBUG);
 		threadSignal.countDown();
 	}
 
 	private void execute(TestScript testScript) {
 		if (testScript != null) {
-			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " start.", Level.DEBUG);
+			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " start.", Level.DEBUG);
 			try {
 				testScript.prepare();
 				timer.begin();
@@ -73,13 +72,14 @@ public final class TestThread extends Thread {
 			} catch (Exception e) {
 				// TODO deal with exception
 				result.addUserErrorCount(testScript.getName());
-				userLogger.write(e.getMessage(), Level.ERROR);
+				logger.write(e.getMessage(), Level.ERROR);
 			}
-//			result.setTimerVector(config.getTestName(), testScript.getName(), String.valueOf(timer.getDuration()),
-//					userName);
+			// result.setTimerVector(config.getTestName(), testScript.getName(),
+			// String.valueOf(timer.getDuration()),
+			// userName);
 			result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
 					String.valueOf(timer.getDuration()));
-			userLogger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
+			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
 			// timer.write(testScript.getName(),
 			// timer.getDuration() + "," + userName + "," + timer.getBeginTime()
 			// + "," + timer.getEndTime());
@@ -92,7 +92,7 @@ public final class TestThread extends Thread {
 		// sequentially run
 		int loop = config.getLoops();
 		if (loop > 0) {
-			userLogger.write("TestThread - execute() sequential run start.", Level.INFO);
+			logger.write("TestThread - execute() sequential run start.", Level.INFO);
 			for (int i = 0; i < loop; i++) {
 				while (iterator.hasNext()) {
 					TestCase testcase = iterator.next();
@@ -101,7 +101,7 @@ public final class TestThread extends Thread {
 					}
 				}
 			}
-			userLogger.write("TestThread - execute() sequential run stop.", Level.INFO);
+			logger.write("TestThread - execute() sequential run stop.", Level.INFO);
 		} else {
 			// prepare random run script pool
 			int totalPercentage = testSuite.getTotalPercentage();
@@ -116,16 +116,16 @@ public final class TestThread extends Thread {
 				}
 				percentageAccumulator += percentage;
 			}
-			userLogger.write("TestThread - execute() random run preparation done with totalPercentage="
+			logger.write("TestThread - execute() random run preparation done with totalPercentage="
 					+ totalPercentage, Level.DEBUG);
 			if (config.getLogLevel() == Level.DEBUG) {
-				userLogger.write("TestThread - execute() random run preparation done with testScriptPool", Level.DEBUG);
+				logger.write("TestThread - execute() random run preparation done with testScriptPool", Level.DEBUG);
 				for (int i = 0; i < testScriptPool.length; i++) {
-					userLogger.write("Index=" + i + ": " + testScriptPool[i].getName(), Level.DEBUG);
+					logger.write("Index=" + i + ": " + testScriptPool[i].getName(), Level.DEBUG);
 				}
 			}
 			// random run
-			userLogger.write("TestThread - execute() random run start.", Level.INFO);
+			logger.write("TestThread - execute() random run start.", Level.INFO);
 			long duration = config.getDuration() * 1000;
 			long begin = System.currentTimeMillis();
 			int testScriptPoolIndex = 0;
@@ -133,7 +133,7 @@ public final class TestThread extends Thread {
 				testScriptPoolIndex = random.nextInt(totalPercentage);
 				execute(testScriptPool[testScriptPoolIndex]);
 			}
-			userLogger.write("TestThread - execute() random run stop.", Level.INFO);
+			logger.write("TestThread - execute() random run stop.", Level.INFO);
 		}
 	}
 }

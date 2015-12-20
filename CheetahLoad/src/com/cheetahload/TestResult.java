@@ -4,8 +4,9 @@ import java.util.Hashtable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 
 public class TestResult {
 
@@ -102,31 +103,28 @@ public class TestResult {
 	// }
 
 	public void setTimerQueue(String testName, String scriptName, String userName, String duration) {
+		Logger logger = Logger.getLogger(LoggerName.Common);
 		if (testName == null || testName.isEmpty()) {
-			CommonLogger.getCommonLogger().write("TestResult - setTimerQueue - testName was null or empty.",
-					Level.ERROR);
+			logger.write("TestResult - setTimerQueue - testName was null or empty.", Level.ERROR);
 			return;
 		}
 		if (scriptName == null || scriptName.isEmpty()) {
-			CommonLogger.getCommonLogger().write("TestResult - setTimerQueue - scriptName was null or empty.",
-					Level.ERROR);
+			logger.write("TestResult - setTimerQueue - scriptName was null or empty.", Level.ERROR);
 			return;
 		}
 		if (userName == null || userName.isEmpty()) {
-			CommonLogger.getCommonLogger().write("TestResult - setTimerQueue - userName was null or empty.",
-					Level.ERROR);
+			logger.write("TestResult - setTimerQueue - userName was null or empty.", Level.ERROR);
 			return;
 		}
 		if (duration == null || duration.isEmpty()) {
-			CommonLogger.getCommonLogger().write("TestResult - setTimerQueue - duration was null or empty.",
-					Level.ERROR);
+			logger.write("TestResult - setTimerQueue - duration was null or empty.", Level.ERROR);
 			return;
 		}
 		StringBuilder item = new StringBuilder();
 		item.append(testName).append(",").append(scriptName).append(",").append(userName).append(",").append(duration);
 		if (!timerQueue.add(item.toString())) {
-			CommonLogger.getCommonLogger().write(
-					"TestResult - setTimerQueue - Add to queue failed. item: '" + item.toString() + "'", Level.ERROR);
+			logger.write("TestResult - setTimerQueue - Add to queue failed. item: '" + item.toString() + "'",
+					Level.ERROR);
 		}
 	}
 

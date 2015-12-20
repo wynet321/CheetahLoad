@@ -2,8 +2,9 @@ package com.cheetahload.timer;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
-import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 import com.cheetahload.utility.DB;
 
 public final class TimerWriter extends Thread {
@@ -35,8 +36,8 @@ public final class TimerWriter extends Thread {
 			try {
 				sleep(logWriteRate);
 			} catch (InterruptedException e) {
-				CommonLogger.getCommonLogger()
-						.write("TimerWriter - run() - sleep interrupted abnormally.", Level.ERROR);
+				Logger.getLogger(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.",
+						Level.ERROR);
 				e.printStackTrace();
 			}
 			// writeToFile();
@@ -51,7 +52,7 @@ public final class TimerWriter extends Thread {
 	public void writeToDB() {
 		if (!DB.insert("insert into timer values(?,?,?,?)", result.getTimerQueue())) {
 			stopSignal = true;
-			CommonLogger.getCommonLogger().write(
+			Logger.getLogger(LoggerName.Common).write(
 					"TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter thread.", Level.ERROR);
 		}
 	}

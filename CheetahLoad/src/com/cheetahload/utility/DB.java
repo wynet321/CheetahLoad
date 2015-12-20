@@ -8,8 +8,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.executor.TestLauncher;
-import com.cheetahload.log.CommonLogger;
 import com.cheetahload.log.Level;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 
 public class DB {
 
@@ -28,8 +29,7 @@ public class DB {
 								"create table timer (testname varchar(50), scriptname varchar(20),  username varchar(20),duration int)");
 				connection.setAutoCommit(false);
 			} catch (Exception e) {
-				CommonLogger
-						.getCommonLogger()
+				Logger.getLogger(LoggerName.Common)
 						.write("DB - getConnection() - Failed to get Connection. Please stop current test since performance data will not record correctly.",
 								Level.ERROR);
 				e.printStackTrace();
@@ -45,7 +45,7 @@ public class DB {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			CommonLogger.getCommonLogger().write(
+			Logger.getLogger(LoggerName.Common).write(
 					"DB - closeConnection() - Close DB connection failed! " + e.getMessage(), Level.ERROR);
 			e.printStackTrace();
 			TestLauncher.stopLogger();
@@ -77,14 +77,14 @@ public class DB {
 	// .getCommonLogger()
 	// .write("DB - insertBatch() - Execute batch SQL failed. Batch SQL: insert into timer values(?,?,?,?). Please stop current test since performance data can't be record correctly. "
 	// + e.getMessage(), Level.ERROR);
-	// CommonLogger.getCommonLogger().write("DB -  insertBatch() - SQL parameter values:\n"
+	// Logger.getLogger(LoggerName.Common).write("DB -  insertBatch() - SQL parameter values:\n"
 	// + sqlValue,
 	// Level.ERROR);
 	// e.printStackTrace();
 	// try {
 	// DB.getConnection().rollback();
 	// } catch (SQLException e1) {
-	// CommonLogger.getCommonLogger().write(
+	// Logger.getLogger(LoggerName.Common).write(
 	// "DB - insertBatch() - Roll back failed. Please check DB connection. " +
 	// e.getMessage(),
 	// Level.ERROR);
@@ -96,7 +96,7 @@ public class DB {
 	// }
 	// return true;
 	// } else {
-	// CommonLogger.getCommonLogger().write("DB - insert() - SQL string is null or empty.  ",
+	// Logger.getLogger(LoggerName.Common).write("DB - insert() - SQL string is null or empty.  ",
 	// Level.ERROR);
 	// return false;
 	// }
@@ -104,7 +104,7 @@ public class DB {
 
 	public static boolean insert(String sql, ConcurrentLinkedQueue<String> queue) {
 		if (null == sql || sql.isEmpty()) {
-			CommonLogger.getCommonLogger().write("DB - insert() - SQL string is null or empty.", Level.ERROR);
+			Logger.getLogger(LoggerName.Common).write("DB - insert() - SQL string is null or empty.", Level.ERROR);
 			return false;
 		}
 		String logValue = new String();
@@ -129,17 +129,17 @@ public class DB {
 			sqlStatement.executeBatch();
 			getConnection().commit();
 		} catch (SQLException e) {
-			CommonLogger.getCommonLogger().write(
+			Logger.getLogger(LoggerName.Common).write(
 					"DB - insertBatch() - Execute batch SQL failed. Batch SQL: " + sql
 							+ ". Please stop current test since performance data can't be recorded correctly. "
 							+ e.getMessage(), Level.ERROR);
-			CommonLogger.getCommonLogger().write("DB -  insertBatch() - SQL parameter values:\n" + logValue,
+			Logger.getLogger(LoggerName.Common).write("DB -  insertBatch() - SQL parameter values:\n" + logValue,
 					Level.ERROR);
 			e.printStackTrace();
 			try {
 				DB.getConnection().rollback();
 			} catch (SQLException e1) {
-				CommonLogger.getCommonLogger().write(
+				Logger.getLogger(LoggerName.Common).write(
 						"DB - insertBatch() - Roll back failed. Please check DB connection. " + e.getMessage(),
 						Level.ERROR);
 				TestLauncher.stopLogger();
