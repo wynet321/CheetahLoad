@@ -29,7 +29,7 @@ public class DB {
 								"create table timer (testname varchar(50), scriptname varchar(20),  username varchar(20),duration int)");
 				connection.setAutoCommit(false);
 			} catch (Exception e) {
-				Logger.getLogger(LoggerName.Common)
+				Logger.get(LoggerName.Common)
 						.write("DB - getConnection() - Failed to get Connection. Please stop current test since performance data will not record correctly.",
 								Level.ERROR);
 				e.printStackTrace();
@@ -45,7 +45,7 @@ public class DB {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"DB - closeConnection() - Close DB connection failed! " + e.getMessage(), Level.ERROR);
 			e.printStackTrace();
 			TestLauncher.stopLogger();
@@ -104,7 +104,7 @@ public class DB {
 
 	public static boolean insert(String sql, ConcurrentLinkedQueue<String> queue) {
 		if (null == sql || sql.isEmpty()) {
-			Logger.getLogger(LoggerName.Common).write("DB - insert() - SQL string is null or empty.", Level.ERROR);
+			Logger.get(LoggerName.Common).write("DB - insert() - SQL string is null or empty.", Level.ERROR);
 			return false;
 		}
 		String logValue = new String();
@@ -129,17 +129,17 @@ public class DB {
 			sqlStatement.executeBatch();
 			getConnection().commit();
 		} catch (SQLException e) {
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"DB - insertBatch() - Execute batch SQL failed. Batch SQL: " + sql
 							+ ". Please stop current test since performance data can't be recorded correctly. "
 							+ e.getMessage(), Level.ERROR);
-			Logger.getLogger(LoggerName.Common).write("DB -  insertBatch() - SQL parameter values:\n" + logValue,
+			Logger.get(LoggerName.Common).write("DB -  insertBatch() - SQL parameter values:\n" + logValue,
 					Level.ERROR);
 			e.printStackTrace();
 			try {
 				DB.getConnection().rollback();
 			} catch (SQLException e1) {
-				Logger.getLogger(LoggerName.Common).write(
+				Logger.get(LoggerName.Common).write(
 						"DB - insertBatch() - Roll back failed. Please check DB connection. " + e.getMessage(),
 						Level.ERROR);
 				TestLauncher.stopLogger();

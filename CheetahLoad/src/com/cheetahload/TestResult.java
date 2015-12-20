@@ -103,7 +103,7 @@ public class TestResult {
 	// }
 
 	public void setTimerQueue(String testName, String scriptName, String userName, String duration) {
-		Logger logger = Logger.getLogger(LoggerName.Common);
+		Logger logger = Logger.get(LoggerName.Common);
 		if (testName == null || testName.isEmpty()) {
 			logger.write("TestResult - setTimerQueue - testName was null or empty.", Level.ERROR);
 			return;

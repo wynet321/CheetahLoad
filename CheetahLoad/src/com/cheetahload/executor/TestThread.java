@@ -36,7 +36,7 @@ public final class TestThread extends Thread {
 		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
 		//userLogger = UserLogger.getUserLogger(userName);
-		logger=Logger.getLogger(LoggerName.User);
+		logger=Logger.get(LoggerName.User);
 		timer = new Timer();
 		random = new Random();
 	}

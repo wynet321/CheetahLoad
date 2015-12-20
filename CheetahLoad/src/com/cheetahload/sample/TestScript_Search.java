@@ -10,7 +10,7 @@ public class TestScript_Search extends TestScript {
 	@Override
 	public void test() throws Exception {
 		
-		Logger.getLogger(LoggerName.User).write(this.getName() + " - test()", Level.INFO);
+		Logger.get(LoggerName.User).write(this.getName() + " - test()", Level.INFO);
 		Thread.sleep(20);
 		throw new Exception("aaa");
 		

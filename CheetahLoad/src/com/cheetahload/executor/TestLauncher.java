@@ -50,7 +50,7 @@ public final class TestLauncher {
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
 		if (!config.verifyConfiguration()) {
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			commonLoggerWriter.setStopSignal(true);
@@ -72,31 +72,31 @@ public final class TestLauncher {
 		try {
 			threadSignal.await();
 		} catch (InterruptedException e) {
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"TestEntry - runTest() Thread can't be started. Error: " + e.getStackTrace().toString(),
 					Level.ERROR);
 		}
 
 		// output statistic data
-		Logger.getLogger(LoggerName.Common).write("TestEntry - runTest() Execution Summary Start.", Level.INFO);
+		Logger.get(LoggerName.Common).write("TestEntry - runTest() Execution Summary Start.", Level.INFO);
 		Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
 		for (String key : userExecutionCountTable.keySet()) {
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"TestEntry - runTest() " + key + " execution count: " + userExecutionCountTable.get(key),
 					Level.INFO);
 		}
 
 		Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
 		if (userErrorCountTable.isEmpty()) {
-			Logger.getLogger(LoggerName.Common).write("TestEntry - runTest() There is no error in test.", Level.INFO);
+			Logger.get(LoggerName.Common).write("TestEntry - runTest() There is no error in test.", Level.INFO);
 		} else {
 			for (String key : userErrorCountTable.keySet()) {
-				Logger.getLogger(LoggerName.Common).write(
+				Logger.get(LoggerName.Common).write(
 						"TestEntry - runTest() " + key + " error count: " + userErrorCountTable.get(key), Level.INFO);
 			}
 		}
 
-		Logger.getLogger(LoggerName.Common).write("TestEntry - runTest() Execution Summary End.", Level.INFO);
+		Logger.get(LoggerName.Common).write("TestEntry - runTest() Execution Summary End.", Level.INFO);
 		stopLogger();
 	}
 }

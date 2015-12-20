@@ -76,7 +76,7 @@ public class TestConfiguration {
 
 	public boolean verifyConfiguration() {
 		//CommonLogger commonLogger = CommonLogger.getCommonLogger();
-		Logger logger=Logger.getLogger(LoggerName.Common);
+		Logger logger=Logger.get(LoggerName.Common);
 
 		logger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
 		logger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);

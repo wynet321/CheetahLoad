@@ -36,7 +36,7 @@ public final class TimerWriter extends Thread {
 			try {
 				sleep(logWriteRate);
 			} catch (InterruptedException e) {
-				Logger.getLogger(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.",
+				Logger.get(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.",
 						Level.ERROR);
 				e.printStackTrace();
 			}
@@ -52,7 +52,7 @@ public final class TimerWriter extends Thread {
 	public void writeToDB() {
 		if (!DB.insert("insert into timer values(?,?,?,?)", result.getTimerQueue())) {
 			stopSignal = true;
-			Logger.getLogger(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).write(
 					"TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter thread.", Level.ERROR);
 		}
 	}

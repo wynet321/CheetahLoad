@@ -14,7 +14,7 @@ public class TestScript_Login extends TestScript {
 
 	@Override
 	public void test() throws Exception {
-		Logger.getLogger(LoggerName.User).write(this.getName() + " - test()", Level.INFO);
+		Logger.get(LoggerName.User).write(this.getName() + " - test()", Level.INFO);
 
 		Thread.sleep(10);
 	}
