@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public final class CommonLoggerWriter extends LoggerWriter {
 
-	private StringBuffer buffer;
+	
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
@@ -18,6 +18,7 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				sleep(logWriteRate);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			writeToFile();
@@ -29,7 +30,7 @@ public final class CommonLoggerWriter extends LoggerWriter {
 		String path = config.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
 		FileWriter logWriter;
-		buffer = result.getCommonLogBuffer();
+		StringBuffer buffer = result.getCommonLogBuffer();
 		try {
 			while (buffer.length() >= fileSize) {
 				logWriter = new FileWriter(path, false);

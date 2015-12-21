@@ -6,9 +6,8 @@ import java.io.IOException;
 
 public final class UserLoggerWriter extends LoggerWriter {
 
-	private StringBuffer buffer;
-	private FileWriter logWriter;
-
+	
+	
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
 	}
@@ -31,7 +30,8 @@ public final class UserLoggerWriter extends LoggerWriter {
 		for (String key : result.getUserLogBufferKeySet()) {
 			String path = config.getLogPath() + "/" + key + ".log";
 			File file = new File(path);
-			buffer = result.getUserLogBuffer(key);
+			FileWriter logWriter;
+			StringBuffer buffer = result.getUserLogBuffer(key);
 			fileCount = result.getUserLogFileCount(key);
 			try {
 				while (buffer.length() >= fileSize) {
