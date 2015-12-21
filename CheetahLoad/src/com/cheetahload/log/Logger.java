@@ -8,17 +8,23 @@ public abstract class Logger {
 	public abstract void write(String message, Level lineLevel);
 
 	public static Logger get(LoggerName loggerName) {
-		if (loggerName == LoggerName.User) {
+		if (null == loggerName) {
+			System.out.println("Logger - get() - Can't get null logger. Log system initial failed.");
+			System.exit(0);
+		} else {
 			if (null == userLogger) {
 				userLogger = new UserLogger();
 			}
-			return userLogger;
-		} else {
 			if (null == commonLogger) {
 				commonLogger = new CommonLogger();
 			}
-			return commonLogger;
-		}
-	}
 
+			if (loggerName == LoggerName.User) {
+				return userLogger;
+			} else if (loggerName == LoggerName.Common) {
+				return commonLogger;
+			}
+		}
+		return commonLogger;
+	}
 }
