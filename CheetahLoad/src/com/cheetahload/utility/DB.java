@@ -107,6 +107,7 @@ public class DB {
 			Logger.get(LoggerName.Common).write("DB - insert() - SQL string is null or empty.", Level.ERROR);
 			return false;
 		}
+		
 		String logValue = new String();
 		try {
 			PreparedStatement sqlStatement = getConnection().prepareStatement(sql);
