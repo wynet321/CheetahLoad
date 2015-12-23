@@ -34,8 +34,8 @@ public final class TestLauncher {
 		timerWriter.setStopSignal(true);
 		userLoggerWriter.setStopSignal(true);
 		commonLoggerWriter.setStopSignal(true);
-		while (timerWriter.isAlive() || userLoggerWriter.isAlive() || commonLoggerWriter.isAlive()) { 
-			try{
+		while (timerWriter.isAlive() || userLoggerWriter.isAlive() || commonLoggerWriter.isAlive()) {
+			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -49,9 +49,9 @@ public final class TestLauncher {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
-		if (!config.verifyConfiguration()) {
+		if (!config.verify()) {
 			Logger.get(LoggerName.Common).write(
-					"TestEntry - runTest() Test configuration settings are not completed. Test can't start! ",
+					"TestLauncher - run() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			commonLoggerWriter.setStopSignal(true);
 			System.exit(0);
@@ -73,12 +73,12 @@ public final class TestLauncher {
 			threadSignal.await();
 		} catch (InterruptedException e) {
 			Logger.get(LoggerName.Common).write(
-					"TestEntry - runTest() Thread can't be started. Error: " + e.getStackTrace().toString(),
+					"TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
 					Level.ERROR);
 		}
 
 		// output statistic data
-		Logger.get(LoggerName.Common).write("TestEntry - runTest() Execution Summary Start.", Level.INFO);
+		Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary Start.", Level.INFO);
 		Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
 		for (String key : userExecutionCountTable.keySet()) {
 			Logger.get(LoggerName.Common).write(
@@ -88,15 +88,15 @@ public final class TestLauncher {
 
 		Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
 		if (userErrorCountTable.isEmpty()) {
-			Logger.get(LoggerName.Common).write("TestEntry - runTest() There is no error in test.", Level.INFO);
+			Logger.get(LoggerName.Common).write("TestLauncher - run() There is no error in test.", Level.INFO);
 		} else {
 			for (String key : userErrorCountTable.keySet()) {
 				Logger.get(LoggerName.Common).write(
-						"TestEntry - runTest() " + key + " error count: " + userErrorCountTable.get(key), Level.INFO);
+						"TestLauncher - run() " + key + " error count: " + userErrorCountTable.get(key), Level.INFO);
 			}
 		}
 
-		Logger.get(LoggerName.Common).write("TestEntry - runTest() Execution Summary End.", Level.INFO);
+		Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary End.", Level.INFO);
 		stopLogger();
 	}
 }

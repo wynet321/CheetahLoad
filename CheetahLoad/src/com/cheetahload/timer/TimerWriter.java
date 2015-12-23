@@ -14,20 +14,14 @@ import com.cheetahload.utility.DB;
 public final class TimerWriter extends Thread {
 
 	private boolean stopSignal;
-	// private Vector<String> timerVector;
 	private TestConfiguration config;
 	private TestResult result;
-	// private FileWriter logWriter;
-
 	private int logWriteRate;
-
-	// private Connection connection;
 
 	public TimerWriter() {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
 		stopSignal = false;
-		// timerVector = new Vector<String>();
 		logWriteRate = config.getLogWriteRate();
 	}
 
@@ -43,11 +37,9 @@ public final class TimerWriter extends Thread {
 				Logger.get(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.", Level.ERROR);
 				e.printStackTrace();
 			}
-			// writeToFile();
 			writeToDB();
 		}
-		// write all of timer buffer left to file
-		// writeToFile();
+		// write all of timer buffer left to DB
 		writeToDB();
 		DB.closeConnection();
 	}
@@ -67,36 +59,4 @@ public final class TimerWriter extends Thread {
 					"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.", Level.ERROR);
 		}
 	}
-
-	// public void writeToDB() {
-	// if (!DB.insert("insert into timer values(?,?,?,?)",
-	// result.getTimerQueue())) {
-	// stopSignal = true;
-	// Logger.get(LoggerName.Common).write(
-	// "TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter
-	// thread.", Level.ERROR);
-	// }
-	// }
-	// public void writeToFile() {
-	// for (String key : result.getTimerBufferKeySet()) {
-	// String path = config.getTimerLogPath() + "/" + key + ".log";
-	// File file = new File(path);
-	// list = result.getTimerList(key);
-	// int bufferLength = list.length();
-	// try {
-	// if (file.exists()) {
-	// logWriter = new FileWriter(path, true);
-	// } else {
-	// logWriter = new FileWriter(path, false);
-	// }
-	// logWriter.write(list.substring(0, bufferLength));
-	// list.delete(0, bufferLength);
-	// logWriter.flush();
-	// logWriter.close();
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
 }

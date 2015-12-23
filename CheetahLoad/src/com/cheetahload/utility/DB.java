@@ -107,8 +107,8 @@ public class DB {
 
 	public static boolean insert(List<String> list) {
 		if (null == list || list.isEmpty()) {
-			Logger.get(LoggerName.Common).write("DB - insert() - SQL list is null or empty.", Level.ERROR);
-			return false;
+			Logger.get(LoggerName.Common).write("DB - insert() - SQL list is null or empty.", Level.DEBUG);
+			return true;
 		}
 
 		Statement sqlStatement = null;

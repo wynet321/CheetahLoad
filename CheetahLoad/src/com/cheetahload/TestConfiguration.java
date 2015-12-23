@@ -74,47 +74,46 @@ public class TestConfiguration {
 		this.logWriteRate = logWriteRate;
 	}
 
-	public boolean verifyConfiguration() {
-		//CommonLogger commonLogger = CommonLogger.getCommonLogger();
+	public boolean verify() {
 		Logger logger=Logger.get(LoggerName.Common);
 
-		logger.write("TestConfiguration - initial() - duration=" + duration + " seconds", Level.DEBUG);
-		logger.write("TestConfiguration - initial() - loops=" + loops, Level.DEBUG);
+		logger.write("TestConfiguration - verify() - duration=" + duration + " seconds", Level.DEBUG);
+		logger.write("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
 		if (duration == 0 && loops == 0) {
-			logger.write("TestConfiguration - isCompleted() - duration or loops should be non-zero value.",
+			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.",
 					Level.ERROR);
 			return false;
 		}
 		if (duration != 0 && loops != 0) {
-			logger.write("TestConfiguration - initial() - duration and loops can not be non-zero both.",
+			logger.write("TestConfiguration - verify() - duration and loops can not be non-zero both.",
 					Level.ERROR);
 			return false;
 		}
-		logger.write("TestConfiguration - initial() - vusers=" + userCount, Level.DEBUG);
+		logger.write("TestConfiguration - verify() - vusers=" + userCount, Level.DEBUG);
 		if (userCount == 0) {
-			logger.write("TestConfiguration - initial() - vusers should be non-zero value.", Level.ERROR);
+			logger.write("TestConfiguration - verify() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
-		logger.write("TestConfiguration - initial() - password=" + password, Level.DEBUG);
+		logger.write("TestConfiguration - verify() - password=" + password, Level.DEBUG);
 		if (password.isEmpty()) {
-			logger.write("TestConfiguration - initial() - password is set to blank.", Level.WARN);
+			logger.write("TestConfiguration - verify() - password is set to blank.", Level.WARN);
 		}
-		logger.write("TestConfiguration - initial() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		logger.write("TestConfiguration - verify() - testSuiteName=" + testSuiteName, Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			logger.write("TestConfiguration - initial() - testSuiteName can not be blank.", Level.ERROR);
+			logger.write("TestConfiguration - verify() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				logger.write("TestConfiguration - initial() - userNames vector has " + userNames.size()
+				logger.write("TestConfiguration - verify() - userNames vector has " + userNames.size()
 						+ " cell object(s).", Level.DEBUG);
 			} else {
-				logger.write("TestConfiguration - initial() - userNames vector should include cell object(s).",
+				logger.write("TestConfiguration - verify() - userNames vector should include cell object(s).",
 						Level.ERROR);
 				return false;
 			}
 		else {
-			logger.write("TestConfiguration - initial() - userNames vector can not be null.", Level.ERROR);
+			logger.write("TestConfiguration - verify() - userNames vector can not be null.", Level.ERROR);
 			return false;
 		}
 
@@ -126,7 +125,7 @@ public class TestConfiguration {
 			return false;
 		}
 
-		logger.write("TestConfiguration - initial() done.", Level.DEBUG);
+		logger.write("TestConfiguration - verify() done.", Level.DEBUG);
 		return true;
 	}
 
