@@ -18,7 +18,7 @@ public class TestConfiguration {
 	private int thinkTime;
 	private String testSuiteName;
 	private String logPath;
-	private String timerLogPath;
+	//private String timerLogPath;
 	private Level logLevel;
 	private int userIndex;
 	private int logFileSize;
@@ -58,7 +58,7 @@ public class TestConfiguration {
 		thinkTime = 0;
 		testSuiteName = new String();
 		logPath = "./log";
-		timerLogPath = "./log/timer/";
+		//timerLogPath = "./log/timer/";
 		logLevel = Level.ERROR;
 		userIndex = 0;
 		logFileSize = 1024000;
@@ -117,9 +117,9 @@ public class TestConfiguration {
 			return false;
 		}
 
-		if (!initialLogPath(timerLogPath)) {
-			return false;
-		}
+//		if (!initialLogPath(timerLogPath)) {
+//			return false;
+//		}
 
 		if (!initialLogPath(logPath)) {
 			return false;
@@ -156,9 +156,9 @@ public class TestConfiguration {
 		}
 	}
 
-	public String getTimerLogPath() {
-		return timerLogPath;
-	}
+//	public String getTimerLogPath() {
+//		return timerLogPath;
+//	}
 
 	public String getLogPath() {
 		return logPath;
@@ -179,9 +179,9 @@ public class TestConfiguration {
 		return true;
 	}
 
-	public void setTimerLogPath(String timerLogPath) {
-		this.timerLogPath = timerLogPath;
-	}
+//	public void setTimerLogPath(String timerLogPath) {
+//		this.timerLogPath = timerLogPath;
+//	}
 
 	public synchronized int getUserIndex() {
 		return userIndex++;

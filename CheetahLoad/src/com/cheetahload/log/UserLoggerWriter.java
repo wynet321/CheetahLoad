@@ -6,26 +6,6 @@ import java.io.IOException;
 
 public final class UserLoggerWriter extends LoggerWriter {
 
-	
-	
-	public void setStopSignal(boolean stopSignal) {
-		this.stopSignal = stopSignal;
-	}
-
-	public void run() {
-		while (!stopSignal) {
-			try {
-				sleep(logWriteRate);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			writeToFile();
-		}
-		// write all of timer buffer to file
-		writeToFile();
-	}
-
 	public void writeToFile() {
 		for (String key : result.getUserLogBufferKeySet()) {
 			String path = config.getLogPath() + "/" + key + ".log";

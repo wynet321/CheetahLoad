@@ -12,7 +12,23 @@ public abstract class LoggerWriter extends Thread {
 	protected boolean stopSignal = false;
 	protected int fileCount = 0;
 	
-	public abstract void setStopSignal(boolean stopSignal);
+	public abstract void writeToFile();
+	
+	public void setStopSignal(boolean stopSignal){
+		this.stopSignal = stopSignal;
+	}
 
-	public abstract void run();
+	public void run(){
+		while (!stopSignal) {
+			try {
+				sleep(logWriteRate);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			writeToFile();
+		}
+		// write all of timer buffer to file
+		writeToFile();
+	}
 }

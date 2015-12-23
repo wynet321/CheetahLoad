@@ -10,24 +10,25 @@ import com.cheetahload.log.CommonLoggerWriter;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
 import com.cheetahload.log.LoggerName;
+import com.cheetahload.log.LoggerWriter;
 import com.cheetahload.log.UserLoggerWriter;
 import com.cheetahload.timer.TimerWriter;
 
 public final class TestLauncher {
 
-	private static CommonLoggerWriter commonLoggerWriter;
+	private static LoggerWriter commonLoggerWriter;
+	private static LoggerWriter userLoggerWriter;
 	private static TimerWriter timerWriter;
-	private static UserLoggerWriter userLoggerWriter;
 
 	private static void startLogger() {
 		commonLoggerWriter = new CommonLoggerWriter();
 		commonLoggerWriter.start();
-
-		timerWriter = new TimerWriter();
-		timerWriter.start();
-
+		
 		userLoggerWriter = new UserLoggerWriter();
 		userLoggerWriter.start();
+		
+		timerWriter = new TimerWriter();
+		timerWriter.start();
 	}
 
 	public static void stopLogger() {

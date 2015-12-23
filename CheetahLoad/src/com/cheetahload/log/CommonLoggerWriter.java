@@ -6,26 +6,6 @@ import java.io.IOException;
 
 public final class CommonLoggerWriter extends LoggerWriter {
 
-	
-
-	public void setStopSignal(boolean stopSignal) {
-		this.stopSignal = stopSignal;
-	}
-
-	public void run() {
-		while (!stopSignal) {
-			try {
-				sleep(logWriteRate);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				
-				e.printStackTrace();
-			}
-			writeToFile();
-		}
-		writeToFile();
-	}
-
 	public void writeToFile() {
 		String path = config.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
