@@ -1,5 +1,9 @@
 package com.cheetahload.timer;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.log.Level;
@@ -36,8 +40,7 @@ public final class TimerWriter extends Thread {
 			try {
 				sleep(logWriteRate);
 			} catch (InterruptedException e) {
-				Logger.get(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.",
-						Level.ERROR);
+				Logger.get(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.", Level.ERROR);
 				e.printStackTrace();
 			}
 			// writeToFile();
@@ -50,12 +53,30 @@ public final class TimerWriter extends Thread {
 	}
 
 	public void writeToDB() {
-		if (!DB.insert("insert into timer values(?,?,?,?)", result.getTimerQueue())) {
+		List<String> sql = new LinkedList<String>();
+		ConcurrentLinkedQueue<String> timerQueue = result.getTimerQueue();
+		String prefix = "insert into timer values(";
+		String suffix = ")";
+		while (!timerQueue.isEmpty()) {
+			sql.add(prefix + timerQueue.poll() + suffix);
+		}
+
+		if (!DB.insert(sql)) {
 			stopSignal = true;
 			Logger.get(LoggerName.Common).write(
-					"TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter thread.", Level.ERROR);
+					"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.", Level.ERROR);
 		}
 	}
+
+	// public void writeToDB() {
+	// if (!DB.insert("insert into timer values(?,?,?,?)",
+	// result.getTimerQueue())) {
+	// stopSignal = true;
+	// Logger.get(LoggerName.Common).write(
+	// "TimerWriter - writeToDB() - Insert into DB failed. Stop TimerWriter
+	// thread.", Level.ERROR);
+	// }
+	// }
 	// public void writeToFile() {
 	// for (String key : result.getTimerBufferKeySet()) {
 	// String path = config.getTimerLogPath() + "/" + key + ".log";
