@@ -6,6 +6,8 @@ import java.util.concurrent.CountDownLatch;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.TestSuite;
+import com.cheetahload.db.Configuration;
+import com.cheetahload.db.DB;
 import com.cheetahload.log.CommonLoggerWriter;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
@@ -23,10 +25,10 @@ public final class TestLauncher {
 	private static void startLogger() {
 		commonLoggerWriter = new CommonLoggerWriter();
 		commonLoggerWriter.start();
-		
+
 		userLoggerWriter = new UserLoggerWriter();
 		userLoggerWriter.start();
-		
+
 		timerWriter = new TimerWriter();
 		timerWriter.start();
 	}
@@ -50,11 +52,29 @@ public final class TestLauncher {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
-		if (!config.verify()) {
+		if (config.verify()) {
+			Configuration configEntry = new Configuration();
+			configEntry.setDuration(config.getDuration());
+			configEntry.setLogFileSize(config.getLogFileSize());
+			configEntry.setLogLevel(config.getLogLevel());
+			configEntry.setLogWriteRate(config.getLogWriteRate());
+			configEntry.setLoops(config.getLoops());
+			configEntry.setTesterName(config.getTestName());
+			configEntry.setTesterMail(config.getTesterMail());
+			configEntry.setTestName(config.getTestName());
+			configEntry.setTestSuiteName(config.getTestSuiteName());
+			configEntry.setThinkTime(config.getThinkTime());
+			configEntry.setUserCount(config.getUserCount());
+			if (!DB.insert(configEntry)) {
+				Logger.get(LoggerName.Common).write(
+						"TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
+						Level.ERROR);
+			}
+
+		} else {
 			Logger.get(LoggerName.Common).write(
 					"TestLauncher - run() Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
-			commonLoggerWriter.setStopSignal(true);
 			System.exit(0);
 		}
 

@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
+import com.cheetahload.db.DB;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
 import com.cheetahload.log.LoggerName;
-import com.cheetahload.utility.DB;
 
 public final class TimerWriter extends Thread {
 

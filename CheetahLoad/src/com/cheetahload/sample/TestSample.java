@@ -20,6 +20,8 @@ public class TestSample {
 		config.setTestSuiteName("Bucket");
 		config.setLogLevel(Level.DEBUG);
 		config.setTestName("3hrPerformanceRegression");
+		config.setTesterName("Dennis Wang");
+		config.setTesterMail("wynet321@163.com");
 
 		TestSuite testSuite = new TestSuite();
 		testSuite.setPrepareTestScript(new TestScript_Login());

@@ -18,13 +18,30 @@ public class TestConfiguration {
 	private int thinkTime;
 	private String testSuiteName;
 	private String logPath;
-	//private String timerLogPath;
 	private Level logLevel;
 	private int userIndex;
 	private int logFileSize;
 	private static TestConfiguration testConfiguration;
 	private int logWriteRate;
 	private String testName;
+	private String testerName;
+	private String testerMail;
+
+	public String getTesterName() {
+		return testerName;
+	}
+
+	public void setTesterName(String testerName) {
+		this.testerName = testerName;
+	}
+
+	public String getTesterMail() {
+		return testerMail;
+	}
+
+	public void setTesterMail(String testerMail) {
+		this.testerMail = testerMail;
+	}
 
 	public String getTestName() {
 		return testName;
@@ -58,12 +75,13 @@ public class TestConfiguration {
 		thinkTime = 0;
 		testSuiteName = new String();
 		logPath = "./log";
-		//timerLogPath = "./log/timer/";
 		logLevel = Level.ERROR;
 		userIndex = 0;
 		logFileSize = 1024000;
 		logWriteRate = 10000;
 		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
+		testerName="";
+		testerMail="";
 	}
 
 	public int getLogWriteRate() {
@@ -79,13 +97,13 @@ public class TestConfiguration {
 
 		logger.write("TestConfiguration - verify() - duration=" + duration + " seconds", Level.DEBUG);
 		logger.write("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
-		if (duration == 0 && loops == 0) {
-			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.",
+		if(testName.isEmpty()){
+			logger.write("TestConfiguration - verify() - Tester name must be set.",
 					Level.ERROR);
 			return false;
 		}
-		if (duration != 0 && loops != 0) {
-			logger.write("TestConfiguration - verify() - duration and loops can not be non-zero both.",
+		if (duration == 0 && loops == 0) {
+			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.",
 					Level.ERROR);
 			return false;
 		}
