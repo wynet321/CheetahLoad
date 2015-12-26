@@ -6,7 +6,6 @@ import java.util.concurrent.CountDownLatch;
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.TestSuite;
-import com.cheetahload.db.Configuration;
 import com.cheetahload.db.DB;
 import com.cheetahload.log.CommonLoggerWriter;
 import com.cheetahload.log.Level;
@@ -53,22 +52,17 @@ public final class TestLauncher {
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 
 		if (config.verify()) {
-			Configuration configEntry = new Configuration();
-			configEntry.setDuration(config.getDuration());
-			configEntry.setLogFileSize(config.getLogFileSize());
-			configEntry.setLogLevel(config.getLogLevel());
-			configEntry.setLogWriteRate(config.getLogWriteRate());
-			configEntry.setLoops(config.getLoops());
-			configEntry.setTesterName(config.getTestName());
-			configEntry.setTesterMail(config.getTesterMail());
-			configEntry.setTestName(config.getTestName());
-			configEntry.setTestSuiteName(config.getTestSuiteName());
-			configEntry.setThinkTime(config.getThinkTime());
-			configEntry.setUserCount(config.getUserCount());
-			if (!DB.insert(configEntry)) {
-				Logger.get(LoggerName.Common).write(
-						"TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
-						Level.ERROR);
+			StringBuilder sql = new StringBuilder();
+			sql.append("insert into configuration values('").append(config.getTestName()).append("','")
+					.append(config.getTesterName()).append("','").append(config.getTesterMail()).append("','")
+					.append(config.getTestSuiteName()).append("',").append(config.getUserCount()).append(",")
+					.append(config.getDuration()).append(",").append(config.getLoops()).append(",")
+					.append(config.getThinkTime()).append(",'").append(config.getLogLevel()).append("',")
+					.append(config.getLogFileSize()).append(",").append(config.getLogWriteRate()).append(")");
+			if (!DB.insert(sql.toString())) {
+				Logger.get(LoggerName.Common)
+						.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
+								Level.ERROR);
 			}
 
 		} else {
@@ -93,9 +87,9 @@ public final class TestLauncher {
 		try {
 			threadSignal.await();
 		} catch (InterruptedException e) {
-			Logger.get(LoggerName.Common).write(
-					"TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
-					Level.ERROR);
+			Logger.get(LoggerName.Common)
+					.write("TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
+							Level.ERROR);
 		}
 
 		// output statistic data

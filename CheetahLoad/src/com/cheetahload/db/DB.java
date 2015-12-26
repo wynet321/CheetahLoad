@@ -16,6 +16,8 @@ import com.cheetahload.log.LoggerName;
 public class DB {
 
 	private static Connection connection;
+	private final static String TIMERTABLEDEFINITION = "create table timer (testname varchar(50), scriptname varchar(20), username varchar(20),duration int)";
+	private final static String CONFIGURATIONTABLEDEFINITION = "create table configuration (test_name varchar(50), tester_name varchar(20), tester_mail varchar(50),test_suite_name varchar(20), user_count int, duration int, loops int, think_time int, log_level varchar(10), log_file_size int,log_write_rate int)";
 
 	private static Connection getConnection() {
 		if (connection == null) {
@@ -25,7 +27,8 @@ public class DB {
 				connectionString.append("jdbc:sqlite:").append(TestConfiguration.getTestConfiguration().getLogPath())
 						.append("/").append(TestConfiguration.getTestConfiguration().getTestName()).append(".db");
 				connection = DriverManager.getConnection(connectionString.toString());
-				createTables();
+				connection.createStatement().executeUpdate(TIMERTABLEDEFINITION);
+				connection.createStatement().executeUpdate(CONFIGURATIONTABLEDEFINITION);
 				connection.setAutoCommit(false);
 			} catch (ClassNotFoundException e) {
 				Logger.get(LoggerName.Common).write(
@@ -35,17 +38,13 @@ public class DB {
 				TestLauncher.stopLogger();
 			} catch (Exception e) {
 				Logger.get(LoggerName.Common).write(
-						"DB - getConnection() - Failed to create Connection to DB. Need to stop current test. " + e.getMessage(),
-						Level.ERROR);
+						"DB - getConnection() - Failed to create Connection to DB. Need to stop current test. "
+								+ e.getMessage(), Level.ERROR);
 				e.printStackTrace();
 				TestLauncher.stopLogger();
 			}
 		}
 		return connection;
-	}
-
-	private static void createTables() throws Exception {
-		connection.createStatement().executeUpdate(Timer.getTableDef());
 	}
 
 	public static void closeConnection() {
@@ -54,20 +53,18 @@ public class DB {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			Logger.get(LoggerName.Common)
-					.write("DB - closeConnection() - Close DB connection failed! " + e.getMessage(), Level.ERROR);
+			Logger.get(LoggerName.Common).write(
+					"DB - closeConnection() - Close DB connection failed! " + e.getMessage(), Level.ERROR);
 			e.printStackTrace();
 			TestLauncher.stopLogger();
 		}
 	}
 
-	public static boolean insert(Entity entity){
-		return true;
-	}
-	public static boolean insert(List<String> list) {
-		if (null == list || list.isEmpty()) {
-			Logger.get(LoggerName.Common).write("DB - insert() - SQL list is null or empty.", Level.DEBUG);
-			return true;
+	public static boolean insert(String sql) {
+		boolean result=false;
+		if (null == sql || sql.isEmpty()) {
+			Logger.get(LoggerName.Common).write("DB - insert() - SQL string is null or empty.", Level.DEBUG);
+			return result;
 		}
 
 		Statement sqlStatement = null;
@@ -78,7 +75,47 @@ public class DB {
 					.write("DB - insert() - Create SQL statement failed. Please stop current test since performance data can't be recorded correctly. "
 							+ e.getMessage(), Level.ERROR);
 			e.printStackTrace();
-			return false;
+			return result;
+		}
+		try {
+			result=sqlStatement.execute(sql);
+			getConnection().commit();
+		} catch (SQLException e) {
+			Logger.get(LoggerName.Common)
+					.write("DB - insert() - Execute SQL batch statement failed. Part of performance data can't be recorded. Recommend stop current test."
+							+ e.getMessage(), Level.ERROR);
+			e.printStackTrace();
+			try {
+				getConnection().rollback();
+			} catch (SQLException e1) {
+				Logger.get(LoggerName.Common).write(
+						"DB - insertBatch() - Roll back failed. Please check DB connection. " + e.getMessage(),
+						Level.ERROR);
+				TestLauncher.stopLogger();
+				e1.printStackTrace();
+				result=false;
+			}
+			result=false;
+		}
+		return result;
+	}
+
+	public static boolean insert(List<String> list) {
+		boolean result=false;
+		if (null == list || list.isEmpty()) {
+			Logger.get(LoggerName.Common).write("DB - insert() - SQL list is null or empty.", Level.DEBUG);
+			return result;
+		}
+
+		Statement sqlStatement = null;
+		try {
+			sqlStatement = getConnection().createStatement();
+		} catch (SQLException e) {
+			Logger.get(LoggerName.Common)
+					.write("DB - insert() - Create SQL statement failed. Please stop current test since performance data can't be recorded correctly. "
+							+ e.getMessage(), Level.ERROR);
+			e.printStackTrace();
+			return result;
 		}
 		int batchCount = 0;
 		String sql = new String();
@@ -92,7 +129,7 @@ public class DB {
 						.write("DB - insert() - Add SQL batch statement failed. Part of performance data can't be recorded. Recommend stop current test."
 								+ e.getMessage(), Level.ERROR);
 				e.printStackTrace();
-				return false;
+				return result;
 			}
 			batchCount++;
 			if (batchCount >= 1000) {
@@ -105,16 +142,16 @@ public class DB {
 									+ e.getMessage(), Level.ERROR);
 					e.printStackTrace();
 					try {
-						DB.getConnection().rollback();
+						getConnection().rollback();
 					} catch (SQLException e1) {
 						Logger.get(LoggerName.Common).write(
 								"DB - insertBatch() - Roll back failed. Please check DB connection. " + e.getMessage(),
 								Level.ERROR);
 						TestLauncher.stopLogger();
 						e1.printStackTrace();
-						return false;
+						return result;
 					}
-					return false;
+					return result;
 				}
 				batchCount = 0;
 			}
@@ -122,6 +159,7 @@ public class DB {
 		try {
 			sqlStatement.executeBatch();
 			getConnection().commit();
+			result=true;
 		} catch (SQLException e) {
 			Logger.get(LoggerName.Common)
 					.write("DB - insert() - Execute SQL batch statement failed. Part of performance data can't be recorded. Recommend stop current test."
@@ -135,11 +173,11 @@ public class DB {
 						Level.ERROR);
 				TestLauncher.stopLogger();
 				e1.printStackTrace();
-				return false;
+				return result;
 			}
-			return false;
+			return result;
 		}
-		return true;
+		return result;
 	}
 
 }
