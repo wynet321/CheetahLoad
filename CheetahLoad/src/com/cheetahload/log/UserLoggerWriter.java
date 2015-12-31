@@ -34,7 +34,7 @@ public final class UserLoggerWriter extends LoggerWriter {
 				}
 				result.setUserLogFileCount(key, fileCount);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				System.out.println("UserLoggerWriter - writeToFile - Write to file '" + path + "' failed.");
 				e.printStackTrace();
 			}
 		}
