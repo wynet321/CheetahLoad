@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public final class UserLoggerWriter extends LoggerWriter {
-
 	public void writeToFile() {
 		for (String key : result.getUserLogBufferKeySet()) {
 			String path = config.getLogPath() + "/" + key + ".log";

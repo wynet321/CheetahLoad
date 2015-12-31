@@ -16,7 +16,7 @@ import com.cheetahload.timer.Timer;
 
 public final class TestThread extends Thread {
 	private TestSuite testSuite;
-	//private UserLogger userLogger;
+	// private UserLogger userLogger;
 	private Logger logger;
 	private String userName;
 	private Timer timer;
@@ -35,15 +35,15 @@ public final class TestThread extends Thread {
 		this.testSuite = testSuite;
 		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
-		//userLogger = UserLogger.getUserLogger(userName);
-		logger=Logger.get(LoggerName.User);
+		// userLogger = UserLogger.getUserLogger(userName);
+		logger = Logger.get(LoggerName.User);
 		timer = new Timer();
 		random = new Random();
 	}
 
-//	public UserLogger getUserLogger() {
-//		return userLogger;
-//	}
+	// public UserLogger getUserLogger() {
+	// return userLogger;
+	// }
 
 	public void run() {
 		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.",
@@ -70,19 +70,13 @@ public final class TestThread extends Thread {
 				timer.end();
 				testScript.clearup();
 			} catch (Exception e) {
-				// TODO deal with exception
 				result.addUserErrorCount(testScript.getName());
-				logger.write(e.getMessage(), Level.ERROR);
+				logger.write("TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
+						+ e.getMessage(), Level.ERROR);
 			}
-			// result.setTimerVector(config.getTestName(), testScript.getName(),
-			// String.valueOf(timer.getDuration()),
-			// userName);
 			result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
 					String.valueOf(timer.getDuration()));
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
-			// timer.write(testScript.getName(),
-			// timer.getDuration() + "," + userName + "," + timer.getBeginTime()
-			// + "," + timer.getEndTime());
 			result.addUserExecutionCount(testScript.getName());
 		}
 	}
@@ -116,8 +110,8 @@ public final class TestThread extends Thread {
 				}
 				percentageAccumulator += percentage;
 			}
-			logger.write("TestThread - execute() random run preparation done with totalPercentage="
-					+ totalPercentage, Level.DEBUG);
+			logger.write("TestThread - execute() random run preparation done with totalPercentage=" + totalPercentage,
+					Level.DEBUG);
 			if (config.getLogLevel() == Level.DEBUG) {
 				logger.write("TestThread - execute() random run preparation done with testScriptPool", Level.DEBUG);
 				for (int i = 0; i < testScriptPool.length; i++) {
