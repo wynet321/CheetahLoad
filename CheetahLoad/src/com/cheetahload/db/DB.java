@@ -16,8 +16,6 @@ import com.cheetahload.log.LoggerName;
 public class DB {
 
 	private static Connection connection;
-	private final static String TIMERTABLEDEFINITION = "create table timer (test_name varchar(50), script_name varchar(20), vuser_name varchar(20),duration int)";
-	private final static String CONFIGURATIONTABLEDEFINITION = "create table configuration (test_name varchar(50), tester_name varchar(20), tester_mail varchar(50),test_suite_name varchar(20), vuser_count int, duration int, loops int, think_time int, log_level varchar(10), log_file_size int, log_write_rate int)";
 
 	private static Connection getConnection() {
 		if (connection == null) {
@@ -52,8 +50,8 @@ public class DB {
 
 	private static void createTables() {
 		try {
-			getConnection().createStatement().executeUpdate(TIMERTABLEDEFINITION);
-			getConnection().createStatement().executeUpdate(CONFIGURATIONTABLEDEFINITION);
+			getConnection().createStatement().executeUpdate(TableDefinition.TIMER);
+			getConnection().createStatement().executeUpdate(TableDefinition.CONFIGURATION);
 			getConnection().commit();
 		} catch (SQLException e) {
 			Logger.get(LoggerName.Common).write("DB - createTables() - Create DB tables failed. " + e.getMessage(),
