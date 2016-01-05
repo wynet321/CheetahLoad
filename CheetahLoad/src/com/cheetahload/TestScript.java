@@ -8,6 +8,7 @@ public abstract class TestScript {
 	protected HashMap<String, Object> caseParameters = new HashMap<String, Object>();
 
 	public void setName(String caseName) {
+		// TODO judge parameter
 		this.caseName = caseName;
 	}
 

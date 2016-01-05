@@ -32,6 +32,7 @@ public class TestConfiguration {
 	}
 
 	public void setTesterName(String testerName) {
+		// TODO judge parameter
 		this.testerName = testerName;
 	}
 
@@ -40,6 +41,7 @@ public class TestConfiguration {
 	}
 
 	public void setTesterMail(String testerMail) {
+		// TODO judge parameter
 		this.testerMail = testerMail;
 	}
 
@@ -48,6 +50,7 @@ public class TestConfiguration {
 	}
 
 	public void setTestName(String testName) {
+		// TODO judge parameter
 		this.testName = testName + "_" + this.testName;
 	}
 
@@ -56,6 +59,7 @@ public class TestConfiguration {
 	}
 
 	public void setLogFileSize(int logFileSize) {
+		// TODO judge parameter
 		this.logFileSize = logFileSize;
 	}
 
@@ -89,6 +93,7 @@ public class TestConfiguration {
 	}
 
 	public void setLogWriteRate(int logWriteRate) {
+		// TODO judge parameter
 		this.logWriteRate = logWriteRate;
 	}
 
@@ -135,10 +140,6 @@ public class TestConfiguration {
 			return false;
 		}
 
-//		if (!initialLogPath(timerLogPath)) {
-//			return false;
-//		}
-
 		if (!initialLogPath(logPath)) {
 			return false;
 		}
@@ -148,6 +149,7 @@ public class TestConfiguration {
 	}
 
 	private boolean initialLogPath(String path) {
+		// TODO judge parameter
 		File dir = new File(path);
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
@@ -174,10 +176,6 @@ public class TestConfiguration {
 		}
 	}
 
-//	public String getTimerLogPath() {
-//		return timerLogPath;
-//	}
-
 	public String getLogPath() {
 		return logPath;
 	}
@@ -197,10 +195,6 @@ public class TestConfiguration {
 		return true;
 	}
 
-//	public void setTimerLogPath(String timerLogPath) {
-//		this.timerLogPath = timerLogPath;
-//	}
-
 	public synchronized int getUserIndex() {
 		return userIndex++;
 	}
@@ -210,6 +204,7 @@ public class TestConfiguration {
 	}
 
 	public void setUserNames(int userCount, String prefix, int digit, int startNumber) {
+		// TODO judge parameter
 		this.userCount = userCount;
 		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, userCount);
 	}
@@ -219,6 +214,7 @@ public class TestConfiguration {
 	}
 
 	public void setDuration(int duration) {
+		// TODO judge parameter
 		this.duration = duration * 60; // transfer minutes to seconds
 	}
 
@@ -227,6 +223,7 @@ public class TestConfiguration {
 	}
 
 	public void setLoops(int loops) {
+		// TODO judge parameter
 		this.loops = loops;
 	}
 
@@ -239,6 +236,7 @@ public class TestConfiguration {
 	}
 
 	public void setPassword(String password) {
+		// TODO judge parameter
 		this.password = password;
 	}
 
@@ -247,6 +245,7 @@ public class TestConfiguration {
 	}
 
 	public void setThinkTime(int thinkTime) {
+		// TODO judge parameter
 		this.thinkTime = thinkTime;
 	}
 
@@ -255,10 +254,12 @@ public class TestConfiguration {
 	}
 
 	public void setTestSuiteName(String testSuiteName) {
+		// TODO judge parameter
 		this.testSuiteName = testSuiteName;
 	}
 
 	public void setLogLocation(String logLocation) {
+		// TODO judge parameter
 		this.logPath = logLocation;
 	}
 
