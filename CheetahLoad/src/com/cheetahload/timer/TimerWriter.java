@@ -41,7 +41,6 @@ public final class TimerWriter extends Thread {
 		}
 		// write all of timer buffer left to DB
 		writeToDB();
-		DB.closeConnection();
 	}
 
 	public void writeToDB() {
@@ -58,5 +57,6 @@ public final class TimerWriter extends Thread {
 			Logger.get(LoggerName.Common).write(
 					"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.", Level.ERROR);
 		}
+		DB.closeConnection();
 	}
 }

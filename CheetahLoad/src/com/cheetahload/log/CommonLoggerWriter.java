@@ -27,7 +27,7 @@ public final class CommonLoggerWriter extends LoggerWriter {
 				logWriter.close();
 			}
 		} catch (IOException e) {
-			// TODO deal with IO exception
+			System.out.println("UserLoggerWriter - writeToFile - Write to file '" + path + "' failed.");
 			e.printStackTrace();
 		}
 	}

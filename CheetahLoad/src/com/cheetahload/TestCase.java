@@ -6,8 +6,8 @@ public final class TestCase{
 	private TestScript testScript;
 	private int percentage;
 	
-	public TestCase(TestScript testScript, int percentage)
-	{
+	public TestCase(TestScript testScript, int percentage){
+		// TODO judge parameter
 		this.testScript=testScript;
 		this.percentage=percentage;
 	}

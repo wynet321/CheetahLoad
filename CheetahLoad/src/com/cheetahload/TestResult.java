@@ -39,10 +39,13 @@ public class TestResult {
 	}
 
 	public synchronized void addUserExecutionCount(String testScriptName) {
-		if(null==testScriptName||testScriptName.isEmpty()){
-			Logger.get(LoggerName.Common).write("TestResult - addUserExecutionCount() - testScriptName is null or empty string.", Level.ERROR);
+
+		if (null == testScriptName || testScriptName.isEmpty()) {
+			Logger.get(LoggerName.Common).write(
+					"TestResult - addUserExecutionCount() - testScriptName is null or empty string.", Level.ERROR);
 			return;
 		}
+
 		if (userExecutionCountTable.containsKey(testScriptName)) {
 			userExecutionCountTable.put(testScriptName, 1 + userExecutionCountTable.get(testScriptName));
 		} else {
@@ -55,10 +58,13 @@ public class TestResult {
 	}
 
 	public synchronized void addUserErrorCount(String testScriptName) {
-		if(null==testScriptName||testScriptName.isEmpty()){
-			Logger.get(LoggerName.Common).write("TestResult - addUserErrorCount() - testScriptName is null or empty string.", Level.ERROR);
+
+		if (null == testScriptName || testScriptName.isEmpty()) {
+			Logger.get(LoggerName.Common).write(
+					"TestResult - addUserErrorCount() - testScriptName is null or empty string.", Level.ERROR);
 			return;
 		}
+
 		if (userErrorCountTable.containsKey(testScriptName)) {
 			userErrorCountTable.put(testScriptName, 1 + userErrorCountTable.get(testScriptName));
 		} else {
@@ -71,10 +77,13 @@ public class TestResult {
 	}
 
 	public StringBuffer getUserLogBuffer(String userName) {
-		if(null==userName||userName.isEmpty()){
-			Logger.get(LoggerName.Common).write("TestResult - getUserLogBuffer() - userName is null or empty string.", Level.ERROR);
+
+		if (null == userName || userName.isEmpty()) {
+			Logger.get(LoggerName.Common).write("TestResult - getUserLogBuffer() - userName is null or empty string.",
+					Level.ERROR);
 			return new StringBuffer();
 		}
+
 		if (!userLogBufferTable.containsKey(userName)) {
 			userLogBufferTable.put(userName, new StringBuffer());
 		}
@@ -82,10 +91,13 @@ public class TestResult {
 	}
 
 	public int getUserLogFileCount(String userName) {
-		if(null==userName||userName.isEmpty()){
-			Logger.get(LoggerName.Common).write("TestResult - getUserLogFileCount() - userName is null or empty string.", Level.ERROR);
+
+		if (null == userName || userName.isEmpty()) {
+			Logger.get(LoggerName.Common).write(
+					"TestResult - getUserLogFileCount() - userName is null or empty string.", Level.ERROR);
 			return 0;
 		}
+
 		if (!userLogFileCountTable.containsKey(userName)) {
 			userLogFileCountTable.put(userName, 0);
 		}
@@ -93,13 +105,16 @@ public class TestResult {
 	}
 
 	public void setUserLogFileCount(String userName, int logFileCount) {
-		if(null==userName||userName.isEmpty()){
-			Logger.get(LoggerName.Common).write("TestResult - setUserLogFileCount() - userName is null or empty string.", Level.ERROR);
-			return ;
+
+		if (null == userName || userName.isEmpty()) {
+			Logger.get(LoggerName.Common).write(
+					"TestResult - setUserLogFileCount() - userName is null or empty string.", Level.ERROR);
+			return;
 		}
-		if(logFileCount<0){
+		if (logFileCount < 0) {
 			userLogFileCountTable.put(userName, 0);
 		}
+
 		userLogFileCountTable.put(userName, logFileCount);
 	}
 
