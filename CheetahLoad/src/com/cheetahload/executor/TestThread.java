@@ -67,15 +67,19 @@ public final class TestThread extends Thread {
 				testScript.clearup();
 			} catch (Exception e) {
 				result.addUserErrorCount(testScript.getName());
+				StackTraceElement[] stackTrace = e.getStackTrace();
+				StringBuilder message = new StringBuilder();
+				for (StackTraceElement element : stackTrace) {
+					message.append(element.toString()).append("\n");
+				}
 				logger.write(
 						"TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
-								+ e.getMessage(), Level.ERROR);
+								+ e.getMessage() + "\n" + message, Level.ERROR);
 			}
-			result.setTimerQueue(testScript.getName(), userName,
-					String.valueOf(timer.getDuration()));
+			result.setTimerQueue(testScript.getName(), userName, String.valueOf(timer.getDuration()));
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
 			result.addUserExecutionCount(testScript.getName());
-		}else{
+		} else {
 			logger.write("TestThread - execute(TestScript testScript) - Parameter testScript is null.", Level.ERROR);
 		}
 	}

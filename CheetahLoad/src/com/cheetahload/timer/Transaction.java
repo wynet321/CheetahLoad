@@ -33,7 +33,7 @@ public final class Transaction {
 		TestThread current = (TestThread) (Thread.currentThread());
 		scriptName = current.getName();
 		vuName = current.getUserName();
-		String sql = "insert into transaction values(" + scriptName + "','" + vuName + "','" + name + "'," + duration
+		String sql = "insert into tranx values(" + scriptName + "','" + vuName + "','" + name + "'," + duration
 				+ ")";
 		TestConfiguration.getTestConfiguration().getOperator().insert(sql);
 	}
