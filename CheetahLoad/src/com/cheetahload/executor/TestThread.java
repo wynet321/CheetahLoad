@@ -71,7 +71,7 @@ public final class TestThread extends Thread {
 						"TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
 								+ e.getMessage(), Level.ERROR);
 			}
-			result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
+			result.setTimerQueue(testScript.getName(), userName,
 					String.valueOf(timer.getDuration()));
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
 			result.addUserExecutionCount(testScript.getName());

@@ -113,12 +113,8 @@ public class TestResult {
 		userLogFileCountTable.put(userName, logFileCount);
 	}
 
-	public void setTimerQueue(String testName, String scriptName, String userName, String duration) {
+	public void setTimerQueue(String scriptName, String userName, String duration) {
 		Logger logger = Logger.get(LoggerName.Common);
-		if (testName == null || testName.isEmpty()) {
-			logger.write("TestResult - setTimerQueue() - testName was null or empty.", Level.ERROR);
-			return;
-		}
 		if (scriptName == null || scriptName.isEmpty()) {
 			logger.write("TestResult - setTimerQueue() - scriptName was null or empty.", Level.ERROR);
 			return;
@@ -132,7 +128,7 @@ public class TestResult {
 			return;
 		}
 		StringBuilder item = new StringBuilder();
-		item.append("'").append(testName).append("','").append(scriptName).append("','").append(userName).append("',")
+		item.append("'").append(scriptName).append("','").append(userName).append("',")
 				.append(duration);
 		if (!timerQueue.add(item.toString())) {
 			logger.write("TestResult - setTimerQueue() - Add to queue failed. item: '" + item.toString() + "'",

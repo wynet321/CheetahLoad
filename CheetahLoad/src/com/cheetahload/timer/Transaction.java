@@ -1,6 +1,6 @@
 package com.cheetahload.timer;
 
-import com.cheetahload.TestResult;
+import com.cheetahload.TestConfiguration;
 import com.cheetahload.executor.TestThread;
 
 public final class Transaction {
@@ -9,15 +9,14 @@ public final class Transaction {
 	private long begin = 0L;
 	private long end = 0L;
 	private long duration = 0L;
-	private TestResult result;
+	private String scriptName, vuName;
 
-	public Transaction(String name) {
-		if (name != null && !name.isEmpty()) {
-			this.name = name;
-		} else {
+	public Transaction(String transactionName) {
+		if (transactionName == null || transactionName.isEmpty()) {
 			this.name = "Transaction_" + System.currentTimeMillis();
+		} else {
+			this.name = transactionName;
 		}
-		result = TestResult.getTestResult();
 	}
 
 	public String getName() {
@@ -32,11 +31,10 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		// TODO add transaction to db
-		// result.getTimerVector(current.getName()).add(current.getUserName() +
-		// "," + duration + "," + begin + "," + end + "\n");
-		// result.setTimerQueue(current.getName(), , userName, duration);
-		result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
-				String.valueOf(timer.getDuration()));
+		scriptName = current.getName();
+		vuName = current.getUserName();
+		String sql = "insert into transaction values(" + scriptName + "','" + vuName + "','" + name + "'," + duration
+				+ ")";
+		TestConfiguration.getTestConfiguration().getOperator().insert(sql);
 	}
 }

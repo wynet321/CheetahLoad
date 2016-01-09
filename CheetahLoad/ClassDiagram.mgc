@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="com.cheetahload.timer.TimerWriter" x="29" y="860">
+    <Class name="com.cheetahload.timer.TimerWriter" x="840" y="175">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -8,79 +8,17 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
-    </Class>
-    <Class name="com.cheetahload.log.Logger" x="460" y="596">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-        <Association destinationClassName="com.cheetahload.log.Level"
-            endpointName="level" kind="Simple"/>
-    </Class>
-    <Class name="com.cheetahload.executor.TestEntry" x="140" y="594">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"
-            accessors-accepted="true" constructors-accepted="true"/>
-        <Communication destinationClassName="com.cheetahload.timer.TimerWriter"/>
-        <Communication destinationClassName="com.cheetahload.log.CommonLogger"/>
-        <Communication destinationClassName="com.cheetahload.log.UserLoggerWriter"/>
-        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
-    </Class>
-    <Class name="com.cheetahload.executor.TestThread" x="91" y="140">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"
-            accessors-accepted="true" constructors-accepted="true"/>
-        <Association destinationClassName="com.cheetahload.timer.Timer"
-            endpointName="timer" kind="Simple"/>
-        <Association destinationClassName="com.cheetahload.TestSuite"
-            endpointName="testSuite" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestResult"
+            endpointName="result" kind="Simple"/>
         <Association
-            destinationClassName="com.cheetahload.log.UserLogger"
-            endpointName="userLogger" kind="Simple"/>
-        <Communication destinationClassName="com.cheetahload.TestScript"/>
-        <Communication destinationClassName="com.cheetahload.log.UserLogger"/>
-        <Communication destinationClassName="com.cheetahload.timer.Timer"/>
-    </Class>
-    <Class name="com.cheetahload.log.UserLoggerWriter" x="256" y="801">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
+            destinationClassName="com.cheetahload.TestConfiguration"
+            endpointName="config" kind="Simple"/>
         <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+        <Communication destinationClassName="com.cheetahload.db.Operator"/>
+        <Communication destinationClassName="com.cheetahload.log.Logger"/>
     </Class>
-    <Class name="com.cheetahload.TestSuite" x="380" y="50">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"
-            accessors-accepted="true" constructors-accepted="true"/>
-        <Association destinationClassName="com.cheetahload.TestScript"
-            endpointName="prepareTestCase" kind="Simple">
-            <Point x="862" y="175"/>
-        </Association>
-        <Association destinationClassName="com.cheetahload.TestCase"
-            endpointName="testCaseList" kind="Simple"/>
-        <Association destinationClassName="com.cheetahload.TestScript"
-            endpointName="clearupTestCase" kind="Simple"/>
-    </Class>
-    <Class name="com.cheetahload.TestConfiguration" x="712" y="729">
+    <Class name="com.cheetahload.TestConfiguration" x="550" y="207">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"/>
@@ -90,13 +28,23 @@
             accessors-accepted="true" constructors-accepted="true"/>
         <Association destinationClassName="com.cheetahload.log.Level"
             endpointName="logLevel" kind="Simple"/>
-        <Association
-            destinationClassName="com.cheetahload.log.CommonLogger"
-            endpointName="commonLogger" kind="Simple"/>
-        <Communication destinationClassName="com.cheetahload.VirtualUser"/>
+        <Association destinationClassName="com.cheetahload.db.Operator"
+            endpointName="operator" kind="Simple"/>
         <Communication destinationClassName="com.cheetahload.log.CommonLogger"/>
+        <Communication destinationClassName="com.cheetahload.db.Operator"/>
+        <Communication destinationClassName="com.cheetahload.log.Logger"/>
+        <Communication destinationClassName="com.cheetahload.VirtualUser"/>
     </Class>
-    <Class name="com.cheetahload.TestCase" x="447" y="312">
+    <Class name="com.cheetahload.timer.Timer" x="344" y="204">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="com.cheetahload.TestCase" x="54" y="25">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"/>
@@ -107,7 +55,71 @@
         <Association destinationClassName="com.cheetahload.TestScript"
             endpointName="testScript" kind="Simple"/>
     </Class>
-    <Class name="com.cheetahload.TestScript" x="790" y="247">
+    <Class name="com.cheetahload.db.Operator" x="870" y="512">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.cheetahload.db.ConnectionPool"
+            endpointName="connectionPool" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.db.ConnectionPool"/>
+    </Class>
+    <Class name="com.cheetahload.log.UserLoggerWriter" x="1337" y="31">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.cheetahload.log.LoggerWriter"/>
+        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+    </Class>
+    <Class name="com.cheetahload.executor.TestLauncher" x="1075" y="411">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.cheetahload.log.LoggerWriter"
+            endpointName="userLoggerWriter" kind="Simple"/>
+        <Association
+            destinationClassName="com.cheetahload.timer.TimerWriter"
+            endpointName="timerWriter" kind="Simple"/>
+        <Association
+            destinationClassName="com.cheetahload.log.LoggerWriter"
+            endpointName="commonLoggerWriter" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.timer.TimerWriter"/>
+        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.log.LoggerWriter"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+        <Communication destinationClassName="com.cheetahload.db.Operator"/>
+        <Communication destinationClassName="com.cheetahload.log.Logger"/>
+    </Class>
+    <Class name="com.cheetahload.log.Logger" x="346" y="323">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="com.cheetahload.log.UserLogger"
+            endpointName="userLogger" kind="Simple"/>
+        <Association
+            destinationClassName="com.cheetahload.log.CommonLogger"
+            endpointName="commonLogger" kind="Simple"/>
+    </Class>
+    <Class name="com.cheetahload.VirtualUser" x="1108" y="747">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"/>
@@ -115,9 +127,8 @@
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="true"
             accessors-accepted="true" constructors-accepted="true"/>
-        <Communication destinationClassName="com.cheetahload.executor.TestThread"/>
     </Class>
-    <Class name="com.cheetahload.log.Level" x="676" y="598">
+    <Class name="com.cheetahload.TestScript" x="51" y="206">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -126,7 +137,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="com.cheetahload.timer.Timer" x="30" y="721">
+    <Class name="com.cheetahload.log.LoggerName" x="998" y="747">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -135,7 +146,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="com.cheetahload.log.UserLogger" x="256" y="720">
+    <Class name="com.cheetahload.log.UserLogger" x="182" y="425">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -146,16 +157,31 @@
         <Extension destinationClassName="com.cheetahload.log.Logger"/>
         <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
     </Class>
-    <Class name="com.cheetahload.VirtualUser" x="712" y="1442">
+    <Class name="com.cheetahload.timer.Transaction" x="1073" y="180">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"/>
+            default-accepted="true" static-accepted="false"/>
         <MethodDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="true"
-            accessors-accepted="true" constructors-accepted="true"/>
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="com.cheetahload.TestResult"
+            endpointName="result" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
     </Class>
-    <Class name="com.cheetahload.log.CommonLogger" x="462" y="729">
+    <Class name="com.cheetahload.log.CommonLoggerWriter" x="1186" y="30">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="com.cheetahload.log.LoggerWriter"/>
+        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+    </Class>
+    <Class name="com.cheetahload.log.CommonLogger" x="374" y="425">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -165,5 +191,102 @@
             accessors-accepted="false" constructors-accepted="false"/>
         <Extension destinationClassName="com.cheetahload.log.Logger"/>
         <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+    </Class>
+    <Class name="com.cheetahload.executor.TestThread" x="556" y="22">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+        <Association destinationClassName="com.cheetahload.TestResult"
+            endpointName="result" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.timer.Timer"
+            endpointName="timer" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestSuite"
+            endpointName="testSuite" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.log.Logger"
+            endpointName="logger" kind="Simple"/>
+        <Association
+            destinationClassName="com.cheetahload.TestConfiguration"
+            endpointName="config" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.log.UserLogger"/>
+        <Communication destinationClassName="com.cheetahload.timer.Timer"/>
+        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.TestCase"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+        <Communication destinationClassName="com.cheetahload.log.Logger"/>
+        <Communication destinationClassName="com.cheetahload.TestScript"/>
+        <Communication destinationClassName="com.cheetahload.TestSuite"/>
+    </Class>
+    <Class name="com.cheetahload.TestResult" x="863" y="28">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="com.cheetahload.log.Logger"/>
+    </Class>
+    <Class name="com.cheetahload.log.LoggerWriter" x="1281" y="163">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="com.cheetahload.TestResult"
+            endpointName="result" kind="Simple"/>
+        <Association
+            destinationClassName="com.cheetahload.TestConfiguration"
+            endpointName="config" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.TestConfiguration"/>
+        <Communication destinationClassName="com.cheetahload.TestResult"/>
+    </Class>
+    <Class name="com.cheetahload.log.Level" x="868" y="341">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="com.cheetahload.TestSuite" x="245" y="24">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="true"
+            accessors-accepted="true" constructors-accepted="true"/>
+        <Association destinationClassName="com.cheetahload.TestCase"
+            endpointName="testCaseList" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestScript"
+            endpointName="prepareTestScript" kind="Simple"/>
+        <Association destinationClassName="com.cheetahload.TestScript"
+            endpointName="clearupTestScript" kind="Simple"/>
+        <Communication destinationClassName="com.cheetahload.TestCase"/>
+    </Class>
+    <Class name="com.cheetahload.db.ConnectionPool" x="867" y="588">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="com.cheetahload.db.TableDefinition" x="874" y="746">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
     </Class>
 </ClassDiagram>

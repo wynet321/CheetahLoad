@@ -51,6 +51,7 @@ public final class TestLauncher {
 		List<String> sql = new LinkedList<String>();
 		sql.add(TableDefinition.CONFIGURATION);
 		sql.add(TableDefinition.TIMER);
+		sql.add(TableDefinition.TRANSACTION);
 		if (!TestConfiguration.getTestConfiguration().getOperator().insert(sql)) {
 			Logger.get(LoggerName.Common)
 					.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
