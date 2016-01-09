@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
-import com.cheetahload.db.DB;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
 import com.cheetahload.log.LoggerName;
@@ -51,12 +50,13 @@ public final class TimerWriter extends Thread {
 		while (!timerQueue.isEmpty()) {
 			sql.add(prefix + timerQueue.poll() + suffix);
 		}
-
-		if (!DB.insert(sql)) {
-			stopSignal = true;
-			Logger.get(LoggerName.Common).write(
-					"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.", Level.ERROR);
+		if (!sql.isEmpty()) {
+			if (!config.getOperator().insert(sql)) {
+				stopSignal = true;
+				Logger.get(LoggerName.Common)
+						.write("TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.",
+								Level.ERROR);
+			}
 		}
-		DB.closeConnection();
 	}
 }

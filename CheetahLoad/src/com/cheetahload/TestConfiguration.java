@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.cheetahload.db.Operator;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
 import com.cheetahload.log.LoggerName;
@@ -26,6 +27,34 @@ public class TestConfiguration {
 	private String testName;
 	private String testerName;
 	private String testerMail;
+	private Operator operator;
+
+	public Operator getOperator() {
+		if (operator == null) {
+			StringBuilder connectionString = new StringBuilder();
+			connectionString.append("jdbc:sqlite:").append(logPath).append("/").append(testName).append(".db");
+			operator = Operator.getOperator("org.sqlite.JDBC", connectionString.toString(), 10);
+		}
+		return operator;
+	}
+
+	private TestConfiguration() {
+		// default value
+		duration = 0;
+		loops = 0;
+		userCount = 0;
+		password = new String();
+		thinkTime = 0;
+		testSuiteName = new String();
+		logPath = "./log";
+		logLevel = Level.ERROR;
+		userIndex = 0;
+		logFileSize = 1024000;
+		logWriteRate = 10000;
+		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
+		testerName = "";
+		testerMail = "";
+	}
 
 	public String getTesterName() {
 		return testerName;
@@ -70,24 +99,6 @@ public class TestConfiguration {
 		return testConfiguration;
 	}
 
-	private TestConfiguration() {
-		// default value
-		duration = 0;
-		loops = 0;
-		userCount = 0;
-		password = new String();
-		thinkTime = 0;
-		testSuiteName = new String();
-		logPath = "./log";
-		logLevel = Level.ERROR;
-		userIndex = 0;
-		logFileSize = 1024000;
-		logWriteRate = 10000;
-		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
-		testerName="";
-		testerMail="";
-	}
-
 	public int getLogWriteRate() {
 		return logWriteRate;
 	}
@@ -98,18 +109,16 @@ public class TestConfiguration {
 	}
 
 	public boolean verify() {
-		Logger logger=Logger.get(LoggerName.Common);
+		Logger logger = Logger.get(LoggerName.Common);
 
 		logger.write("TestConfiguration - verify() - duration=" + duration + " seconds", Level.DEBUG);
 		logger.write("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
-		if(testName.isEmpty()){
-			logger.write("TestConfiguration - verify() - Tester name must be set.",
-					Level.ERROR);
+		if (testName.isEmpty()) {
+			logger.write("TestConfiguration - verify() - Tester name must be set.", Level.ERROR);
 			return false;
 		}
 		if (duration == 0 && loops == 0) {
-			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.",
-					Level.ERROR);
+			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.", Level.ERROR);
 			return false;
 		}
 		logger.write("TestConfiguration - verify() - vusers=" + userCount, Level.DEBUG);

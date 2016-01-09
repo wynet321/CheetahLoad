@@ -1,12 +1,14 @@
 package com.cheetahload.executor;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 import com.cheetahload.TestSuite;
-import com.cheetahload.db.DB;
+import com.cheetahload.db.TableDefinition;
 import com.cheetahload.log.CommonLoggerWriter;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
@@ -46,11 +48,22 @@ public final class TestLauncher {
 		System.out.println("Test is completed.");
 	}
 
-	public final static void run(TestSuite testSuite) {
+	private static void createTables() {
+		List<String> sql = new LinkedList<String>();
+		sql.add(TableDefinition.CONFIGURATION);
+		sql.add(TableDefinition.TIMER);
+		if (!TestConfiguration.getTestConfiguration().getOperator().insert(sql)) {
+			Logger.get(LoggerName.Common)
+					.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
+							Level.ERROR);
+		}
+	}
+
+	public final static void start(TestSuite testSuite) {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
-
 		if (config.verify()) {
+			createTables();
 			StringBuilder sql = new StringBuilder();
 			sql.append("insert into configuration values('").append(config.getTestName()).append("','")
 					.append(config.getTesterName()).append("','").append(config.getTesterMail()).append("','")
@@ -58,12 +71,11 @@ public final class TestLauncher {
 					.append(config.getDuration()).append(",").append(config.getLoops()).append(",")
 					.append(config.getThinkTime()).append(",'").append(config.getLogLevel()).append("',")
 					.append(config.getLogFileSize()).append(",").append(config.getLogWriteRate()).append(")");
-			if (!DB.insert(sql.toString())) {
+			if (!config.getOperator().insert(sql.toString())) {
 				Logger.get(LoggerName.Common)
 						.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
 								Level.ERROR);
 			}
-
 		} else {
 			Logger.get(LoggerName.Common).write(
 					"TestLauncher - run() Test configuration settings are not completed. Test can't start! ",

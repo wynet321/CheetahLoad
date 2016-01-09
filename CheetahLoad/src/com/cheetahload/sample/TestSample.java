@@ -27,7 +27,7 @@ public class TestSample {
 		testSuite.setPrepareTestScript(new TestScript_Login());
 		testSuite.add(new TestCase(new TestScript_Search(), 1));
 		testSuite.add(new TestCase(new TestScript_Login(), 2));
-		TestLauncher.run(testSuite);
+		TestLauncher.start(testSuite);
 	}
 
 }
