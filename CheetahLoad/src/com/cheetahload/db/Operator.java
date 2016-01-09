@@ -11,7 +11,15 @@ public class Operator {
 	private static Operator operator;
 
 	public static Operator getOperator(String dbClassName, String url, int maxQueueSize) {
-		connectionPool = new ConnectionPool(dbClassName, url, maxQueueSize);
+		if (dbClassName == null || dbClassName.isEmpty()) {
+			System.out
+					.println("Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter dbClassName is null or empty. Connection pool creation failed.");
+		} else if (url == null || url.isEmpty()) {
+			System.out
+					.println("Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter url is null or empty. Connection pool creation failed.");
+		} else {
+			connectionPool = new ConnectionPool(dbClassName, url, maxQueueSize);
+		}
 		if (operator == null) {
 			operator = new Operator();
 		}

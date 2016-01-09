@@ -61,8 +61,9 @@ public class TestConfiguration {
 	}
 
 	public void setTesterName(String testerName) {
-		// TODO judge parameter
-		this.testerName = testerName;
+		if (null != testerName && !testerName.isEmpty()) {
+			this.testerName = testerName;
+		}
 	}
 
 	public String getTesterMail() {
@@ -70,8 +71,9 @@ public class TestConfiguration {
 	}
 
 	public void setTesterMail(String testerMail) {
-		// TODO judge parameter
-		this.testerMail = testerMail;
+		if (null != testerMail && !testerMail.isEmpty()) {
+			this.testerMail = testerMail;
+		}
 	}
 
 	public String getTestName() {
@@ -79,8 +81,9 @@ public class TestConfiguration {
 	}
 
 	public void setTestName(String testName) {
-		// TODO judge parameter
-		this.testName = testName + "_" + this.testName;
+		if (null != testName && !testName.isEmpty()) {
+			this.testName = testName + "_" + this.testName;
+		}
 	}
 
 	public int getLogFileSize() {
@@ -88,8 +91,9 @@ public class TestConfiguration {
 	}
 
 	public void setLogFileSize(int logFileSize) {
-		// TODO judge parameter
-		this.logFileSize = logFileSize;
+		if (logFileSize > 0) {
+			this.logFileSize = logFileSize;
+		}
 	}
 
 	public static TestConfiguration getTestConfiguration() {
@@ -104,8 +108,9 @@ public class TestConfiguration {
 	}
 
 	public void setLogWriteRate(int logWriteRate) {
-		// TODO judge parameter
-		this.logWriteRate = logWriteRate;
+		if (logWriteRate > 0) {
+			this.logWriteRate = logWriteRate;
+		}
 	}
 
 	public boolean verify() {
@@ -158,7 +163,10 @@ public class TestConfiguration {
 	}
 
 	private boolean initialLogPath(String path) {
-		// TODO judge parameter
+		if (null == path || path.isEmpty()) {
+			System.out.println("TestConfiguration - initialLogPath(String path) - Parameter path is null or empty.");
+			return false;
+		}
 		File dir = new File(path);
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
@@ -213,9 +221,10 @@ public class TestConfiguration {
 	}
 
 	public void setUserNames(int userCount, String prefix, int digit, int startNumber) {
-		// TODO judge parameter
-		this.userCount = userCount;
-		userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, userCount);
+		if (userCount > 0 && prefix != null && digit > 0 && startNumber >= 0) {
+			this.userCount = userCount;
+			userNames = VirtualUser.generateUserNames(prefix, digit, startNumber, userCount);
+		}
 	}
 
 	public int getDuration() {
@@ -223,8 +232,9 @@ public class TestConfiguration {
 	}
 
 	public void setDuration(int duration) {
-		// TODO judge parameter
-		this.duration = duration * 60; // transfer minutes to seconds
+		if (duration > 0) {
+			this.duration = duration * 60; // transfer minutes to seconds
+		}
 	}
 
 	public int getLoops() {
@@ -232,8 +242,9 @@ public class TestConfiguration {
 	}
 
 	public void setLoops(int loops) {
-		// TODO judge parameter
-		this.loops = loops;
+		if (loops > 0) {
+			this.loops = loops;
+		}
 	}
 
 	public int getUserCount() {
@@ -245,8 +256,9 @@ public class TestConfiguration {
 	}
 
 	public void setPassword(String password) {
-		// TODO judge parameter
-		this.password = password;
+		if (password != null && !password.isEmpty()) {
+			this.password = password;
+		}
 	}
 
 	public int getThinkTime() {
@@ -254,8 +266,9 @@ public class TestConfiguration {
 	}
 
 	public void setThinkTime(int thinkTime) {
-		// TODO judge parameter
-		this.thinkTime = thinkTime;
+		if (thinkTime > 0) {
+			this.thinkTime = thinkTime;
+		}
 	}
 
 	public String getTestSuiteName() {
@@ -263,13 +276,15 @@ public class TestConfiguration {
 	}
 
 	public void setTestSuiteName(String testSuiteName) {
-		// TODO judge parameter
-		this.testSuiteName = testSuiteName;
+		if (testSuiteName != null && !testSuiteName.isEmpty()) {
+			this.testSuiteName = testSuiteName;
+		}
 	}
 
 	public void setLogLocation(String logLocation) {
-		// TODO judge parameter
-		this.logPath = logLocation;
+		if (logLocation != null && !logLocation.isEmpty()) {
+			this.logPath = logLocation;
+		}
 	}
 
 	public Level getLogLevel() {

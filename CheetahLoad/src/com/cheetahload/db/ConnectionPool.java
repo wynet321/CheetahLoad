@@ -62,12 +62,12 @@ public class ConnectionPool {
 		}
 		if (maxQueueSize <= 0) {
 			System.out
-					.println("ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter maxQueueSize is negative or zero. Set it to default value 1.");
+					.println("WARN: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter maxQueueSize is negative or zero. Set it to default value 1.");
 			this.maxQueueSize = 1;
 		}
 		this.url = url;
 		this.dbClassName = dbClassName;
-		this.maxQueueSize=maxQueueSize;
+		this.maxQueueSize = maxQueueSize;
 		connectionPool = new ConcurrentLinkedQueue<Connection>();
 		queueSize = 0;
 	}

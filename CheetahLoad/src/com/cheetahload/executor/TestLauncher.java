@@ -45,7 +45,6 @@ public final class TestLauncher {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Test is completed.");
 	}
 
 	private static void createTables() {
@@ -84,45 +83,49 @@ public final class TestLauncher {
 		}
 
 		startLogger();
-		System.out.println("Test is starting...");
-		// Thread(VU) start
-		int threadCount = config.getUserCount();
-		int i = 0;
-		Thread[] thread = new Thread[threadCount];
-		CountDownLatch threadSignal = new CountDownLatch(threadCount);
-		while (i < threadCount) {
-			thread[i] = new TestThread(testSuite, threadSignal);
-			thread[i].start();
-			i++;
-		}
-		try {
-			threadSignal.await();
-		} catch (InterruptedException e) {
-			Logger.get(LoggerName.Common)
-					.write("TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
-							Level.ERROR);
-		}
-
-		// output statistic data
-		Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary Start.", Level.INFO);
-		Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
-		for (String key : userExecutionCountTable.keySet()) {
-			Logger.get(LoggerName.Common).write(
-					"TestEntry - runTest() " + key + " execution count: " + userExecutionCountTable.get(key),
-					Level.INFO);
-		}
-
-		Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
-		if (userErrorCountTable.isEmpty()) {
-			Logger.get(LoggerName.Common).write("TestLauncher - run() There is no error in test.", Level.INFO);
-		} else {
-			for (String key : userErrorCountTable.keySet()) {
-				Logger.get(LoggerName.Common).write(
-						"TestLauncher - run() " + key + " error count: " + userErrorCountTable.get(key), Level.INFO);
+		if (testSuite != null) {
+			System.out.println("Test is starting...");
+			// Thread(VU) start
+			int threadCount = config.getUserCount();
+			int i = 0;
+			Thread[] thread = new Thread[threadCount];
+			CountDownLatch threadSignal = new CountDownLatch(threadCount);
+			while (i < threadCount) {
+				thread[i] = new TestThread(testSuite, threadSignal);
+				thread[i].start();
+				i++;
 			}
-		}
+			try {
+				threadSignal.await();
+			} catch (InterruptedException e) {
+				Logger.get(LoggerName.Common).write(
+						"TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
+						Level.ERROR);
+			}
 
-		Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary End.", Level.INFO);
-		stopLogger();
+			// output statistic data
+			Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary Start.", Level.INFO);
+			Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
+			for (String key : userExecutionCountTable.keySet()) {
+				Logger.get(LoggerName.Common).write(
+						"TestEntry - runTest() " + key + " execution count: " + userExecutionCountTable.get(key),
+						Level.INFO);
+			}
+
+			Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
+			if (userErrorCountTable.isEmpty()) {
+				Logger.get(LoggerName.Common).write("TestLauncher - run() There is no error in test.", Level.INFO);
+			} else {
+				for (String key : userErrorCountTable.keySet()) {
+					Logger.get(LoggerName.Common)
+							.write("TestLauncher - run() " + key + " error count: " + userErrorCountTable.get(key),
+									Level.INFO);
+				}
+			}
+
+			Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary End.", Level.INFO);
+			stopLogger();
+			System.out.println("Test is completed.");
+		}
 	}
 }

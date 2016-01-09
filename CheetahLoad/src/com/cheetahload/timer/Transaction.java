@@ -12,7 +12,11 @@ public final class Transaction {
 	private TestResult result;
 
 	public Transaction(String name) {
-		this.name = name;
+		if (name != null && !name.isEmpty()) {
+			this.name = name;
+		} else {
+			this.name = "Transaction_" + System.currentTimeMillis();
+		}
 		result = TestResult.getTestResult();
 	}
 
@@ -32,5 +36,7 @@ public final class Transaction {
 		// result.getTimerVector(current.getName()).add(current.getUserName() +
 		// "," + duration + "," + begin + "," + end + "\n");
 		// result.setTimerQueue(current.getName(), , userName, duration);
+		result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
+				String.valueOf(timer.getDuration()));
 	}
 }

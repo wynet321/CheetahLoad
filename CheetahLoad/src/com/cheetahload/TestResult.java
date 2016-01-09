@@ -39,7 +39,6 @@ public class TestResult {
 	}
 
 	public synchronized void addUserExecutionCount(String testScriptName) {
-
 		if (null == testScriptName || testScriptName.isEmpty()) {
 			Logger.get(LoggerName.Common).write(
 					"TestResult - addUserExecutionCount() - testScriptName is null or empty string.", Level.ERROR);
@@ -58,7 +57,6 @@ public class TestResult {
 	}
 
 	public synchronized void addUserErrorCount(String testScriptName) {
-
 		if (null == testScriptName || testScriptName.isEmpty()) {
 			Logger.get(LoggerName.Common).write(
 					"TestResult - addUserErrorCount() - testScriptName is null or empty string.", Level.ERROR);
@@ -77,7 +75,6 @@ public class TestResult {
 	}
 
 	public StringBuffer getUserLogBuffer(String userName) {
-
 		if (null == userName || userName.isEmpty()) {
 			Logger.get(LoggerName.Common).write("TestResult - getUserLogBuffer() - userName is null or empty string.",
 					Level.ERROR);
@@ -91,7 +88,6 @@ public class TestResult {
 	}
 
 	public int getUserLogFileCount(String userName) {
-
 		if (null == userName || userName.isEmpty()) {
 			Logger.get(LoggerName.Common).write(
 					"TestResult - getUserLogFileCount() - userName is null or empty string.", Level.ERROR);
@@ -105,7 +101,6 @@ public class TestResult {
 	}
 
 	public void setUserLogFileCount(String userName, int logFileCount) {
-
 		if (null == userName || userName.isEmpty()) {
 			Logger.get(LoggerName.Common).write(
 					"TestResult - setUserLogFileCount() - userName is null or empty string.", Level.ERROR);

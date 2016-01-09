@@ -16,7 +16,6 @@ import com.cheetahload.timer.Timer;
 
 public final class TestThread extends Thread {
 	private TestSuite testSuite;
-	// private UserLogger userLogger;
 	private Logger logger;
 	private String userName;
 	private Timer timer;
@@ -30,20 +29,17 @@ public final class TestThread extends Thread {
 	}
 
 	public TestThread(TestSuite testSuite, CountDownLatch threadSignal) {
+		if (testSuite != null && threadSignal != null) {
+			this.testSuite = testSuite;
+			this.threadSignal = threadSignal;
+		}
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
-		this.testSuite = testSuite;
-		this.threadSignal = threadSignal;
 		userName = config.getUserNames().get(config.getUserIndex());
-		// userLogger = UserLogger.getUserLogger(userName);
 		logger = Logger.get(LoggerName.User);
 		timer = new Timer();
 		random = new Random();
 	}
-
-	// public UserLogger getUserLogger() {
-	// return userLogger;
-	// }
 
 	public void run() {
 		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.",
@@ -71,13 +67,16 @@ public final class TestThread extends Thread {
 				testScript.clearup();
 			} catch (Exception e) {
 				result.addUserErrorCount(testScript.getName());
-				logger.write("TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
-						+ e.getMessage(), Level.ERROR);
+				logger.write(
+						"TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
+								+ e.getMessage(), Level.ERROR);
 			}
 			result.setTimerQueue(config.getTestName(), testScript.getName(), userName,
 					String.valueOf(timer.getDuration()));
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
 			result.addUserExecutionCount(testScript.getName());
+		}else{
+			logger.write("TestThread - execute(TestScript testScript) - Parameter testScript is null.", Level.ERROR);
 		}
 	}
 
