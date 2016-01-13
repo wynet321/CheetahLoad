@@ -88,6 +88,8 @@ public final class TestThread extends Thread {
 
 	private void executeThinkTime(long executionDuration) {
 		long plannedThinkTime = config.getThinkTime();
+		boolean randomThinkTime = config.isRandomThinkTime();
+
 		long actualThinkTime = 0L;
 		if (executionDuration > 0) {
 			if (executionDuration < plannedThinkTime) {
@@ -101,6 +103,13 @@ public final class TestThread extends Thread {
 		} else {
 			actualThinkTime = plannedThinkTime;
 		}
+		if (randomThinkTime) {
+			if (actualThinkTime <= Integer.MAX_VALUE - 1) {
+				actualThinkTime = random.nextInt((int) (actualThinkTime + 1));
+			} else {
+				actualThinkTime = random.nextInt((int) Integer.MAX_VALUE);
+			}
+		}
 		try {
 			Thread.sleep(actualThinkTime);
 		} catch (InterruptedException e) {
@@ -111,7 +120,6 @@ public final class TestThread extends Thread {
 
 	private void execute() {
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
-
 		long executionDuration = 0L;
 		// sequentially run
 		int loop = config.getLoops();

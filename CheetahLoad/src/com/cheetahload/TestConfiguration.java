@@ -28,6 +28,7 @@ public class TestConfiguration {
 	private String testerName;
 	private String testerMail;
 	private Operator operator;
+	private boolean randomThinkTime;
 
 	public Operator getOperator() {
 		if (operator == null) {
@@ -54,6 +55,15 @@ public class TestConfiguration {
 		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
 		testerName = "";
 		testerMail = "";
+		randomThinkTime=false;
+	}
+
+	public boolean isRandomThinkTime() {
+		return randomThinkTime;
+	}
+
+	public void setRandomThinkTime(boolean randomThinkTime) {
+		this.randomThinkTime = randomThinkTime;
 	}
 
 	public String getTesterName() {
@@ -268,6 +278,8 @@ public class TestConfiguration {
 	public void setThinkTime(int thinkTime) {
 		if (thinkTime > 0) {
 			this.thinkTime = thinkTime;
+		}else{
+			this.thinkTime=0;
 		}
 	}
 
