@@ -56,7 +56,8 @@ public final class TestThread extends Thread {
 		threadSignal.countDown();
 	}
 
-	private void execute(TestScript testScript) {
+	private long execute(TestScript testScript) {
+		long begin = System.currentTimeMillis();
 		if (testScript != null) {
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " start.", Level.DEBUG);
 			try {
@@ -72,9 +73,8 @@ public final class TestThread extends Thread {
 				for (StackTraceElement element : stackTrace) {
 					message.append(element.toString()).append("\n");
 				}
-				logger.write(
-						"TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
-								+ e.getMessage() + "\n" + message, Level.ERROR);
+				logger.write("TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
+						+ e.getMessage() + "\n" + message, Level.ERROR);
 			}
 			result.setTimerQueue(testScript.getName(), userName, String.valueOf(timer.getDuration()));
 			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
@@ -82,10 +82,37 @@ public final class TestThread extends Thread {
 		} else {
 			logger.write("TestThread - execute(TestScript testScript) - Parameter testScript is null.", Level.ERROR);
 		}
+		long duration = System.currentTimeMillis() - begin;
+		return duration;
+	}
+
+	private void executeThinkTime(long executionDuration) {
+		long plannedThinkTime = config.getThinkTime();
+		long actualThinkTime = 0L;
+		if (executionDuration > 0) {
+			if (executionDuration < plannedThinkTime) {
+				actualThinkTime = plannedThinkTime - executionDuration;
+			} else {
+				logger.write(
+						"TestThread - execute() - Test case execution duration was longer than think time, actual think time set to zero.",
+						Level.WARN);
+				actualThinkTime = 0L;
+			}
+		} else {
+			actualThinkTime = plannedThinkTime;
+		}
+		try {
+			Thread.sleep(actualThinkTime);
+		} catch (InterruptedException e) {
+			Logger.get(LoggerName.User).write("TestThread - execute() - sleep interrupted abnormally.", Level.ERROR);
+			e.printStackTrace();
+		}
 	}
 
 	private void execute() {
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
+
+		long executionDuration = 0L;
 		// sequentially run
 		int loop = config.getLoops();
 		if (loop > 0) {
@@ -94,7 +121,8 @@ public final class TestThread extends Thread {
 				while (iterator.hasNext()) {
 					TestCase testcase = iterator.next();
 					if (testcase != null) {
-						execute(testcase.getTestScript());
+						executionDuration = execute(testcase.getTestScript());
+						executeThinkTime(executionDuration);
 					}
 				}
 			}
@@ -128,7 +156,8 @@ public final class TestThread extends Thread {
 			int testScriptPoolIndex = 0;
 			while (System.currentTimeMillis() - begin < duration) {
 				testScriptPoolIndex = random.nextInt(totalPercentage);
-				execute(testScriptPool[testScriptPoolIndex]);
+				executionDuration = execute(testScriptPool[testScriptPoolIndex]);
+				executeThinkTime(executionDuration);
 			}
 			logger.write("TestThread - execute() random run stop.", Level.INFO);
 		}
