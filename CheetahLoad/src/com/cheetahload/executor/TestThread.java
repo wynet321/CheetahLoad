@@ -163,7 +163,7 @@ public final class TestThread extends Thread {
 			}
 			// random run
 			logger.write("TestThread - execute() - Random run start.", Level.INFO);
-			long wholeTestDuration = config.getDuration() * 1000;
+			long wholeTestDuration = config.getWholeTestDuration() * 1000;
 			long begin = System.currentTimeMillis();
 			int testScriptPoolIndex = 0;
 			while (System.currentTimeMillis() - begin < wholeTestDuration) {

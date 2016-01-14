@@ -68,7 +68,7 @@ public final class TestLauncher {
 			sql.append("insert into configuration values('").append(config.getTestName()).append("','")
 					.append(config.getTesterName()).append("','").append(config.getTesterMail()).append("','")
 					.append(config.getTestSuiteName()).append("',").append(config.getUserCount()).append(",")
-					.append(config.getDuration()).append(",").append(config.getLoops()).append(",")
+					.append(config.getWholeTestDuration()).append(",").append(config.getLoops()).append(",")
 					.append(config.getThinkTime()).append(",'").append(config.getLogLevel()).append("',")
 					.append(config.getLogFileSize()).append(",").append(config.getLogWriteRate()).append(")");
 			if (!config.getOperator().insert(sql.toString())) {

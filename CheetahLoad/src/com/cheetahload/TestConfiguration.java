@@ -11,7 +11,7 @@ import com.cheetahload.log.LoggerName;
 
 public class TestConfiguration {
 
-	private int duration;
+	private int wholeTestDuration;
 	private int loops;
 	private int userCount;
 	private List<String> userNames;
@@ -29,6 +29,7 @@ public class TestConfiguration {
 	private String testerMail;
 	private Operator operator;
 	private boolean randomThinkTime;
+	private Logger logger;
 
 	public Operator getOperator() {
 		if (operator == null) {
@@ -41,7 +42,7 @@ public class TestConfiguration {
 
 	private TestConfiguration() {
 		// default value
-		duration = 0;
+		wholeTestDuration = 0;
 		loops = 0;
 		userCount = 0;
 		password = new String();
@@ -55,7 +56,8 @@ public class TestConfiguration {
 		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
 		testerName = "";
 		testerMail = "";
-		randomThinkTime=false;
+		randomThinkTime = false;
+		logger = Logger.get(LoggerName.Common);
 	}
 
 	public boolean isRandomThinkTime() {
@@ -124,16 +126,15 @@ public class TestConfiguration {
 	}
 
 	public boolean verify() {
-		Logger logger = Logger.get(LoggerName.Common);
-
-		logger.write("TestConfiguration - verify() - duration=" + duration + " seconds", Level.DEBUG);
+		logger.write("TestConfiguration - verify() - wholeTestDuration=" + wholeTestDuration + " seconds", Level.DEBUG);
 		logger.write("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
 		if (testName.isEmpty()) {
 			logger.write("TestConfiguration - verify() - Tester name must be set.", Level.ERROR);
 			return false;
 		}
-		if (duration == 0 && loops == 0) {
-			logger.write("TestConfiguration - verify() - duration or loops should be non-zero value.", Level.ERROR);
+		if (wholeTestDuration == 0 && loops == 0) {
+			logger.write("TestConfiguration - verify() - wholeTestDuration or loops should be non-zero value.",
+					Level.ERROR);
 			return false;
 		}
 		logger.write("TestConfiguration - verify() - vusers=" + userCount, Level.DEBUG);
@@ -152,8 +153,9 @@ public class TestConfiguration {
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				logger.write("TestConfiguration - verify() - userNames vector has " + userNames.size()
-						+ " cell object(s).", Level.DEBUG);
+				logger.write(
+						"TestConfiguration - verify() - userNames vector has " + userNames.size() + " cell object(s).",
+						Level.DEBUG);
 			} else {
 				logger.write("TestConfiguration - verify() - userNames vector should include cell object(s).",
 						Level.ERROR);
@@ -168,37 +170,42 @@ public class TestConfiguration {
 			return false;
 		}
 
-		logger.write("TestConfiguration - verify() done.", Level.DEBUG);
+		logger.write("TestConfiguration - verify() - Parameters verification completed.", Level.DEBUG);
 		return true;
 	}
 
 	private boolean initialLogPath(String path) {
 		if (null == path || path.isEmpty()) {
-			System.out.println("TestConfiguration - initialLogPath(String path) - Parameter path is null or empty.");
+			logger.write("TestConfiguration - initialLogPath(String path) - Parameter path is null or empty.",
+					Level.ERROR);
 			return false;
 		}
 		File dir = new File(path);
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
 				if (!clearDirectory(new File(path))) {
-					throw new RuntimeException("TestConfiguration - initialLogPath() Clear folder '" + path
-							+ "' failed. Please clear by manual.");
+					logger.write("TestConfiguration - initialLogPath(String path) Clear folder '" + path
+							+ "' failed. Please clear by manual.", Level.ERROR);
 				}
+				logger.write(
+						"TestConfiguration - initialLogPath(String path) - Directory '" + path + "' was cleared up.",
+						Level.DEBUG);
 			} else {
 				if (!dir.delete())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Delete file '" + path
-							+ "' failed. Please delete by manual.");
+					logger.write("TestConfiguration - initialLogPath(String path) Delete file '" + path
+							+ "' failed. Please delete by manual.", Level.ERROR);
 				if (!dir.mkdir())
-					throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path
-							+ "' failed. Please create by manual.");
+					logger.write("TestConfiguration - initialLogPath(String path) Create folder '" + path
+							+ "' failed. Please create by manual.", Level.ERROR);
 			}
 			return true;
 		} else {
 			if (dir.mkdirs()) {
 				return true;
 			} else {
-				throw new RuntimeException("TestConfiguration - initialLogPath() Create folder '" + path
-						+ "' failed. Please check permission.");
+				logger.write("TestConfiguration - initialLogPath(String path) Create folder '" + path
+						+ "' failed. Please check permission.", Level.ERROR);
+				return false;
 			}
 		}
 	}
@@ -237,13 +244,14 @@ public class TestConfiguration {
 		}
 	}
 
-	public int getDuration() {
-		return duration;
+	public int getWholeTestDuration() {
+		return wholeTestDuration;
 	}
 
-	public void setDuration(int duration) {
-		if (duration > 0) {
-			this.duration = duration * 60; // transfer minutes to seconds
+	public void setWholeTestDuration(int wholeTestDuration) {
+		if (wholeTestDuration > 0) {
+			// transfer minutes to seconds
+			this.wholeTestDuration = wholeTestDuration * 60;
 		}
 	}
 
@@ -278,8 +286,8 @@ public class TestConfiguration {
 	public void setThinkTime(int thinkTime) {
 		if (thinkTime > 0) {
 			this.thinkTime = thinkTime;
-		}else{
-			this.thinkTime=0;
+		} else {
+			this.thinkTime = 0;
 		}
 	}
 
