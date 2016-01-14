@@ -59,7 +59,8 @@ public final class TestThread extends Thread {
 		long duration = 0L;
 		if (testScript != null) {
 			String testScriptName = testScript.getName();
-			logger.write("TestThread - execute(TestScript) - Test '" + testScriptName + "' start.", Level.DEBUG);
+			logger.write("TestThread - execute(TestScript testScript) - Test '" + testScriptName + "' start.",
+					Level.DEBUG);
 			try {
 				testScript.prepare();
 				timer.begin();
@@ -73,18 +74,18 @@ public final class TestThread extends Thread {
 				for (StackTraceElement element : stackTrace) {
 					message.append(element.toString()).append("\n");
 				}
-				logger.write("TestThread - execute(TestScript) - Execute test '" + testScriptName + "' failed. "
-						+ e.getMessage() + "\n" + message, Level.ERROR);
+				logger.write("TestThread - execute(TestScript testScript) - Execute test '" + testScriptName
+						+ "' failed. " + e.getMessage() + "\n" + message, Level.ERROR);
 			}
 			result.setTimerQueue(testScript.getName(), userName, String.valueOf(timer.getDuration()));
-			logger.write("TestThread - execute(TestScript) - Test '" + testScriptName + "' stopped.", Level.DEBUG);
+			logger.write("TestThread - execute(TestScript testScript) - Test '" + testScriptName + "' stopped.",
+					Level.DEBUG);
 			result.addUserExecutionCount(testScript.getName());
 			duration = System.currentTimeMillis() - begin;
-			logger.write(
-					"TestThread - execute(TestScript) - Test '" + testScriptName + "' executed " + duration + " ms.",
-					Level.DEBUG);
+			logger.write("TestThread - execute(TestScript testScript) - Test '" + testScriptName + "' executed "
+					+ duration + " ms.", Level.DEBUG);
 		} else {
-			logger.write("TestThread - execute(TestScript) - Parameter testScript is null.", Level.ERROR);
+			logger.write("TestThread - execute(TestScript testScript) - Parameter testScript is null.", Level.ERROR);
 		}
 		return duration;
 	}
@@ -117,7 +118,8 @@ public final class TestThread extends Thread {
 		try {
 			Thread.sleep(actualThinkTime);
 		} catch (InterruptedException e) {
-			Logger.get(LoggerName.User).write("TestThread - executeThinkTime(long testDuration) - Sleep interrupted abnormally.", Level.ERROR);
+			logger.write("TestThread - executeThinkTime(long testDuration) - Sleep interrupted abnormally.",
+					Level.ERROR);
 			e.printStackTrace();
 		}
 	}

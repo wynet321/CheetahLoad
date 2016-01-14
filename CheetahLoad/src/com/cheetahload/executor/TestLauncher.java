@@ -42,6 +42,7 @@ public final class TestLauncher {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
+				System.out.println("TestLauncher - stopLogger() - Sleep failed.");
 				e.printStackTrace();
 			}
 		}
@@ -53,15 +54,16 @@ public final class TestLauncher {
 		sql.add(TableDefinition.TIMER);
 		sql.add(TableDefinition.TRANSACTION);
 		if (!TestConfiguration.getTestConfiguration().getOperator().insert(sql)) {
-			Logger.get(LoggerName.Common)
-					.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
-							Level.ERROR);
+			Logger.get(LoggerName.Common).write(
+					"TestLauncher - createTables() - Test configuration parameters failed to insert into DB. Test will continue to run without time record...",
+					Level.ERROR);
 		}
 	}
 
 	public final static void start(TestSuite testSuite) {
 		TestResult result = TestResult.getTestResult();
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
+		Logger logger = Logger.get(LoggerName.Common);
 		if (config.verify()) {
 			createTables();
 			StringBuilder sql = new StringBuilder();
@@ -72,13 +74,14 @@ public final class TestLauncher {
 					.append(config.getThinkTime()).append(",'").append(config.getLogLevel()).append("',")
 					.append(config.getLogFileSize()).append(",").append(config.getLogWriteRate()).append(")");
 			if (!config.getOperator().insert(sql.toString())) {
-				Logger.get(LoggerName.Common)
-						.write("TestLauncher - run() Test configuration parameters failed to insert into DB. Test will continue to run...",
-								Level.ERROR);
+				logger.write(
+						"TestLauncher - run() - Test configuration parameters failed to insert into DB. Test will continue to run...",
+						Level.ERROR);
 			}
+			logger.write("TestLauncher - run() - Test configuration parameters succeeded to insert into DB.",
+					Level.DEBUG);
 		} else {
-			Logger.get(LoggerName.Common).write(
-					"TestLauncher - run() Test configuration settings are not completed. Test can't start! ",
+			logger.write("TestLauncher - run() - Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			System.exit(0);
 		}
@@ -99,32 +102,29 @@ public final class TestLauncher {
 			try {
 				threadSignal.await();
 			} catch (InterruptedException e) {
-				Logger.get(LoggerName.Common).write(
-						"TestLauncher - run() Thread can't be started. Error: " + e.getStackTrace().toString(),
-						Level.ERROR);
+				logger.write("TestLauncher - run() - Thread can't be started. Error: " + e.getMessage(), Level.ERROR);
+				e.printStackTrace();
 			}
 
 			// output statistic data
-			Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary Start.", Level.INFO);
+			Logger.get(LoggerName.Common).write("TestLauncher - run() - Execution Summary Start.", Level.INFO);
 			Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
 			for (String key : userExecutionCountTable.keySet()) {
-				Logger.get(LoggerName.Common).write(
-						"TestEntry - runTest() " + key + " execution count: " + userExecutionCountTable.get(key),
+				logger.write("TestEntry - runTest() - " + key + " execution count: " + userExecutionCountTable.get(key),
 						Level.INFO);
 			}
 
 			Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
 			if (userErrorCountTable.isEmpty()) {
-				Logger.get(LoggerName.Common).write("TestLauncher - run() There is no error in test.", Level.INFO);
+				logger.write("TestLauncher - run() - There is no error in test.", Level.INFO);
 			} else {
 				for (String key : userErrorCountTable.keySet()) {
-					Logger.get(LoggerName.Common)
-							.write("TestLauncher - run() " + key + " error count: " + userErrorCountTable.get(key),
-									Level.INFO);
+					logger.write("TestLauncher - run() - " + key + " error count: " + userErrorCountTable.get(key),
+							Level.INFO);
 				}
 			}
 
-			Logger.get(LoggerName.Common).write("TestLauncher - run() Execution Summary End.", Level.INFO);
+			logger.write("TestLauncher - run() - Execution Summary End.", Level.INFO);
 			stopLogger();
 			System.out.println("Test is completed.");
 		}
