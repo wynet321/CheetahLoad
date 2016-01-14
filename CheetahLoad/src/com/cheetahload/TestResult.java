@@ -17,6 +17,7 @@ public class TestResult {
 	private Hashtable<String, Integer> userLogFileCountTable;
 	private StringBuffer commonLogBuffer;
 	private ConcurrentLinkedQueue<String> timerQueue;
+	private Logger logger;
 
 	public TestResult() {
 		userLogBufferTable = new Hashtable<String, StringBuffer>();
@@ -25,6 +26,7 @@ public class TestResult {
 		userErrorCountTable = new Hashtable<String, Integer>();
 		commonLogBuffer = new StringBuffer();
 		timerQueue = new ConcurrentLinkedQueue<String>();
+		logger = Logger.get(LoggerName.Common);
 	}
 
 	public static TestResult getTestResult() {
@@ -40,8 +42,9 @@ public class TestResult {
 
 	public synchronized void addUserExecutionCount(String testScriptName) {
 		if (null == testScriptName || testScriptName.isEmpty()) {
-			Logger.get(LoggerName.Common).write(
-					"TestResult - addUserExecutionCount() - testScriptName is null or empty string.", Level.ERROR);
+			logger.write(
+					"TestResult - addUserExecutionCount(String testScriptName) - testScriptName is null or empty string.",
+					Level.ERROR);
 			return;
 		}
 
@@ -58,8 +61,7 @@ public class TestResult {
 
 	public synchronized void addUserErrorCount(String testScriptName) {
 		if (null == testScriptName || testScriptName.isEmpty()) {
-			Logger.get(LoggerName.Common).write(
-					"TestResult - addUserErrorCount() - testScriptName is null or empty string.", Level.ERROR);
+			logger.write("TestResult - addUserErrorCount() - testScriptName is null or empty string.", Level.ERROR);
 			return;
 		}
 
@@ -76,8 +78,7 @@ public class TestResult {
 
 	public StringBuffer getUserLogBuffer(String userName) {
 		if (null == userName || userName.isEmpty()) {
-			Logger.get(LoggerName.Common).write("TestResult - getUserLogBuffer() - userName is null or empty string.",
-					Level.ERROR);
+			logger.write("TestResult - getUserLogBuffer() - userName is null or empty string.", Level.ERROR);
 			return new StringBuffer();
 		}
 
@@ -89,8 +90,7 @@ public class TestResult {
 
 	public int getUserLogFileCount(String userName) {
 		if (null == userName || userName.isEmpty()) {
-			Logger.get(LoggerName.Common).write(
-					"TestResult - getUserLogFileCount() - userName is null or empty string.", Level.ERROR);
+			logger.write("TestResult - getUserLogFileCount() - userName is null or empty string.", Level.ERROR);
 			return 0;
 		}
 
@@ -102,8 +102,7 @@ public class TestResult {
 
 	public void setUserLogFileCount(String userName, int logFileCount) {
 		if (null == userName || userName.isEmpty()) {
-			Logger.get(LoggerName.Common).write(
-					"TestResult - setUserLogFileCount() - userName is null or empty string.", Level.ERROR);
+			logger.write("TestResult - setUserLogFileCount() - userName is null or empty string.", Level.ERROR);
 			return;
 		}
 		if (logFileCount < 0) {
@@ -114,7 +113,6 @@ public class TestResult {
 	}
 
 	public void setTimerQueue(String scriptName, String userName, String duration) {
-		Logger logger = Logger.get(LoggerName.Common);
 		if (scriptName == null || scriptName.isEmpty()) {
 			logger.write("TestResult - setTimerQueue() - scriptName was null or empty.", Level.ERROR);
 			return;
@@ -128,8 +126,7 @@ public class TestResult {
 			return;
 		}
 		StringBuilder item = new StringBuilder();
-		item.append("'").append(scriptName).append("','").append(userName).append("',")
-				.append(duration);
+		item.append("'").append(scriptName).append("','").append(userName).append("',").append(duration);
 		if (!timerQueue.add(item.toString())) {
 			logger.write("TestResult - setTimerQueue() - Add to queue failed. item: '" + item.toString() + "'",
 					Level.ERROR);
