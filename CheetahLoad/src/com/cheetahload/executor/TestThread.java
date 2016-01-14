@@ -42,24 +42,24 @@ public final class TestThread extends Thread {
 	}
 
 	public void run() {
-		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " start.",
-				Level.DEBUG);
+		String prepareTestScriptName = testSuite.getPrepareTestScript().getName();
+		String clearupTestScriptName = testSuite.getClearupTestScript().getName();
+		logger.write("TestThread - run() - Prepare test '" + prepareTestScriptName + "' start.", Level.DEBUG);
 		execute(testSuite.getPrepareTestScript());
-		logger.write("TestThread - run() Prepare test " + testSuite.getPrepareTestScript().getName() + " stopped.",
-				Level.DEBUG);
+		logger.write("TestThread - run() - Prepare test '" + prepareTestScriptName + "' stopped.", Level.DEBUG);
 		execute();
-		logger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " start.",
-				Level.DEBUG);
+		logger.write("TestThread - run() - Clearup test '" + clearupTestScriptName + "' start.", Level.DEBUG);
 		execute(testSuite.getClearupTestScript());
-		logger.write("TestThread - run() Clearup test " + testSuite.getPrepareTestScript().getName() + " stopped.",
-				Level.DEBUG);
+		logger.write("TestThread - run() - Clearup test '" + clearupTestScriptName + "' stopped.", Level.DEBUG);
 		threadSignal.countDown();
 	}
 
 	private long execute(TestScript testScript) {
 		long begin = System.currentTimeMillis();
+		long duration = 0L;
 		if (testScript != null) {
-			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " start.", Level.DEBUG);
+			String testScriptName = testScript.getName();
+			logger.write("TestThread - execute(TestScript) - Test '" + testScriptName + "' start.", Level.DEBUG);
 			try {
 				testScript.prepare();
 				timer.begin();
@@ -73,30 +73,32 @@ public final class TestThread extends Thread {
 				for (StackTraceElement element : stackTrace) {
 					message.append(element.toString()).append("\n");
 				}
-				logger.write("TestThread - execute - Execute test case '" + testScript.getName() + "' failed. "
+				logger.write("TestThread - execute(TestScript) - Execute test '" + testScriptName + "' failed. "
 						+ e.getMessage() + "\n" + message, Level.ERROR);
 			}
 			result.setTimerQueue(testScript.getName(), userName, String.valueOf(timer.getDuration()));
-			logger.write("TestThread - execute(TestScript) " + testScript.getName() + " end.", Level.DEBUG);
+			logger.write("TestThread - execute(TestScript) - Test '" + testScriptName + "' stopped.", Level.DEBUG);
 			result.addUserExecutionCount(testScript.getName());
+			duration = System.currentTimeMillis() - begin;
+			logger.write(
+					"TestThread - execute(TestScript) - Test '" + testScriptName + "' executed " + duration + " ms.",
+					Level.DEBUG);
 		} else {
-			logger.write("TestThread - execute(TestScript testScript) - Parameter testScript is null.", Level.ERROR);
+			logger.write("TestThread - execute(TestScript) - Parameter testScript is null.", Level.ERROR);
 		}
-		long duration = System.currentTimeMillis() - begin;
 		return duration;
 	}
 
-	private void executeThinkTime(long executionDuration) {
+	private void executeThinkTime(long testDuration) {
 		long plannedThinkTime = config.getThinkTime();
 		boolean randomThinkTime = config.isRandomThinkTime();
-
 		long actualThinkTime = 0L;
-		if (executionDuration > 0) {
-			if (executionDuration < plannedThinkTime) {
-				actualThinkTime = plannedThinkTime - executionDuration;
+		if (testDuration > 0) {
+			if (testDuration < plannedThinkTime) {
+				actualThinkTime = plannedThinkTime - testDuration;
 			} else {
 				logger.write(
-						"TestThread - execute() - Test case execution duration was longer than think time, actual think time set to zero.",
+						"TestThread - executeThinkTime(long testDuration) - Test case execution duration was longer than think time, actual think time set to zero.",
 						Level.WARN);
 				actualThinkTime = 0L;
 			}
@@ -110,31 +112,33 @@ public final class TestThread extends Thread {
 				actualThinkTime = random.nextInt((int) Integer.MAX_VALUE);
 			}
 		}
+		logger.write("TestThread - executeThinkTime(long testDuration) - Sleep for " + actualThinkTime + " ms.",
+				Level.DEBUG);
 		try {
 			Thread.sleep(actualThinkTime);
 		} catch (InterruptedException e) {
-			Logger.get(LoggerName.User).write("TestThread - execute() - sleep interrupted abnormally.", Level.ERROR);
+			Logger.get(LoggerName.User).write("TestThread - executeThinkTime(long testDuration) - Sleep interrupted abnormally.", Level.ERROR);
 			e.printStackTrace();
 		}
 	}
 
 	private void execute() {
 		Iterator<TestCase> iterator = testSuite.getTestCaseList().iterator();
-		long executionDuration = 0L;
+		long testDuration = 0L;
 		// sequentially run
 		int loop = config.getLoops();
 		if (loop > 0) {
-			logger.write("TestThread - execute() sequential run start.", Level.INFO);
+			logger.write("TestThread - execute() - Sequential run start.", Level.INFO);
 			for (int i = 0; i < loop; i++) {
 				while (iterator.hasNext()) {
 					TestCase testcase = iterator.next();
 					if (testcase != null) {
-						executionDuration = execute(testcase.getTestScript());
-						executeThinkTime(executionDuration);
+						testDuration = execute(testcase.getTestScript());
+						executeThinkTime(testDuration);
 					}
 				}
 			}
-			logger.write("TestThread - execute() sequential run stop.", Level.INFO);
+			logger.write("TestThread - execute() - Sequential run stopped.", Level.INFO);
 		} else {
 			// prepare random run script pool
 			int totalPercentage = testSuite.getTotalPercentage();
@@ -149,25 +153,25 @@ public final class TestThread extends Thread {
 				}
 				percentageAccumulator += percentage;
 			}
-			logger.write("TestThread - execute() random run preparation done with totalPercentage=" + totalPercentage,
+			logger.write("TestThread - execute() - Random run preparation done with totalPercentage=" + totalPercentage,
 					Level.DEBUG);
 			if (config.getLogLevel() == Level.DEBUG) {
-				logger.write("TestThread - execute() random run preparation done with testScriptPool", Level.DEBUG);
+				logger.write("TestThread - execute() - Random run preparation done with testScriptPool", Level.DEBUG);
 				for (int i = 0; i < testScriptPool.length; i++) {
 					logger.write("Index=" + i + ": " + testScriptPool[i].getName(), Level.DEBUG);
 				}
 			}
 			// random run
-			logger.write("TestThread - execute() random run start.", Level.INFO);
-			long duration = config.getDuration() * 1000;
+			logger.write("TestThread - execute() - Random run start.", Level.INFO);
+			long wholeTestDuration = config.getDuration() * 1000;
 			long begin = System.currentTimeMillis();
 			int testScriptPoolIndex = 0;
-			while (System.currentTimeMillis() - begin < duration) {
+			while (System.currentTimeMillis() - begin < wholeTestDuration) {
 				testScriptPoolIndex = random.nextInt(totalPercentage);
-				executionDuration = execute(testScriptPool[testScriptPoolIndex]);
-				executeThinkTime(executionDuration);
+				testDuration = execute(testScriptPool[testScriptPoolIndex]);
+				executeThinkTime(testDuration);
 			}
-			logger.write("TestThread - execute() random run stop.", Level.INFO);
+			logger.write("TestThread - execute() - Random run stopped.", Level.INFO);
 		}
 	}
 }
