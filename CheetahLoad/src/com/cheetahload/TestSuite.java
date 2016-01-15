@@ -36,5 +36,4 @@ public final class TestSuite {
 	public final void setClearupTestScript(TestScript clearupTestScript) {
 		this.clearupTestScript = clearupTestScript;
 	}
-
 }
