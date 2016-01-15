@@ -14,6 +14,7 @@ public class ConnectionPool {
 		if (connectionPool.isEmpty()) {
 			return create();
 		} else {
+			queueSize--;
 			return connectionPool.poll();
 		}
 	}
@@ -38,13 +39,14 @@ public class ConnectionPool {
 
 	public synchronized void release(Connection connection) {
 		if (connection != null) {
-			connectionPool.add(connection);
+			connectionPool.offer(connection);
 			queueSize++;
 		}
 		while (queueSize > maxQueueSize) {
 			try {
 				connectionPool.poll().close();
-			} catch (SQLException e) {
+				queueSize--;
+			} catch (Exception e) {
 				System.out.println("ERROR: ConnectionPool - release() - Connection failed to close.");
 				e.printStackTrace();
 			}
