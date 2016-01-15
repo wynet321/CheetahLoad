@@ -45,17 +45,17 @@ public final class TimerWriter extends Thread {
 	public void writeToDB() {
 		List<String> sql = new LinkedList<String>();
 		ConcurrentLinkedQueue<String> timerQueue = result.getTimerQueue();
-		String prefix = "insert into timer values(";
+		String prefix = "insert into timer(script_name,vuser_name,duration) values(";
 		String suffix = ")";
 		while (!timerQueue.isEmpty()) {
 			sql.add(prefix + timerQueue.poll() + suffix);
 		}
 		if (!sql.isEmpty()) {
-			if (!config.getOperator().insert(sql)) {
+			if (!config.getOperator().execute(sql)) {
 				stopSignal = true;
-				Logger.get(LoggerName.Common)
-						.write("TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.",
-								Level.ERROR);
+				Logger.get(LoggerName.Common).write(
+						"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.",
+						Level.ERROR);
 			}
 		}
 	}

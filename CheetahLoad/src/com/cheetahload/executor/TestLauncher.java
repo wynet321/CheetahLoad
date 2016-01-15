@@ -1,5 +1,6 @@
 package com.cheetahload.executor;
 
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +54,7 @@ public final class TestLauncher {
 		sql.add(TableDefinition.CONFIGURATION);
 		sql.add(TableDefinition.TIMER);
 		sql.add(TableDefinition.TRANSACTION);
-		if (!TestConfiguration.getTestConfiguration().getOperator().insert(sql)) {
+		if (!TestConfiguration.getTestConfiguration().getOperator().execute(sql)) {
 			Logger.get(LoggerName.Common).write(
 					"TestLauncher - createTables() - Test configuration parameters failed to insert into DB. Test will continue to run without time record...",
 					Level.ERROR);
@@ -73,8 +74,10 @@ public final class TestLauncher {
 					.append(config.getWholeTestDuration()).append(",").append(config.getLoops()).append(",")
 					.append(config.getThinkTime()).append(",'").append(config.isRandomThinkTime()).append("','")
 					.append(config.getLogLevel()).append("',").append(config.getLogFileSize()).append(",")
-					.append(config.getLogWriteRate()).append(")");
-			if (!config.getOperator().insert(sql.toString())) {
+					.append(config.getLogWriteRate()).append(",'")
+					.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis())).append("',")
+					.append("'')");
+			if (!config.getOperator().execute(sql.toString())) {
 				logger.write(
 						"TestLauncher - run() - Test configuration parameters failed to insert into DB. Test will continue to run...",
 						Level.ERROR);
@@ -124,8 +127,15 @@ public final class TestLauncher {
 							Level.INFO);
 				}
 			}
-
 			logger.write("TestLauncher - run() - Execution Summary End.", Level.INFO);
+
+			StringBuilder sql = new StringBuilder();
+			sql.append("update configuration set end_time='")
+					.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()))
+					.append("' where test_name='").append(config.getTestName()).append("'");
+			if (!config.getOperator().execute(sql.toString())) {
+				logger.write("TestLauncher - run() - Test end time failed to update to DB.", Level.ERROR);
+			}
 			stopLogger();
 			System.out.println("Test is completed.");
 		}

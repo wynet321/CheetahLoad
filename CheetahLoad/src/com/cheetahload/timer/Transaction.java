@@ -44,6 +44,6 @@ public final class Transaction {
 		vuName = current.getUserName();
 		String sql = "insert into tranx values('" + scriptName + "','" + vuName + "','" + name + "'," + duration
 				+ ")";
-		TestConfiguration.getTestConfiguration().getOperator().insert(sql);
+		TestConfiguration.getTestConfiguration().getOperator().execute(sql);
 	}
 }

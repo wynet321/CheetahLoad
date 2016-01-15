@@ -26,9 +26,9 @@ public class Operator {
 		return operator;
 	}
 
-	public boolean insert(List<String> sqlList) {
+	public boolean execute(List<String> sqlList) {
 		if (null == sqlList || sqlList.isEmpty()) {
-			System.out.println("ERROR: Operator - insert(List<String> sqlList) - SQL list is null or empty.");
+			System.out.println("ERROR: Operator - execute(List<String> sqlList) - SQL list is null or empty.");
 			return false;
 		}
 		Connection connection = connectionPool.get();
@@ -43,7 +43,7 @@ public class Operator {
 					statement.addBatch(sql);
 				} catch (SQLException e) {
 					System.out
-							.println("ERROR: Operator - insert(List<String> sqlList) - Failed to add batch to create tables. SQL: '"
+							.println("ERROR: Operator - execute(List<String> sqlList) - Failed to add batch to create tables. SQL: '"
 									+ sql + "'");
 					e.printStackTrace();
 					return false;
@@ -52,7 +52,7 @@ public class Operator {
 			statement.executeBatch();
 			connection.commit();
 		} catch (SQLException e) {
-			System.out.println("ERROR: Operator - insert(List<String> sqlList) - Failed to create tables.");
+			System.out.println("ERROR: Operator - execute(List<String> sqlList) - execute SQL statements failed.");
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -60,7 +60,7 @@ public class Operator {
 				try {
 					statement.close();
 				} catch (SQLException e) {
-					System.out.println("ERROR: Operator - insert(List<String> sqlList) - Failed to close statement.");
+					System.out.println("ERROR: Operator - execute(List<String> sqlList) - Failed to close statement.");
 					e.printStackTrace();
 				}
 			}
@@ -69,9 +69,9 @@ public class Operator {
 		return true;
 	}
 
-	public boolean insert(String sql) {
+	public boolean execute(String sql) {
 		if (null == sql || sql.isEmpty()) {
-			System.out.println("ERROR: Operator - insert(String sql) - SQL string is null or empty.");
+			System.out.println("ERROR: Operator - execute(String sql) - SQL string is null or empty.");
 			return false;
 		}
 		Connection connection = connectionPool.get();
@@ -81,13 +81,13 @@ public class Operator {
 			statement.execute(sql);
 			connection.commit();
 		} catch (SQLException e) {
-			System.out.println("ERROR: Operator - insert(String sql) - execute SQL statement failed. SQL: '" + sql
+			System.out.println("ERROR: Operator - execute(String sql) - execute SQL statement failed. SQL: '" + sql
 					+ "'");
 			e.printStackTrace();
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
-				System.out.println("ERROR: Operator - insert(String sql) - Roll back failed.");
+				System.out.println("ERROR: Operator - execute(String sql) - Roll back failed.");
 				e1.printStackTrace();
 				return false;
 			}
@@ -98,7 +98,7 @@ public class Operator {
 					statement.close();
 				} catch (SQLException e) {
 					System.out
-							.println("ERROR: Operator - createTables(List<String> tableDefinitions) - Failed to close statement.");
+							.println("ERROR: Operator - execute(String sql) - Failed to close statement.");
 					e.printStackTrace();
 				}
 			}
