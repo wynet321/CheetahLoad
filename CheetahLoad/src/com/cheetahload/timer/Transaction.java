@@ -2,6 +2,9 @@ package com.cheetahload.timer;
 
 import com.cheetahload.TestConfiguration;
 import com.cheetahload.executor.TestThread;
+import com.cheetahload.log.Level;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 
 public final class Transaction {
 
@@ -11,8 +14,15 @@ public final class Transaction {
 	private long duration = 0L;
 	private String scriptName, vuName;
 
-	public Transaction(String transactionName) {
+	public Transaction(String scriptName, String transactionName) {
+		if(scriptName==null||scriptName.isEmpty()){
+			Logger.get(LoggerName.Common).write("Transaction - Transaction(String scriptName, String transactionName) - Parameter scriptName is null or empty. Set it to default value 'Test'.", Level.WARN);
+			scriptName="Test";
+		}else{
+			this.scriptName=scriptName;
+		}
 		if (transactionName == null || transactionName.isEmpty()) {
+			Logger.get(LoggerName.Common).write("Transaction - Transaction(String scriptName, String transactionName) - Parameter transactionName is null or empty. Set it to default value 'Transaction_[timestamp]'.", Level.WARN);
 			this.name = "Transaction_" + System.currentTimeMillis();
 		} else {
 			this.name = transactionName;
@@ -31,7 +41,6 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		scriptName = current.getName();
 		vuName = current.getUserName();
 		String sql = "insert into tranx values('" + scriptName + "','" + vuName + "','" + name + "'," + duration
 				+ ")";
