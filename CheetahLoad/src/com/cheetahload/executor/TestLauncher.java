@@ -71,8 +71,9 @@ public final class TestLauncher {
 					.append(config.getTesterName()).append("','").append(config.getTesterMail()).append("','")
 					.append(config.getTestSuiteName()).append("',").append(config.getUserCount()).append(",")
 					.append(config.getWholeTestDuration()).append(",").append(config.getLoops()).append(",")
-					.append(config.getThinkTime()).append(",'").append(config.getLogLevel()).append("',")
-					.append(config.getLogFileSize()).append(",").append(config.getLogWriteRate()).append(")");
+					.append(config.getThinkTime()).append(",'").append(config.isRandomThinkTime()).append("','")
+					.append(config.getLogLevel()).append("',").append(config.getLogFileSize()).append(",")
+					.append(config.getLogWriteRate()).append(")");
 			if (!config.getOperator().insert(sql.toString())) {
 				logger.write(
 						"TestLauncher - run() - Test configuration parameters failed to insert into DB. Test will continue to run...",
