@@ -9,7 +9,7 @@ public class TestScript_Search extends TestScript {
 
 	@Override
 	public void test() throws Exception {
-		Logger.get(LoggerName.User).write(this.getName() + " - test()", Level.INFO);
+		Logger.get(LoggerName.User).add(this.getName() + " - test()", Level.INFO);
 		Thread.sleep(20);
 
 		// negative test

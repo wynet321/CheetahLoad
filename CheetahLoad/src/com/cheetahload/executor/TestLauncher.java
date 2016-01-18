@@ -55,7 +55,7 @@ public final class TestLauncher {
 		sql.add(TableDefinition.TIMER);
 		sql.add(TableDefinition.TRANSACTION);
 		if (!TestConfiguration.getTestConfiguration().getOperator().execute(sql)) {
-			Logger.get(LoggerName.Common).write(
+			Logger.get(LoggerName.Common).add(
 					"TestLauncher - createTables() - Test configuration parameters failed to insert into DB. Test will continue to run without time record...",
 					Level.ERROR);
 		}
@@ -74,18 +74,18 @@ public final class TestLauncher {
 					.append(config.getWholeTestDuration()).append(",").append(config.getLoops()).append(",")
 					.append(config.getThinkTime()).append(",'").append(config.isRandomThinkTime()).append("','")
 					.append(config.getLogLevel()).append("',").append(config.getLogFileSize()).append(",")
-					.append(config.getLogWriteRate()).append(",'")
+					.append(config.getLogWriteCycle()).append(",'")
 					.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis())).append("',")
 					.append("'')");
 			if (!config.getOperator().execute(sql.toString())) {
-				logger.write(
+				logger.add(
 						"TestLauncher - run() - Test configuration parameters failed to insert into DB. Test will continue to run...",
 						Level.ERROR);
 			}
-			logger.write("TestLauncher - run() - Test configuration parameters succeeded to insert into DB.",
+			logger.add("TestLauncher - run() - Test configuration parameters succeeded to insert into DB.",
 					Level.DEBUG);
 		} else {
-			logger.write("TestLauncher - run() - Test configuration settings are not completed. Test can't start! ",
+			logger.add("TestLauncher - run() - Test configuration settings are not completed. Test can't start! ",
 					Level.ERROR);
 			System.exit(0);
 		}
@@ -106,35 +106,35 @@ public final class TestLauncher {
 			try {
 				threadSignal.await();
 			} catch (InterruptedException e) {
-				logger.write("TestLauncher - run() - Thread can't be started. Error: " + e.getMessage(), Level.ERROR);
+				logger.add("TestLauncher - run() - Thread can't be started. Error: " + e.getMessage(), Level.ERROR);
 				e.printStackTrace();
 			}
 
 			// output statistic data
-			Logger.get(LoggerName.Common).write("TestLauncher - run() - Execution Summary Start.", Level.INFO);
+			Logger.get(LoggerName.Common).add("TestLauncher - run() - Execution Summary Start.", Level.INFO);
 			Hashtable<String, Integer> userExecutionCountTable = result.getUserExecutionCountTable();
 			for (String key : userExecutionCountTable.keySet()) {
-				logger.write("TestEntry - runTest() - " + key + " execution count: " + userExecutionCountTable.get(key),
+				logger.add("TestEntry - runTest() - " + key + " execution count: " + userExecutionCountTable.get(key),
 						Level.INFO);
 			}
 
 			Hashtable<String, Integer> userErrorCountTable = result.getUserErrorCountTable();
 			if (userErrorCountTable.isEmpty()) {
-				logger.write("TestLauncher - run() - There is no error in test.", Level.INFO);
+				logger.add("TestLauncher - run() - There is no error in test.", Level.INFO);
 			} else {
 				for (String key : userErrorCountTable.keySet()) {
-					logger.write("TestLauncher - run() - " + key + " error count: " + userErrorCountTable.get(key),
+					logger.add("TestLauncher - run() - " + key + " error count: " + userErrorCountTable.get(key),
 							Level.INFO);
 				}
 			}
-			logger.write("TestLauncher - run() - Execution Summary End.", Level.INFO);
+			logger.add("TestLauncher - run() - Execution Summary End.", Level.INFO);
 
 			StringBuilder sql = new StringBuilder();
 			sql.append("update configuration set end_time='")
 					.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()))
 					.append("' where test_name='").append(config.getTestName()).append("'");
 			if (!config.getOperator().execute(sql.toString())) {
-				logger.write("TestLauncher - run() - Test end time failed to update to DB.", Level.ERROR);
+				logger.add("TestLauncher - run() - Test end time failed to update to DB.", Level.ERROR);
 			}
 			stopLogger();
 			System.out.println("Test is completed.");

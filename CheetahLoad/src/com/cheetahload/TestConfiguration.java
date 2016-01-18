@@ -23,7 +23,7 @@ public class TestConfiguration {
 	private int userIndex;
 	private int logFileSize;
 	private static TestConfiguration testConfiguration;
-	private int logWriteRate;
+	private int logWriteCycle;
 	private String testName;
 	private String testerName;
 	private String testerMail;
@@ -52,7 +52,7 @@ public class TestConfiguration {
 		logLevel = Level.ERROR;
 		userIndex = 0;
 		logFileSize = 1024000;
-		logWriteRate = 10000;
+		logWriteCycle = 10000;
 		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
 		testerName = "";
 		testerMail = "";
@@ -115,54 +115,54 @@ public class TestConfiguration {
 		return testConfiguration;
 	}
 
-	public int getLogWriteRate() {
-		return logWriteRate;
+	public int getLogWriteCycle() {
+		return logWriteCycle;
 	}
 
 	public void setLogWriteRate(int logWriteRate) {
 		if (logWriteRate > 0) {
-			this.logWriteRate = logWriteRate;
+			this.logWriteCycle = logWriteRate;
 		}
 	}
 
 	public boolean verify() {
-		logger.write("TestConfiguration - verify() - wholeTestDuration=" + wholeTestDuration + " seconds", Level.DEBUG);
-		logger.write("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
+		logger.add("TestConfiguration - verify() - wholeTestDuration=" + wholeTestDuration + " seconds", Level.DEBUG);
+		logger.add("TestConfiguration - verify() - loops=" + loops, Level.DEBUG);
 		if (testName.isEmpty()) {
-			logger.write("TestConfiguration - verify() - Tester name must be set.", Level.ERROR);
+			logger.add("TestConfiguration - verify() - Tester name must be set.", Level.ERROR);
 			return false;
 		}
 		if (wholeTestDuration == 0 && loops == 0) {
-			logger.write("TestConfiguration - verify() - wholeTestDuration or loops should be non-zero value.",
+			logger.add("TestConfiguration - verify() - wholeTestDuration or loops should be non-zero value.",
 					Level.ERROR);
 			return false;
 		}
-		logger.write("TestConfiguration - verify() - vusers=" + userCount, Level.DEBUG);
+		logger.add("TestConfiguration - verify() - vusers=" + userCount, Level.DEBUG);
 		if (userCount == 0) {
-			logger.write("TestConfiguration - verify() - vusers should be non-zero value.", Level.ERROR);
+			logger.add("TestConfiguration - verify() - vusers should be non-zero value.", Level.ERROR);
 			return false;
 		}
-		logger.write("TestConfiguration - verify() - password=" + password, Level.DEBUG);
+		logger.add("TestConfiguration - verify() - password=" + password, Level.DEBUG);
 		if (password.isEmpty()) {
-			logger.write("TestConfiguration - verify() - password is set to blank.", Level.WARN);
+			logger.add("TestConfiguration - verify() - password is set to blank.", Level.WARN);
 		}
-		logger.write("TestConfiguration - verify() - testSuiteName=" + testSuiteName, Level.DEBUG);
+		logger.add("TestConfiguration - verify() - testSuiteName=" + testSuiteName, Level.DEBUG);
 		if (testSuiteName.isEmpty()) {
-			logger.write("TestConfiguration - verify() - testSuiteName can not be blank.", Level.ERROR);
+			logger.add("TestConfiguration - verify() - testSuiteName can not be blank.", Level.ERROR);
 			return false;
 		}
 		if (userNames != null)
 			if (userNames.size() != 0) {
-				logger.write(
+				logger.add(
 						"TestConfiguration - verify() - userNames vector has " + userNames.size() + " cell object(s).",
 						Level.DEBUG);
 			} else {
-				logger.write("TestConfiguration - verify() - userNames vector should include cell object(s).",
+				logger.add("TestConfiguration - verify() - userNames vector should include cell object(s).",
 						Level.ERROR);
 				return false;
 			}
 		else {
-			logger.write("TestConfiguration - verify() - userNames vector can not be null.", Level.ERROR);
+			logger.add("TestConfiguration - verify() - userNames vector can not be null.", Level.ERROR);
 			return false;
 		}
 
@@ -170,13 +170,13 @@ public class TestConfiguration {
 			return false;
 		}
 
-		logger.write("TestConfiguration - verify() - Parameters verification completed.", Level.DEBUG);
+		logger.add("TestConfiguration - verify() - Parameters verification completed.", Level.DEBUG);
 		return true;
 	}
 
 	private boolean initialLogPath(String path) {
 		if (null == path || path.isEmpty()) {
-			logger.write("TestConfiguration - initialLogPath(String path) - Parameter path is null or empty.",
+			logger.add("TestConfiguration - initialLogPath(String path) - Parameter path is null or empty.",
 					Level.ERROR);
 			return false;
 		}
@@ -184,18 +184,18 @@ public class TestConfiguration {
 		if (dir.exists()) {
 			if (dir.isDirectory()) {
 				if (!clearDirectory(new File(path))) {
-					logger.write("TestConfiguration - initialLogPath(String path) Clear folder '" + path
+					logger.add("TestConfiguration - initialLogPath(String path) Clear folder '" + path
 							+ "' failed. Please clear by manual.", Level.ERROR);
 				}
-				logger.write(
+				logger.add(
 						"TestConfiguration - initialLogPath(String path) - Directory '" + path + "' was cleared up.",
 						Level.DEBUG);
 			} else {
 				if (!dir.delete())
-					logger.write("TestConfiguration - initialLogPath(String path) Delete file '" + path
+					logger.add("TestConfiguration - initialLogPath(String path) Delete file '" + path
 							+ "' failed. Please delete by manual.", Level.ERROR);
 				if (!dir.mkdir())
-					logger.write("TestConfiguration - initialLogPath(String path) Create folder '" + path
+					logger.add("TestConfiguration - initialLogPath(String path) Create folder '" + path
 							+ "' failed. Please create by manual.", Level.ERROR);
 			}
 			return true;
@@ -203,7 +203,7 @@ public class TestConfiguration {
 			if (dir.mkdirs()) {
 				return true;
 			} else {
-				logger.write("TestConfiguration - initialLogPath(String path) Create folder '" + path
+				logger.add("TestConfiguration - initialLogPath(String path) Create folder '" + path
 						+ "' failed. Please check permission.", Level.ERROR);
 				return false;
 			}

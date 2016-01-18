@@ -11,17 +11,16 @@ import com.cheetahload.log.Logger;
 import com.cheetahload.log.LoggerName;
 
 public final class TimerWriter extends Thread {
-
 	private boolean stopSignal;
 	private TestConfiguration config;
 	private TestResult result;
-	private int logWriteRate;
+	private int logWriteCycle;
 
 	public TimerWriter() {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
 		stopSignal = false;
-		logWriteRate = config.getLogWriteRate();
+		logWriteCycle = config.getLogWriteCycle();
 	}
 
 	public void setStopSignal(boolean stopSignal) {
@@ -31,18 +30,18 @@ public final class TimerWriter extends Thread {
 	public void run() {
 		while (!stopSignal) {
 			try {
-				sleep(logWriteRate);
+				sleep(logWriteCycle);
 			} catch (InterruptedException e) {
-				Logger.get(LoggerName.Common).write("TimerWriter - run() - sleep interrupted abnormally.", Level.ERROR);
+				Logger.get(LoggerName.Common).add("TimerWriter - run() - Sleep interrupted abnormally.", Level.ERROR);
 				e.printStackTrace();
 			}
-			writeToDB();
+			write();
 		}
-		// write all of timer buffer left to DB
-		writeToDB();
+		// write the left of timer buffer left to DB
+		write();
 	}
 
-	public void writeToDB() {
+	public void write() {
 		List<String> sql = new LinkedList<String>();
 		ConcurrentLinkedQueue<String> timerQueue = result.getTimerQueue();
 		String prefix = "insert into timer(script_name,vuser_name,duration) values(";
@@ -53,7 +52,7 @@ public final class TimerWriter extends Thread {
 		if (!sql.isEmpty()) {
 			if (!config.getOperator().execute(sql)) {
 				stopSignal = true;
-				Logger.get(LoggerName.Common).write(
+				Logger.get(LoggerName.Common).add(
 						"TimerWriter - writeToDB() - DB timer insert failed. Timer record thread stopped.",
 						Level.ERROR);
 			}

@@ -14,8 +14,9 @@ public class ConnectionPool {
 		if (connectionPool.isEmpty()) {
 			return create();
 		} else {
+			Connection connection = connectionPool.poll();
 			queueSize--;
-			return connectionPool.poll();
+			return connection;
 		}
 	}
 
@@ -26,15 +27,16 @@ public class ConnectionPool {
 			System.out.println("ERROR: ConnectionPool - create() - JDBC class not found.");
 			e.printStackTrace();
 		}
-		Connection connection = null;
+
 		try {
-			connection = DriverManager.getConnection(url);
+			Connection connection = DriverManager.getConnection(url);
 			connection.setAutoCommit(false);
+			return connection;
 		} catch (SQLException e) {
 			System.out.println("ERROR: ConnectionPool - create() - Failed to create Connection to DB '" + url + "'.");
 			e.printStackTrace();
+			return null;
 		}
-		return connection;
 	}
 
 	public synchronized void release(Connection connection) {
@@ -55,16 +57,16 @@ public class ConnectionPool {
 
 	public ConnectionPool(String dbClassName, String url, int maxQueueSize) {
 		if (dbClassName == null || dbClassName.isEmpty()) {
-			System.out
-					.println("ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter dbClassName is null or empty.");
+			System.out.println(
+					"ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter dbClassName is null or empty.");
 		}
 		if (url == null || url.isEmpty()) {
-			System.out
-					.println("ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter url is null or empty.");
+			System.out.println(
+					"ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter url is null or empty.");
 		}
 		if (maxQueueSize <= 0) {
-			System.out
-					.println("WARN: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter maxQueueSize is negative or zero. Set it to default value 1.");
+			System.out.println(
+					"WARN: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter maxQueueSize is negative or zero. Set it to default value 1.");
 			this.maxQueueSize = 1;
 		}
 		this.url = url;

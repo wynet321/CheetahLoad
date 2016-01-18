@@ -3,10 +3,15 @@ package com.cheetahload;
 import java.util.ArrayList;
 
 public final class TestSuite {
-	private ArrayList<TestCase> testCaseList = new ArrayList<TestCase>();
-	private int totalPercentage = 0;
+	private ArrayList<TestCase> testCaseList;
+	private int totalPercentage;
 	private TestScript prepareTestScript;
 	private TestScript clearupTestScript;
+
+	public TestSuite() {
+		testCaseList = new ArrayList<TestCase>();
+		totalPercentage = 0;
+	}
 
 	public final void add(TestCase testcase) {
 		testCaseList.add(testcase);

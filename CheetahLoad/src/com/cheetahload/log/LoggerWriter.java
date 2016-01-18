@@ -4,15 +4,25 @@ import com.cheetahload.TestConfiguration;
 import com.cheetahload.TestResult;
 
 public abstract class LoggerWriter extends Thread {
-	protected TestConfiguration config = TestConfiguration.getTestConfiguration();;
-	protected TestResult result = TestResult.getTestResult();
-	protected StringBuffer buffer = result.getCommonLogBuffer();
-	protected int fileSize = config.getLogFileSize();
-	protected int logWriteRate = config.getLogWriteRate();
-	protected boolean stopSignal = false;
-	protected int fileCount = 0;
+	protected TestConfiguration config;
+	protected TestResult result;
+	protected StringBuffer buffer;
+	protected int fileSize;
+	protected int logWriteCycle;
+	protected boolean stopSignal;
+	protected int fileCount;
 
-	public abstract void writeToFile();
+	public LoggerWriter() {
+		config = TestConfiguration.getTestConfiguration();
+		result = TestResult.getTestResult();
+		buffer = result.getCommonLogBuffer();
+		fileSize = config.getLogFileSize();
+		logWriteCycle = config.getLogWriteCycle();
+		stopSignal = false;
+		fileCount = 0;
+	}
+
+	public abstract void write();
 
 	public void setStopSignal(boolean stopSignal) {
 		this.stopSignal = stopSignal;
@@ -21,14 +31,14 @@ public abstract class LoggerWriter extends Thread {
 	public void run() {
 		while (!stopSignal) {
 			try {
-				sleep(logWriteRate);
+				sleep(logWriteCycle);
 			} catch (InterruptedException e) {
-				System.out.println("LoggerWriter - run - Sleep failed.");
+				System.out.println("LoggerWriter - run() - Sleep interrupted abnormally.");
 				e.printStackTrace();
 			}
-			writeToFile();
+			write();
 		}
-		// write all of timer buffer to file
-		writeToFile();
+		// write the left of timer buffer to file
+		write();
 	}
 }

@@ -5,7 +5,7 @@ public abstract class Logger {
 	private static CommonLogger commonLogger;
 	private static UserLogger userLogger;
 
-	public abstract void write(String message, Level lineLevel);
+	public abstract void add(String message, Level lineLevel);
 
 	public static Logger get(LoggerName loggerName) {
 		if (null == loggerName) {

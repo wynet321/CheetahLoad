@@ -8,7 +8,7 @@ import com.cheetahload.TestResult;
 public final class CommonLogger extends Logger {
 
 	@Override
-	public void write(String message, Level lineLevel) {
+	public void add(String message, Level lineLevel) {
 		if (message != null && !message.isEmpty()) {
 			if (lineLevel.ordinal() <= TestConfiguration.getTestConfiguration().getLogLevel().ordinal()) {
 				TestResult

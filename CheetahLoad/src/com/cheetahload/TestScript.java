@@ -1,11 +1,13 @@
 package com.cheetahload;
 
-import java.util.HashMap;
-
 public abstract class TestScript {
+	private String caseName;
+	// protected HashMap<String, Object> caseParameters;
 
-	private String caseName = this.getClass().getSimpleName();
-	protected HashMap<String, Object> caseParameters = new HashMap<String, Object>();
+	public TestScript() {
+		caseName = this.getClass().getSimpleName();
+		// caseParameters = new HashMap<String, Object>();
+	}
 
 	public void setName(String caseName) {
 		if (caseName != null) {

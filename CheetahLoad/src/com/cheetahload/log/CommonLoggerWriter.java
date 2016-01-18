@@ -5,8 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public final class CommonLoggerWriter extends LoggerWriter {
-
-	public void writeToFile() {
+	public void write() {
 		String path = config.getLogPath() + "/cheetahload.log";
 		File file = new File(path);
 		FileWriter logWriter;
