@@ -10,6 +10,6 @@ public class Test {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String sayHello() {
-		return "Hello Jboss!";
+		return "Hello Jboss! ";
 	}
 }
