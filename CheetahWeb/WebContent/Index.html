@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="shortcut icon" href="/images/favicon.ico">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<script type="text/javascript" src="/js/script.js"></script>
+</head>
+<body>
+	<div class="cover" id="cover">
+		<div class="main">
+			<div class="header">
+				<div class="logo">
+					<img src="/images/logo.gif">
+				</div>
+			</div>
+			<div class="menu">
+				<ul>
+					<li><a href="/index.html">网站首页</a></li>
+					<li style="line-height: 32px; font-size: 20px;">|</li>
+					<li><a href="#" style="padding-right: 30px;"
+						onmouseover="menuShow('aboutus');"
+						onmouseout="menuHide('aboutus');">关于我们<img src="/images/down.gif"
+							class="downarrow"></a>
+						<ul id="aboutus" onmouseover="menuShow('aboutus');"
+							onmouseout="menuHide('aboutus');">
+							<li><a href="/introduction/organization.html">机构设置</a></li>
+							<li><a href="/introduction/expertgroup.html">专家团队</a></li>
+							<li><a href="/introduction/purpose.html">发展宗旨</a></li>
+						</ul></li>
+					<li style="line-height: 32px; font-size: 20px;">|</li>
+					<li><a href="#" style="padding-right: 30px;"
+						onmouseover="menuShow('training');"
+						onmouseout="menuHide('training');">教学培训<img src="/images/down.gif"
+							class="downarrow"></a>
+						<ul id="training" onmouseover="menuShow('training');"
+							onmouseout="menuHide('training');">
+							<li><a href="/training/plan.html">培训计划</a></li>
+							<li><a href="/training/news.html">开班快讯</a></li>
+							<li><a href="/training/result.html">培训成果</a></li>
+							<li><a href="/training/product.html">培训产品</a></li>
+						</ul></li>
+					<li style="line-height: 32px; font-size: 20px;">|</li>
+					<li><a href="#" style="padding-right: 30px;"
+						onmouseover="menuShow('consultation');"
+						onmouseout="menuHide('consultation');">科研咨询<img
+							src="/images/down.gif" class="downarrow"></a>
+						<ul id="consultation" onmouseover="menuShow('consultation');"
+							onmouseout="menuHide('consultation');">
+							<li><a href="/consultation/consultationservice.html">咨询服务</a></li>
+							<li><a href="/consultation/projectinfo.html">项目动态</a></li>
+							<li><a href="/consultation/researchresult.html">科研成果</a></li>
+							<li><a href="/consultation/academicalview.html">学术观点</a></li>
+							<li><a href="/consultation/infocenter.html">资料库</a></li>
+						</ul></li>
+					<li style="line-height: 32px; font-size: 20px;">|</li>
+					<li><a href="/contactinfo.html" style="padding-right: 30px;">联系我们</a></li>
+				</ul>
+			</div>
+			<div class="slider_box">
+				<button class="prev" id="prev">&laquo;</button>
+				<button class="next" id="next">&raquo;</button>
+				<div id="slider" class="slider">
+					<ul>
+						<li><img src="/images/banner1.gif" width="940" height="320"
+							alt="1" title="1"></li>
+						<li><img src="/images/banner2.gif" width="940" height="320"
+							alt="2" title="2"></li>
+						<li><img src="/images/banner3.gif" width="940" height="320"
+							alt="2" title="3"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="news_box">
+				<div>
+					<div class="news_header">
+						&nbsp;&nbsp;新闻快讯<a href="/news/index.html">更多...</a>
+					</div>
+					<div class="news_content">
+						<div class="news_list">
+						<?php
+						for($i = 1; $i < 6; $i ++) {
+							$newsArray = getNewsArray ( "news/", $i );
+							$tip = (strlen ( $newsArray ["title"] )) > 110 ? $newsArray ["title"] : "";
+							$title = $newsArray ["time"] . "&nbsp;-&nbsp;" . $newsArray ["title"];
+							echo "<div style='white-space:nowrap;overflow-x:hidden;margin-right:10px;'><a href=\"/news/news.html?seqId=" . $i . "\" title=\"" . $tip . "\">" . $title . "</a></div>";
+						}
+						?>
+						</div>
+						<div class="news_pic">
+							<div class="pic_content">
+								<div id="pic_content_1" style="display: block;">
+									<a href="list1.html" title="list1"><img src="/images/list1.gif"></a>
+								</div>
+								<div id="pic_content_2" style="display: none;">
+									<a href="list2.html" title="list2"><img src="/images/list2.gif"></a>
+								</div>
+								<div id="pic_content_3" style="display: none;">
+									<a href="list3.html" title="list3"><img src="/images/list3.gif"></a>
+								</div>
+							</div>
+							<div class="pic_mini">
+								<a id="pic_mini_1" onmouseover="picShow(1)" class="selected">&nbsp;</a>
+								<a id="pic_mini_2" onmouseover="picShow(2)">&nbsp;</a> <a
+									id="pic_mini_3" onmouseover="picShow(3)">&nbsp;</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="update_box">
+				<div class="trainingupdate">
+					<div class="trainingupdate_header">
+						&nbsp;&nbsp;培训动态<a href="/trainingupdate/index.html">更多...</a>
+					</div>
+					<div class="trainingupdate_content">
+						
+						<?php
+						for($i = 1; $i < 5; $i ++) {
+							$newsArray = getNewsArray ( "trainingupdate/", $i );
+							$tip = (strlen ( $newsArray ["title"] )) > 56 ? $newsArray ["title"] : "";
+							$title = (strlen ( $newsArray ["title"] ) < 56 ? $newsArray ["title"] : substr ( $newsArray ["title"], 0, 54 ) . "...");
+							echo "<div style='white-space:nowrap;overflow-x:hidden;margin:15px;'><b>&#183;&nbsp;&nbsp;&nbsp;&nbsp;</b><a href=\"/trainingupdate/trainingupdate.html?seqId=" . $i . "\" title=\"" . $tip . "\">" . $newsArray ["time"] . "&nbsp;-&nbsp;" . $title . "</a></div>";
+						}
+						?>
+						
+					</div>
+				</div>
+				<div class="research">
+					<div class="research_header">
+						&nbsp;&nbsp;科研动态<a href="/researchupdate/index.html">更多...</a>
+					</div>
+					<div class="research_content">
+						<?php
+						for($i = 1; $i < 5; $i ++) {
+							$newsArray = getNewsArray ( "researchupdate/", $i );
+							$tip = (strlen ( $newsArray ["title"] )) > 56 ? $newsArray ["title"] : "";
+							$title = (strlen ( $newsArray ["title"] ) < 56 ? $newsArray ["title"] : substr ( $newsArray ["title"], 0, 54 ) . "...");
+							echo "<div style='white-space:nowrap;overflow-x:hidden;overflow-y:hidden;margin:15px;'><b>&#183;&nbsp;&nbsp;&nbsp;&nbsp;</b><a href=\"/researchupdate/researchupdate.html?seqId=" . $i . "\" title=\"" . $tip . "\">" . $newsArray ["time"] . "&nbsp;-&nbsp;" . $title . "</a></div>";
+						}
+						?>
+					</div>
+				</div>
+			</div>
+			<div class="links">
+				链接&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; <a
+					href="http://www.sina.com.cn" target="_blank">新浪网</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="http://www.sohu.com" target="_blank">搜狐网</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="http://www.google.com" target="_blank">谷歌</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="http://www.163.com" target="_blank">网易</a>
+			</div>
+			<div class="footer">
+				<p>
+					COPYRIGHT 2010-2014&nbsp;&nbsp;<a href="http://www.abc.com/">http://www.abc.com/</a>&nbsp;&nbsp;-&nbsp;&nbsp;网站访问量：
+					您是第<b><?echo $hit;?></b>位访客！
+				</p>
+				<p>
+					联系地址：北京市西城区12号 邮编100000<br> 联系电话：010-12345678 传真：010-12345678<br>
+					电子邮箱：abc@abc.com
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

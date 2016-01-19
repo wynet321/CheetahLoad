@@ -135,8 +135,7 @@ public class Operator {
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println(
-					"ERROR: Operator - execute(String sql) - execute SQL statement failed. SQL: '" + sql + "'");
+			System.out.println("ERROR: Operator - get(String sql) - execute SQL statement failed. SQL: '" + sql + "'");
 			e.printStackTrace();
 			return list;
 		} finally {
@@ -144,7 +143,49 @@ public class Operator {
 				try {
 					statement.close();
 				} catch (SQLException e) {
-					System.out.println("ERROR: Operator - execute(String sql) - Failed to close statement.");
+					System.out.println("ERROR: Operator - get(String sql) - Failed to close statement.");
+					e.printStackTrace();
+				}
+			}
+			connectionPool.release(connection);
+		}
+		return list;
+	}
+
+	public LinkedList<Object> getFirst(String sql) {
+		LinkedList<Object> list = new LinkedList<Object>();
+		if (null == sql || sql.isEmpty()) {
+			System.out.println("ERROR: Operator - getFirst(String sql) - SQL string is null or empty.");
+			return list;
+		}
+		Connection connection = connectionPool.get();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			if (resultSet != null) {
+				int columnCount = resultSet.getMetaData().getColumnCount();
+				if (columnCount > 0) {
+					resultSet.next();
+					LinkedList<Object> sublist = new LinkedList<Object>();
+					for (int i = 0; i < columnCount; i++) {
+						Object object = resultSet.getObject(0);
+						list.add(object);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println(
+					"ERROR: Operator - getFirst(String sql) - execute SQL statement failed. SQL: '" + sql + "'");
+			e.printStackTrace();
+			return list;
+		} finally {
+			if (null != statement) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					System.out.println("ERROR: Operator - getFirst(String sql) - Failed to close statement.");
 					e.printStackTrace();
 				}
 			}
