@@ -168,7 +168,6 @@ public class Operator {
 				int columnCount = resultSet.getMetaData().getColumnCount();
 				if (columnCount > 0) {
 					resultSet.next();
-					LinkedList<Object> sublist = new LinkedList<Object>();
 					for (int i = 0; i < columnCount; i++) {
 						Object object = resultSet.getObject(0);
 						list.add(object);
@@ -193,4 +192,6 @@ public class Operator {
 		}
 		return list;
 	}
+	
+	
 }
