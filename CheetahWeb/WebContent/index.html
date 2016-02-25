@@ -2,90 +2,93 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Home page</title>
+<title>CheetahWeb</title>
 <link rel="shortcut icon" href="./images/favicon.ico">
 <link rel="stylesheet" type="text/css" href="./css/style.css">
 <script type="text/javascript" src="./js/script.js"></script>
+<script type="text/javascript" src="./js/Chart.min.js"></script>
 </head>
 <body>
 	<div class="cover" id="cover">
 		<div class="main">
 			<div class="header">
 				<div class="logo">
-					<img src="/images/logo.gif">
+					logo
 				</div>
 			</div>
-			<div class="menu">
-				<ul>
-					<li><a href="./servlet/hello">网站首页</a></li>
-					<li style="line-height: 32px; font-size: 20px;">|</li>
-					<li><a href="#" style="padding-right: 30px;"
-						onmouseover="menuShow('aboutus');"
-						onmouseout="menuHide('aboutus');">关于我们<img src="/images/down.gif"
-							class="downarrow"></a>
-						<ul id="aboutus" onmouseover="menuShow('aboutus');"
-							onmouseout="menuHide('aboutus');">
-							<li><a href="/introduction/organization.html">机构设置</a></li>
-							<li><a href="/introduction/expertgroup.html">专家团队</a></li>
-							<li><a href="/introduction/purpose.html">发展宗旨</a></li>
-						</ul></li>
-					<li style="line-height: 32px; font-size: 20px;">|</li>
-					<li><a href="#" style="padding-right: 30px;"
-						onmouseover="menuShow('training');"
-						onmouseout="menuHide('training');">教学培训<img src="/images/down.gif"
-							class="downarrow"></a>
-						<ul id="training" onmouseover="menuShow('training');"
-							onmouseout="menuHide('training');">
-							<li><a href="/training/plan.html">培训计划</a></li>
-							<li><a href="/training/news.html">开班快讯</a></li>
-							<li><a href="/training/result.html">培训成果</a></li>
-							<li><a href="/training/product.html">培训产品</a></li>
-						</ul></li>
-					<li style="line-height: 32px; font-size: 20px;">|</li>
-					<li><a href="#" style="padding-right: 30px;"
-						onmouseover="menuShow('consultation');"
-						onmouseout="menuHide('consultation');">科研咨询<img
-							src="/images/down.gif" class="downarrow"></a>
-						<ul id="consultation" onmouseover="menuShow('consultation');"
-							onmouseout="menuHide('consultation');">
-							<li><a href="/consultation/consultationservice.html">咨询服务</a></li>
-							<li><a href="/consultation/projectinfo.html">项目动态</a></li>
-							<li><a href="/consultation/researchresult.html">科研成果</a></li>
-							<li><a href="/consultation/academicalview.html">学术观点</a></li>
-							<li><a href="/consultation/infocenter.html">资料库</a></li>
-						</ul></li>
-					<li style="line-height: 32px; font-size: 20px;">|</li>
-					<li><a href="/contactinfo.html" style="padding-right: 30px;">联系我们</a></li>
-				</ul>
+			
+			<div class="tree">
+				menu
 			</div>
-			<div class="slider_box">
-				<button class="prev" id="prev">&laquo;</button>
-				<button class="next" id="next">&raquo;</button>
-				<div id="slider" class="slider">
-					<ul>
-						<li><img src="/images/banner1.gif" width="940" height="320"
-							alt="1" title="1"></li>
-						<li><img src="/images/banner2.gif" width="940" height="320"
-							alt="2" title="2"></li>
-						<li><img src="/images/banner3.gif" width="940" height="320"
-							alt="2" title="3"></li>
-					</ul>
+			<div class="chart">
+				<div class="cpu">
+					<canvas id="cpu"></canvas>
+					CPU
 				</div>
-			</div>
-			<div class="links">
-				链接&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp; <a
-					href="http://www.sina.com.cn" target="_blank">新浪网</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="http://www.sohu.com" target="_blank">搜狐网</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="http://www.google.com" target="_blank">谷歌</a>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="http://www.163.com" target="_blank">网易</a>
+				<div class="memory">
+					<canvas id="memory"></canvas>
+					Memory
+				</div>
+				<div class="disk">
+					<canvas id="disk"></canvas>
+					Disk
+				</div>
 			</div>
 			<div class="footer">
 				<p>
-					联系地址：北京市西城区12号 邮编100000<br> 联系电话：010-12345678 传真：010-12345678<br>
-					电子邮箱：abc@abc.com
+					<a href="" onclick="change()">Mailbox：wynet321@163.com</a>
 				</p>
 			</div>
 		</div>
 	</div>
+		<script>
+		function change(){
+			alert(lineChartData.labels[0]);
+			lineChartData.labels[0]="1:00";
+			alert(lineChartData.labels[0]);
+		}
+		var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+		var lineChartData = {
+			labels : ["0:00","0:01","0:02","0:03","0:04","0:05","0:06"],
+			datasets : [
+				{
+					label: "My First dataset",
+					fillColor : "rgba(220,220,220,0.2)",
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(220,220,220,1)",
+					data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+				},
+				{
+					label: "My Second dataset",
+					fillColor : "rgba(151,187,205,0.2)",
+					strokeColor : "rgba(151,187,205,1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(151,187,205,1)",
+					data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+				}
+			]
+
+		}
+
+	window.onload = function(){
+		var cpu = document.getElementById("cpu").getContext("2d");
+		var memory = document.getElementById("memory").getContext("2d");
+		var disk = document.getElementById("disk").getContext("2d");
+		window.myLine = new Chart(cpu).Line(lineChartData, {
+			responsive: true
+		});
+		new Chart(memory).Line(lineChartData, {
+			responsive: true
+		});
+		new Chart(disk).Line(lineChartData, {
+			responsive: true
+		});
+	}
+	</script>
 </body>
 </html>
