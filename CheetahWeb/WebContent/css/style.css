@@ -6,7 +6,7 @@ a img {
 
 a, a:hover {
 	outline: none;
-	color: #042c53;
+	color: #00ffff;
 	text-decoration: none;
 }
 
@@ -60,7 +60,7 @@ body {
 
 .chart {
 	width: 740px;
-	height: 500px;
+	height: 300px;
 	float: left;
 	text-align: center;
 	padding-right: 0px;
