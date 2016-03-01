@@ -5,10 +5,12 @@
 <title>CheetahWeb</title>
 <link rel="shortcut icon" href="./images/favicon.ico">
 <link rel="stylesheet" type="text/css" href="./css/style.css">
+<script type="text/javascript" src="./js/json2.js"></script>
 <script type="text/javascript" src="./js/Chart.min.js"></script>
 <script type="text/javascript" src="./js/script.js"></script>
+
 </head>
-<body onload="first();">
+<body onload="initializeChart();">
 	<div class="cover">
 		<div class="main">
 			<div class="header">
@@ -35,7 +37,7 @@
 				</div>
 			</div>
 			<div class="footer">
-					Mailbox：<a href="#" onclick="update();">wynet321@163.com</a>
+					<button onclick="stopUpdate(chart);">Stop update</button>
 			</div>
 		</div>
 	</div>
