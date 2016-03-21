@@ -15,15 +15,15 @@ Load test tool for Web application.
   			This is the test schedule for the whole load test, including all of the TestCases.
 
 ##Sample TestScript
-public class TestScript_Login extends TestScript {
+	public class TestScript_Login extends TestScript {
 
-	@Override
-	public void prepare() throws Exception {
+		@Override
+		public void prepare() throws Exception {
 
-	}
+		}
 
-	@Override
-	public void test() throws Exception {
+		@Override
+		public void test() throws Exception {
 			Logger.get(LoggerName.User).add(this.getName() + " - test()", Level.INFO);
 			Transaction tranx = new Transaction(this.getName(),"tranx2");
 			tranx.begin();
