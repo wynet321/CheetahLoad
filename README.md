@@ -1,33 +1,39 @@
 # CheetahLoad
 
-Load test tool for Web application.
+Load test tool for Web application. This readme is still under construction.
 
 ## TestLauncher
 
-  TestLauncher.start(TestSuite ts) is the entry method to start load test. The parameter of start() method is a TestSuite defined by tester. 
-  Sample
-			TestSuite testSuite = new TestSuite();
-			TestCase login=new TestCase(new TestScript_Login(), 1)
-			testSuite.add(login);
-			TestLauncher.start(testSuite);
+  * TestLauncher.start(TestSuite ts) is the entry method to start load test. The parameter of start() method is a TestSuite defined by tester. 
+  * Sample
+```java
+	TestSuite testSuite = new TestSuite();
+	TestCase login=new TestCase(new TestScript_Login(), 1)
+	testSuite.add(login);
+	TestLauncher.start(testSuite);
+```
 	
 ## Framework introduction
 
-	There are 3 layers in this framework as below.
-		1. TestScript
-			This is the atomic transaction. Every test request class need to extends this class. 
-	  		There is 3 methods which can be overrided. 
-    			prepare() method includes preparation operations before each test request.
-    			test() method includes test request need to be meatured.
-    			clearup() method includes clear up operations after each test request.
-  			The framework will record the duration of each test() method. 
-		2. TestCase
-	  		TestCase includes one or more TestScript instances and its percentage to execute.
-		3. TestSuite
-  			This is the test schedule for the whole load test, including all of the TestCases.
+There are 3 layers in this framework as below.
+* TestScript
 
-## Sample TestScript
+This is the atomic transaction. Every test request class need to extends this class. 
+There is 3 methods which can be overrided. 
+prepare() method includes preparation operations before each test request.
+test() method includes test request need to be meatured.
+clearup() method includes clear up operations after each test request.
+The framework will record the duration of each test() method. 
+* TestCase
 
+TestCase includes one or more TestScript instances and its percentage to execute.
+* TestSuite
+
+This is the test schedule for the whole load test, including all of the TestCases.
+
+## Sample 
+* TestScript
+```java
 	public class TestScript_Login extends TestScript {
 		@Override
 		public void prepare() throws Exception {
@@ -44,4 +50,12 @@ Load test tool for Web application.
 		public void clearup() throws Exception {
 		}
 	}
+```
+* TestCase
+```java
 
+```
+* TestSuite
+```java
+
+```
