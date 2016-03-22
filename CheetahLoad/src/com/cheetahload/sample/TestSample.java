@@ -10,7 +10,6 @@ public class TestSample {
 
 	public static void main(String[] args) {
 		test();
-		// Monitor monitor = new Monitor();
 	}
 
 	private static void test() {
