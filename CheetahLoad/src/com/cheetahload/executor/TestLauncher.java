@@ -90,9 +90,9 @@ public final class TestLauncher {
 			System.exit(0);
 		}
 
-		startLogger();
 		if (testSuite != null) {
 			System.out.println("Test is starting...");
+			startLogger();
 			// Thread(VU) start
 			int threadCount = config.getUserCount();
 			int i = 0;

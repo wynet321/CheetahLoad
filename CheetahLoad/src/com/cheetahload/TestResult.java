@@ -17,15 +17,17 @@ public class TestResult {
 	private Hashtable<String, Integer> userLogFileCountTable;
 	private StringBuffer commonLogBuffer;
 	private ConcurrentLinkedQueue<String> timerQueue;
+	private ConcurrentLinkedQueue<String> transactionTimerQueue;
 	private Logger logger;
 
-	public TestResult() {
+	private TestResult() {
 		userLogBufferTable = new Hashtable<String, StringBuffer>();
 		userLogFileCountTable = new Hashtable<String, Integer>();
 		userExecutionCountTable = new Hashtable<String, Integer>();
 		userErrorCountTable = new Hashtable<String, Integer>();
 		commonLogBuffer = new StringBuffer();
 		timerQueue = new ConcurrentLinkedQueue<String>();
+		transactionTimerQueue = new ConcurrentLinkedQueue<String>();
 		logger = Logger.get(LoggerName.Common);
 	}
 
@@ -135,6 +137,36 @@ public class TestResult {
 
 	public ConcurrentLinkedQueue<String> getTimerQueue() {
 		return timerQueue;
+	}
+
+	public void setTransactionTimerQueue(String scriptName, String userName, String transactionName, String duration) {
+		if (scriptName == null || scriptName.isEmpty()) {
+			logger.add("TestResult - setTransactionTimerQueue() - scriptName was null or empty.", Level.ERROR);
+			scriptName="ErrorScriptName";
+		}
+		if (userName == null || userName.isEmpty()) {
+			logger.add("TestResult - setTransactionTimerQueue() - userName was null or empty.", Level.ERROR);
+			userName="ErrorUserName";
+		}
+		if (transactionName == null || transactionName.isEmpty()) {
+			logger.add("TestResult - setTransactionTimerQueue() - transactionName was null or empty.", Level.ERROR);
+			transactionName="ErrorTransactionName";
+		}
+		if (duration == null || duration.isEmpty()) {
+			logger.add("TestResult - setTransactionTimerQueue() - duration was null or empty.", Level.ERROR);
+			duration="ErrorDuration";
+		}
+		StringBuilder item = new StringBuilder();
+		item.append("'").append(scriptName).append("','").append(userName).append("','").append(transactionName)
+				.append("',").append(duration);
+		if (!transactionTimerQueue.add(item.toString())) {
+			logger.add("TestResult - setTransactionTimerQueue() - Add to queue failed. item: '" + item.toString() + "'",
+					Level.ERROR);
+		}
+	}
+
+	public ConcurrentLinkedQueue<String> getTransactionTimerQueue() {
+		return transactionTimerQueue;
 	}
 
 	public StringBuffer getCommonLogBuffer() {

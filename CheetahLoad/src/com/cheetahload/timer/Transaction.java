@@ -1,6 +1,6 @@
 package com.cheetahload.timer;
 
-import com.cheetahload.TestConfiguration;
+import com.cheetahload.TestResult;
 import com.cheetahload.executor.TestThread;
 import com.cheetahload.log.Level;
 import com.cheetahload.log.Logger;
@@ -12,17 +12,21 @@ public final class Transaction {
 	private long begin = 0L;
 	private long end = 0L;
 	private long duration = 0L;
-	private String scriptName, vuName;
+	private String scriptName, userName;
 
 	public Transaction(String scriptName, String transactionName) {
-		if(scriptName==null||scriptName.isEmpty()){
-			Logger.get(LoggerName.Common).add("Transaction - Transaction(String scriptName, String transactionName) - Parameter scriptName is null or empty. Set it to default value 'Test'.", Level.WARN);
-			scriptName="Test";
-		}else{
-			this.scriptName=scriptName;
+		if (scriptName == null || scriptName.isEmpty()) {
+			Logger.get(LoggerName.Common).add(
+					"Transaction - Transaction(String scriptName, String transactionName) - Parameter scriptName is null or empty. Set it to default value 'Test'.",
+					Level.WARN);
+			scriptName = "Test";
+		} else {
+			this.scriptName = scriptName;
 		}
 		if (transactionName == null || transactionName.isEmpty()) {
-			Logger.get(LoggerName.Common).add("Transaction - Transaction(String scriptName, String transactionName) - Parameter transactionName is null or empty. Set it to default value 'Transaction_[timestamp]'.", Level.WARN);
+			Logger.get(LoggerName.Common).add(
+					"Transaction - Transaction(String scriptName, String transactionName) - Parameter transactionName is null or empty. Set it to default value 'Transaction_[timestamp]'.",
+					Level.WARN);
 			this.name = "Transaction_" + System.currentTimeMillis();
 		} else {
 			this.name = transactionName;
@@ -41,9 +45,7 @@ public final class Transaction {
 		end = System.currentTimeMillis();
 		duration = end - begin;
 		TestThread current = (TestThread) (Thread.currentThread());
-		vuName = current.getUserName();
-		String sql = "insert into tranx values('" + scriptName + "','" + vuName + "','" + name + "'," + duration
-				+ ")";
-		TestConfiguration.getTestConfiguration().getOperator().execute(sql);
+		userName = current.getUserName();
+		TestResult.getTestResult().setTransactionTimerQueue(scriptName, userName, name, String.valueOf(duration));
 	}
 }
