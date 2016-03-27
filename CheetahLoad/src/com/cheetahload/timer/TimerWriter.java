@@ -50,7 +50,7 @@ public final class TimerWriter extends Thread {
 				sql.add(sqlPrefix + queue.poll() + sqlSuffix);
 			}
 			if (!sql.isEmpty()) {
-				if (!config.getOperator().execute(sql)) {System.out.println(sql.get(0));
+				if (!config.getOperator().execute(sql)) {
 					stopSignal = true;
 					if (sqlPrefix.contains("tranx")) {
 						Logger.get(LoggerName.Common).add(

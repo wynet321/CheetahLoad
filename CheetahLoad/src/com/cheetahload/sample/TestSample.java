@@ -21,7 +21,7 @@ public class TestSample {
 		config.setTestName("3hrPerformanceRegression");
 		config.setTesterName("Dennis Wang");
 		config.setTesterMail("wynet321@163.com");
-		config.setLogWriteCycleTime(30);
+		config.setLogWriteCycleTime(15);
 
 		TestSuite testSuite = new TestSuite();
 		testSuite.setPrepareTestScript(new TestScript_Login());
