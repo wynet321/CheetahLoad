@@ -74,7 +74,7 @@ public final class TestLauncher {
 					.append(config.getWholeTestDuration()).append(",").append(config.getLoops()).append(",")
 					.append(config.getThinkTime()).append(",'").append(config.isRandomThinkTime()).append("','")
 					.append(config.getLogLevel()).append("',").append(config.getLogFileSize()).append(",")
-					.append(config.getLogWriteCycle()).append(",'")
+					.append(config.getLogWriteCycleTime()).append(",'")
 					.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis())).append("',")
 					.append("'')");
 			if (!config.getOperator().execute(sql.toString())) {

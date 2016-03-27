@@ -17,7 +17,7 @@ public abstract class LoggerWriter extends Thread {
 		result = TestResult.getTestResult();
 		buffer = result.getCommonLogBuffer();
 		fileSize = config.getLogFileSize();
-		logWriteCycle = config.getLogWriteCycle();
+		logWriteCycle = config.getLogWriteCycleTime();
 		stopSignal = false;
 		fileCount = 0;
 	}

@@ -20,7 +20,7 @@ public final class TimerWriter extends Thread {
 		config = TestConfiguration.getTestConfiguration();
 		result = TestResult.getTestResult();
 		stopSignal = false;
-		logWriteCycle = config.getLogWriteCycle();
+		logWriteCycle = config.getLogWriteCycleTime();
 	}
 
 	public void setStopSignal(boolean stopSignal) {

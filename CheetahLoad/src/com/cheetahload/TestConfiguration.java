@@ -23,19 +23,32 @@ public class TestConfiguration {
 	private int userIndex;
 	private int logFileSize;
 	private static TestConfiguration testConfiguration;
-	private int logWriteCycle;
+	private int logWriteCycleTime;
 	private String testName;
 	private String testerName;
 	private String testerMail;
 	private Operator operator;
 	private boolean randomThinkTime;
 	private Logger logger;
+	private String connectionString;
+	private int maxConnectionPoolSize;
+	private String dbClassName;
+
+	public void setConnectionString(String connectionString) {
+		this.connectionString = connectionString;
+	}
+
+	public void setMaxConnectionPoolSize(int maxConnectionPoolSize) {
+		this.maxConnectionPoolSize = maxConnectionPoolSize;
+	}
+
+	public void setDbClassName(String dbClassName) {
+		this.dbClassName = dbClassName;
+	}
 
 	public Operator getOperator() {
 		if (operator == null) {
-			StringBuilder connectionString = new StringBuilder();
-			connectionString.append("jdbc:sqlite:").append(logPath).append("/").append(testName).append(".db");
-			operator = Operator.getOperator("org.sqlite.JDBC", connectionString.toString(), 10);
+			operator = Operator.getOperator(dbClassName, connectionString, maxConnectionPoolSize);
 		}
 		return operator;
 	}
@@ -52,12 +65,17 @@ public class TestConfiguration {
 		logLevel = Level.ERROR;
 		userIndex = 0;
 		logFileSize = 1024000;
-		logWriteCycle = 10000;
+		logWriteCycleTime = 30000;
 		testName = new SimpleDateFormat("yyyy_MM_dd.HH_mm_ss").format(System.currentTimeMillis());
 		testerName = "";
 		testerMail = "";
 		randomThinkTime = false;
 		logger = Logger.get(LoggerName.Common);
+		StringBuilder sb = new StringBuilder();
+		sb.append("jdbc:sqlite:").append(logPath).append("/").append(testName).append(".db");
+		connectionString = sb.toString();
+		maxConnectionPoolSize = 1;
+		dbClassName = "org.sqlite.JDBC";
 	}
 
 	public boolean isRandomThinkTime() {
@@ -115,13 +133,13 @@ public class TestConfiguration {
 		return testConfiguration;
 	}
 
-	public int getLogWriteCycle() {
-		return logWriteCycle;
+	public int getLogWriteCycleTime() {
+		return logWriteCycleTime;
 	}
 
-	public void setLogWriteRate(int logWriteRate) {
-		if (logWriteRate > 0) {
-			this.logWriteCycle = logWriteRate;
+	public void setLogWriteCycleTime(int logWriteCycleTime) {
+		if (logWriteCycleTime > 0) {
+			this.logWriteCycleTime = logWriteCycleTime * 1000;
 		}
 	}
 
@@ -187,8 +205,7 @@ public class TestConfiguration {
 					logger.add("TestConfiguration - initialLogPath(String path) Clear folder '" + path
 							+ "' failed. Please clear by manual.", Level.ERROR);
 				}
-				logger.add(
-						"TestConfiguration - initialLogPath(String path) - Directory '" + path + "' was cleared up.",
+				logger.add("TestConfiguration - initialLogPath(String path) - Directory '" + path + "' was cleared up.",
 						Level.DEBUG);
 			} else {
 				if (!dir.delete())
