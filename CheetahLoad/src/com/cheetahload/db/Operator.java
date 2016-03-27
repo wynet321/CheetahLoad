@@ -10,13 +10,17 @@ public class Operator {
 	private static ConnectionPool connectionPool;
 	private static Operator operator;
 
+	private Operator() {
+
+	}
+
 	public static Operator getOperator(String dbClassName, String url, int maxQueueSize) {
 		if (dbClassName == null || dbClassName.isEmpty()) {
-			System.out
-					.println("Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter dbClassName is null or empty. Connection pool creation failed.");
+			System.out.println(
+					"Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter dbClassName is null or empty. Connection pool creation failed.");
 		} else if (url == null || url.isEmpty()) {
-			System.out
-					.println("Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter url is null or empty. Connection pool creation failed.");
+			System.out.println(
+					"Error: Operator - getOperator(String dbClassName, String url, int maxQueueSize) - Parameter url is null or empty. Connection pool creation failed.");
 		} else {
 			connectionPool = new ConnectionPool(dbClassName, url, maxQueueSize);
 		}
@@ -42,8 +46,8 @@ public class Operator {
 				try {
 					statement.addBatch(sql);
 				} catch (SQLException e) {
-					System.out
-							.println("ERROR: Operator - execute(List<String> sqlList) - Failed to add batch to create tables. SQL: '"
+					System.out.println(
+							"ERROR: Operator - execute(List<String> sqlList) - Failed to add batch to create tables. SQL: '"
 									+ sql + "'");
 					e.printStackTrace();
 					return false;
@@ -81,8 +85,8 @@ public class Operator {
 			statement.execute(sql);
 			connection.commit();
 		} catch (SQLException e) {
-			System.out.println("ERROR: Operator - execute(String sql) - execute SQL statement failed. SQL: '" + sql
-					+ "'");
+			System.out.println(
+					"ERROR: Operator - execute(String sql) - execute SQL statement failed. SQL: '" + sql + "'");
 			e.printStackTrace();
 			try {
 				connection.rollback();
@@ -97,8 +101,7 @@ public class Operator {
 				try {
 					statement.close();
 				} catch (SQLException e) {
-					System.out
-							.println("ERROR: Operator - execute(String sql) - Failed to close statement.");
+					System.out.println("ERROR: Operator - execute(String sql) - Failed to close statement.");
 					e.printStackTrace();
 				}
 			}

@@ -8,16 +8,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ConnectionPool {
 	private ConcurrentLinkedQueue<Connection> connectionPool;
 	private String dbClassName, url;
-	private int queueSize, maxQueueSize;
+	private volatile int queueSize;
+	private int maxQueueSize;
 
-	public synchronized Connection get() {
-		if (connectionPool.isEmpty()) {
-			return create();
-		} else {
-			Connection connection = connectionPool.poll();
-			queueSize--;
+	public Connection get() {
+		Connection connection = connectionPool.poll();
+		if (connection == null) {
+			connection = create();
 			return connection;
 		}
+		queueSize--;
+		return connection;
 	}
 
 	private Connection create() {
@@ -39,11 +40,12 @@ public class ConnectionPool {
 		}
 	}
 
-	public synchronized void release(Connection connection) {
+	public void release(Connection connection) {
 		if (connection != null) {
 			connectionPool.offer(connection);
 			queueSize++;
 		}
+		//System.out.println("DEBUG: ConnectionPool - release() - Current pool size is " + queueSize);
 		while (queueSize > maxQueueSize) {
 			try {
 				connectionPool.poll().close();
@@ -65,13 +67,15 @@ public class ConnectionPool {
 					"ERROR: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter url is null or empty.");
 		}
 		if (maxQueueSize <= 0) {
+			this.maxQueueSize = 1;
 			System.out.println(
 					"WARN: ConnectionPool - ConnectionPool(String dbClassName, String url, int queueRefreshRate) - Parameter maxQueueSize is negative or zero. Set it to default value 1.");
-			this.maxQueueSize = 1;
+		} else {
+			this.maxQueueSize = maxQueueSize;
 		}
+
 		this.url = url;
 		this.dbClassName = dbClassName;
-		this.maxQueueSize = maxQueueSize;
 		connectionPool = new ConcurrentLinkedQueue<Connection>();
 		queueSize = 0;
 	}
