@@ -1,12 +1,13 @@
 package com.cheetahload;
 
+import com.cheetahload.executor.TestThread;
+
 public abstract class TestScript {
 	private String caseName;
-	// protected HashMap<String, Object> caseParameters;
 
 	public TestScript() {
+		//get default value of caseName;
 		caseName = this.getClass().getSimpleName();
-		// caseParameters = new HashMap<String, Object>();
 	}
 
 	public void setName(String caseName) {
@@ -17,6 +18,16 @@ public abstract class TestScript {
 
 	public String getName() {
 		return caseName;
+	}
+
+	//Do not recommend use parameter method to deliver object between scripts.
+	protected Object getParameter(String key) {
+		return ((TestThread) Thread.currentThread()).getDataMapValue(key);
+	}
+
+	//Do not recommend use parameter method to deliver object between scripts.
+	protected void setParameter(String key, Object object) {
+		((TestThread) Thread.currentThread()).setDataMapValue(key, object);
 	}
 
 	public abstract void prepare() throws Exception;

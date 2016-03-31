@@ -20,6 +20,7 @@ public class TestScript_Login extends TestScript {
 		tranx.begin();
 		Thread.sleep(10);
 		tranx.end();
+		//System.out.println(this.getParameter("aaa"));
 	}
 
 	@Override

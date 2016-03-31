@@ -15,7 +15,7 @@ public class TestSample {
 	private static void test() {
 		TestConfiguration config = TestConfiguration.getTestConfiguration();
 		config.setWholeTestDuration(1);
-		config.setUserNames(2, "user_", 2, 1);
+		config.setUserNames(10, "user_", 2, 1);
 		config.setTestSuiteName("Bucket");
 		config.setLogLevel(Level.DEBUG);
 		config.setTestName("3hrPerformanceRegression");

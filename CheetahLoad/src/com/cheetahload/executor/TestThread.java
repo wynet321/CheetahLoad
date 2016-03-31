@@ -1,5 +1,6 @@
 package com.cheetahload.executor;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -23,6 +24,15 @@ public final class TestThread extends Thread {
 	private CountDownLatch threadSignal;
 	private TestConfiguration config;
 	private TestResult result;
+	private HashMap<String,Object> dataMap;
+
+	public Object getDataMapValue(String key) {
+		return dataMap.get(key);
+	}
+
+	public void setDataMapValue(String key,Object object) {
+		dataMap.put(key, object);
+	}
 
 	public String getUserName() {
 		return userName;
@@ -39,6 +49,7 @@ public final class TestThread extends Thread {
 		logger = Logger.get(LoggerName.User);
 		timer = new Timer();
 		random = new Random();
+		dataMap=new HashMap<String,Object>();
 	}
 
 	public void run() {

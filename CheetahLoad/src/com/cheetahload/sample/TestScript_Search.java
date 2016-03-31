@@ -11,7 +11,6 @@ public class TestScript_Search extends TestScript {
 	public void test() throws Exception {
 		Logger.get(LoggerName.User).add(this.getName() + " - test()", Level.INFO);
 		Thread.sleep(20);
-
 		// negative test
 		String nullString = null;
 		nullString.substring(1);
