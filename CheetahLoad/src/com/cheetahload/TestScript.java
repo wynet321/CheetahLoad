@@ -1,13 +1,16 @@
 package com.cheetahload;
 
 import com.cheetahload.executor.TestThread;
+import com.cheetahload.log.Logger;
+import com.cheetahload.log.LoggerName;
 
 public abstract class TestScript {
 	private String caseName;
-
+	protected Logger logger;
 	public TestScript() {
 		//get default value of caseName;
 		caseName = this.getClass().getSimpleName();
+		logger=Logger.get(LoggerName.User);
 	}
 
 	public void setName(String caseName) {

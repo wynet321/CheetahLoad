@@ -15,7 +15,7 @@ public class TestScript_Login extends TestScript {
 
 	@Override
 	public void test() throws Exception {
-		Logger.get(LoggerName.User).add(this.getName() + " - test()", Level.INFO);
+		logger.add(this.getName() + " - test()", Level.INFO);
 		Transaction tranx = new Transaction(this.getName(),"tranx2");
 		tranx.begin();
 		Thread.sleep(10);
