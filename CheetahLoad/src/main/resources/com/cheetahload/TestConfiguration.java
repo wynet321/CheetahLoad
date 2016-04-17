@@ -35,7 +35,6 @@ public class TestConfiguration {
 	public JDBCOperator getOperator() {
 		if (operator == null) {
 			operator = JDBCOperator.getOperator(dbParameters);
-
 		}
 		return operator;
 	}
@@ -47,33 +46,6 @@ public class TestConfiguration {
 	public void setDbParameters(String[] dbParameters) {
 		this.dbParameters = dbParameters;
 	}
-
-	// public String getConnectionString() {
-	// return connectionString;
-	// }
-
-	// private int maxConnectionPoolSize;
-	// public int getMaxConnectionPoolSize() {
-	// return maxConnectionPoolSize;
-	// }
-	//
-	// private String dbClassName;
-	//
-	// public String getDbClassName() {
-	// return dbClassName;
-	// }
-	//
-	// public void setConnectionString(String connectionString) {
-	// this.connectionString = connectionString;
-	// }
-
-	// public void setMaxConnectionPoolSize(int maxConnectionPoolSize) {
-	// this.maxConnectionPoolSize = maxConnectionPoolSize;
-	// }
-	//
-	// public void setDbClassName(String dbClassName) {
-	// this.dbClassName = dbClassName;
-	// }
 
 	private TestConfiguration() {
 		// default value

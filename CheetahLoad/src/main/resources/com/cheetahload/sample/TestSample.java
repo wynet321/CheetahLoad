@@ -22,6 +22,7 @@ public class TestSample {
 		config.setTesterName("Dennis Wang");
 		config.setTesterMail("wynet321@163.com");
 		config.setLogWriteCycleTime(15);
+		config.setDbParameters(new String[] { "com.mysql.jdbc.Driver", "jdbc:mysql://100.200.1.19:3306/cheetahdb", "dennis","passw0rd","1" });
 
 		TestSuite testSuite = new TestSuite();
 		testSuite.setPrepareTestScript(new TestScript_Login());

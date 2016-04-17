@@ -2,6 +2,7 @@ package main.resources.com.cheetahload.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
@@ -21,9 +22,9 @@ public class JDBCOperator {
 			System.out.println("ERROR: JDBCOperator - JDBCOperator() - DB parameters is null.");
 		}
 		JDBCOperator.parameters = parameters;
-		maxConnectionPoolSize = Integer.parseInt(parameters[2]);
-		connectionPool=new ConcurrentLinkedQueue<Connection>();
-		poolSize=0;
+		maxConnectionPoolSize = Integer.parseInt(parameters[4]);
+		connectionPool = new ConcurrentLinkedQueue<Connection>();
+		poolSize = 0;
 	}
 
 	public static JDBCOperator getOperator(String[] parameters) {
@@ -53,7 +54,7 @@ public class JDBCOperator {
 
 		Connection connection = null;
 		try {
-			connection = DriverManager.getConnection(parameters[1]);
+			connection = DriverManager.getConnection(parameters[1], parameters[2], parameters[3]);
 			connection.setAutoCommit(false);
 			return connection;
 		} catch (SQLException e) {
@@ -84,9 +85,13 @@ public class JDBCOperator {
 	}
 
 	public boolean execute(List<String> sqlList) {
-		if (null == sqlList || sqlList.isEmpty()) {
-			System.out.println("ERROR: Operator - execute(List<String> sqlList) - SQL list is null or empty.");
+		if (null == sqlList) {
+			System.out.println("ERROR: Operator - execute(List<String> sqlList) - sqlList is null.");
 			return false;
+		}
+		if (sqlList.isEmpty()) {
+			System.out.println("WARN: Operator - execute(List<String> sqlList) - sqlList is empty.");
+			return true;
 		}
 		Connection connection = get();
 
@@ -162,5 +167,28 @@ public class JDBCOperator {
 			release(connection);
 		}
 		return true;
+	}
+
+	public boolean exists(String tableName) {
+		if (null == tableName || tableName.isEmpty()) {
+			System.out.println("ERROR: Operator - exists(String tableName) - tableName is null or empty.");
+			return false;
+		}
+		Connection connection = get();
+		try {
+			ResultSet resultSet = connection.createStatement()
+					.executeQuery("select count(*) from `INFORMATION_SCHEMA`.`TABLES` where table_name ='"
+							+ tableName.toLowerCase() + "' and TABLE_SCHEMA='cheetahdb';");
+			if (resultSet != null) {
+				resultSet.first();
+				if (resultSet.getInt(1) == 1) {
+					return true;
+				}
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

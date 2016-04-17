@@ -1,14 +1,15 @@
 package main.resources.com.cheetahload.executor;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import main.resources.com.cheetahload.TestConfiguration;
 import main.resources.com.cheetahload.TestResult;
 import main.resources.com.cheetahload.TestSuite;
+import main.resources.com.cheetahload.db.JDBCOperator;
 import main.resources.com.cheetahload.db.TableDefinition;
 import main.resources.com.cheetahload.log.CommonLoggerWriter;
 import main.resources.com.cheetahload.log.Level;
@@ -50,11 +51,14 @@ public final class TestLauncher {
 	}
 
 	private static void createTables() {
-		List<String> sql = new LinkedList<String>();
-		sql.add(TableDefinition.CONFIGURATION);
-		sql.add(TableDefinition.TIMER);
-		sql.add(TableDefinition.TRANSACTION);
-		if (!TestConfiguration.getTestConfiguration().getOperator().execute(sql)) {
+		List<String> sql = new ArrayList<String>();
+		JDBCOperator operator=TestConfiguration.getTestConfiguration().getOperator();
+		for (TableDefinition set : TableDefinition.values()) {
+			if(!operator.exists(set.name())){
+				sql.add(set.getSql());
+			}
+		}
+		if (!operator.execute(sql)) {
 			Logger.get(LoggerName.Common).add(
 					"TestLauncher - createTables() - Test configuration parameters failed to insert into DB. Test will continue to run without time record...",
 					Level.ERROR);
